@@ -6,7 +6,7 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
   const dropAreaRef = useRef(null);
 
   // 지원하는 이미지 확장자 배열
-  const SUPPORTED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'tiff', 'bmp', 'raw', 'heic', 'heif'];
+  const SUPPORTED_IMAGE_EXTENSIONS = ['jpg', 'jpeg'];
 
   // 드래그 앤 드롭 이벤트 리스너 설정
   useEffect(() => {
@@ -95,7 +95,6 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
         aria-describedby="file-format-info"
       />
 
-      {/* 나머지 코드는 동일 */}
       <div className="flex flex-col items-center justify-center py-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"

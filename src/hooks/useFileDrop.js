@@ -11,7 +11,7 @@ import { useState, useRef, useEffect } from 'react';
 const useFileDrop = (
   onFileSelect,
   {
-    allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'tiff', 'bmp', 'heic', 'heif'],
+    allowedExtensions = ['jpg', 'jpeg'],
     maxFileSize = 25 * 1024 * 1024, // 25MB
     maxFiles = 100, // 최대 파일 개수 100개로 제한
   } = {}
