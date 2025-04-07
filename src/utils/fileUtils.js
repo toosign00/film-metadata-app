@@ -7,12 +7,16 @@ import JSZip from 'jszip';
 export const naturalSort = (a, b) => {
   const chunkify = (t) => {
     const tz = [];
-    let x = 0, y = -1, n = 0, i, j;
+    let x = 0,
+      y = -1,
+      n = 0,
+      i,
+      j;
 
-    while (i = (j = t.charAt(x++)).charCodeAt(0)) {
-      const m = (i === 46 || (i >= 48 && i <= 57));
+    while ((i = (j = t.charAt(x++)).charCodeAt(0))) {
+      const m = i === 46 || (i >= 48 && i <= 57);
       if (m !== n) {
-        tz[++y] = "";
+        tz[++y] = '';
         n = m;
       }
       tz[y] += j;
@@ -25,11 +29,12 @@ export const naturalSort = (a, b) => {
 
   for (let x = 0; aa[x] && bb[x]; x++) {
     if (aa[x] !== bb[x]) {
-      const c = Number(aa[x]), d = Number(bb[x]);
+      const c = Number(aa[x]),
+        d = Number(bb[x]);
       if (c == aa[x] && d == bb[x]) {
         return c - d;
       } else {
-        return (aa[x] > bb[x]) ? 1 : -1;
+        return aa[x] > bb[x] ? 1 : -1;
       }
     }
   }
@@ -51,56 +56,51 @@ export const downloadFile = (image) => {
 /**
  * 모든 결과 파일 다운로드 (ZIP 파일로)
  */
-export const downloadAllAsZip = async (
-  resultImages, 
-  setProcessing, 
-  setZipProgress, 
-  setIsZipCompressing
-) => {
+export const downloadAllAsZip = async (resultImages, setProcessing, setZipProgress, setIsZipCompressing) => {
   if (resultImages.length === 0) {
     alert('다운로드할 이미지가 없습니다.');
     return;
   }
-  
+
   // 처리 시작 알림
   setProcessing(true);
   setZipProgress(0);
   setIsZipCompressing(true);
-  
+
   try {
     const zip = new JSZip();
-    
+
     // 각 이미지 파일을 ZIP에 추가
     for (let i = 0; i < resultImages.length; i++) {
       const image = resultImages[i];
       const response = await fetch(image.url);
       const blob = await response.blob();
-      
+
       // ZIP 파일에 추가
       zip.file(image.name, blob);
-      
+
       // 진행률 업데이트
       setZipProgress(Math.round(((i + 1) / resultImages.length) * 50));
     }
-    
+
     // ZIP 파일 생성
     setIsZipCompressing(true);
-    const zipBlob = await zip.generateAsync({ 
+    const zipBlob = await zip.generateAsync({
       type: 'blob',
-      compression: "DEFLATE",
+      compression: 'DEFLATE',
       compressionOptions: { level: 6 },
       onUpdate: (metadata) => {
         if (metadata.percent) {
           setZipProgress(50 + Math.round(metadata.percent / 2));
         }
-      }
+      },
     });
-    
+
     // 현재 날짜와 시간을 포함한 ZIP 파일명 생성
     const now = new Date();
     const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
     const zipFileName = `film_metadata_${timestamp}.zip`;
-    
+
     // ZIP 파일 다운로드
     const downloadLink = document.createElement('a');
     downloadLink.href = URL.createObjectURL(zipBlob);
@@ -108,7 +108,7 @@ export const downloadAllAsZip = async (
     document.body.appendChild(downloadLink);
     downloadLink.click();
     document.body.removeChild(downloadLink);
-    
+
     alert(`${resultImages.length}개 파일이 성공적으로 ZIP으로 압축되었습니다.`);
   } catch (error) {
     console.error('ZIP 생성 중 오류 발생:', error);
@@ -127,10 +127,10 @@ export const dataURItoBlob = (dataURI, type) => {
   const byteString = atob(dataURI.split(',')[1]);
   const ab = new ArrayBuffer(byteString.length);
   const ia = new Uint8Array(ab);
-  
+
   for (let i = 0; i < byteString.length; i++) {
     ia[i] = byteString.charCodeAt(i);
   }
-  
+
   return new Blob([ab], { type });
 };
