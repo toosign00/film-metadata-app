@@ -64,10 +64,12 @@ const GlobalStyles = () => {
         color: #e5e7eb;
       }
 
-      // .react-datepicker__day--outside-month {
-      //   visibility: hidden;
-      //   pointer-events: none;
-      // }
+      /*
+      .react-datepicker__day--outside-month {
+        visibility: hidden;
+        pointer-events: none;
+      }
+      */
 
       .react-datepicker__day,
       .react-datepicker__time-name {
@@ -153,8 +155,6 @@ const GlobalStyles = () => {
 
       .react-datepicker-popper {
         z-index: 10;
-        transition: all 1s ease; /* 위치 변화 시각화 */
-        outline: 2px solid red; /* 포퍼 영역 표시 */
       }
 
       .react-datepicker-dark {
