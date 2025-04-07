@@ -5,6 +5,9 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
   const fileInputRef = useRef(null);
   const dropAreaRef = useRef(null);
 
+  // 지원하는 이미지 확장자 배열
+  const SUPPORTED_IMAGE_EXTENSIONS = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'tiff', 'bmp', 'raw', 'heic', 'heif'];
+
   // 드래그 앤 드롭 이벤트 리스너 설정
   useEffect(() => {
     const dropArea = dropAreaRef.current;
@@ -36,7 +39,7 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
 
       const droppedFiles = Array.from(e.dataTransfer.files).filter((file) => {
         const ext = file.name.split('.').pop().toLowerCase();
-        return ['jpg', 'jpeg', 'png'].includes(ext);
+        return SUPPORTED_IMAGE_EXTENSIONS.includes(ext);
       });
 
       if (droppedFiles.length > 0) {
@@ -61,13 +64,16 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
   const handleFileSelect = (e) => {
     const selectedFiles = Array.from(e.target.files).filter((file) => {
       const ext = file.name.split('.').pop().toLowerCase();
-      return ['jpg', 'jpeg', 'png'].includes(ext);
+      return SUPPORTED_IMAGE_EXTENSIONS.includes(ext);
     });
 
     if (selectedFiles.length > 0) {
       onFileSelect(selectedFiles);
     }
   };
+
+  // 지원되는 확장자 문자열 생성 (UI에 표시용)
+  const supportedExtensionsText = SUPPORTED_IMAGE_EXTENSIONS.join(', ').toUpperCase();
 
   return (
     <div
@@ -84,11 +90,12 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
         ref={fileInputRef}
         onChange={handleFileSelect}
         multiple
-        accept=".jpg,.jpeg,.png"
+        accept={`.${SUPPORTED_IMAGE_EXTENSIONS.join(',.')}`}
         className="hidden"
         aria-describedby="file-format-info"
       />
 
+      {/* 나머지 코드는 동일 */}
       <div className="flex flex-col items-center justify-center py-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
@@ -108,7 +115,7 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
         {isDragging ? (
           <div>
             <p className="text-lg font-medium text-blue-400">파일을 여기에 놓으세요</p>
-            <p className="text-sm text-blue-300">JPG, JPEG, PNG 파일만 지원됩니다</p>
+            <p className="text-sm text-blue-300">{supportedExtensionsText} 파일만 지원됩니다</p>
           </div>
         ) : filesCount > 0 ? (
           <div>
@@ -123,7 +130,7 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
         )}
 
         <p id="file-format-info" className="mt-2 text-xs text-gray-500">
-          지원 형식: JPG, JPEG, PNG (최대 10MB)
+          지원 형식: {supportedExtensionsText} (최대 10MB)
         </p>
       </div>
     </div>

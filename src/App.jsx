@@ -6,6 +6,7 @@ import MetadataSettings from './components/MetadataSettings';
 import ResultsViewer from './components/ResultsViewer';
 import ErrorDisplay from './components/ErrorDisplay';
 import Footer from './components/Footer';
+import GlobalStyles from './components/GlobalStyles';
 import { naturalSort } from './utils/fileUtils';
 import { processMetadata } from './utils/metadataUtils';
 
@@ -15,37 +16,17 @@ const App = () => {
     // 배경색 설정
     document.body.classList.add('bg-gray-900');
 
-    // 언어 설정 변경 (한국어로 설정)
-    document.documentElement.lang = 'ko';
-
-    // 브라우저 기본 날짜/시간 선택 아이콘 숨기기
-    const style = document.createElement('style');
-    style.textContent = `
-      /* 브라우저 기본 달력/시간 아이콘 숨기기 */
-      input[type="date"]::-webkit-calendar-picker-indicator,
-      input[type="time"]::-webkit-calendar-picker-indicator {
-        display: none;
-        -webkit-appearance: none;
-      }
-      
-      /* Firefox에서의 기본 아이콘 숨기기 */
-      input[type="date"], 
-      input[type="time"] {
-        -moz-appearance: textfield;
-      }
-    `;
-    document.head.appendChild(style);
 
     return () => {
       document.body.classList.remove('bg-gray-900');
-      document.head.removeChild(style);
     };
   }, []);
+
   const [files, setFiles] = useState([]);
   const [sortedFiles, setSortedFiles] = useState([]);
   const [settings, setSettings] = useState({
-    startDate: new Date().toISOString().split('T')[0],
-    startTime: '08:00',
+    startDate: new Date(),
+    startTime: new Date().setHours(0, 0, 0, 0),
     cameraMake: '',
     cameraModel: '',
     filmInfo: '',
@@ -87,8 +68,7 @@ const App = () => {
   };
 
   // 설정 변경 핸들러
-  const handleSettingsChange = (e) => {
-    const { name, value } = e.target;
+  const handleSettingsChange = (name, value) => {
     setSettings((prev) => ({
       ...prev,
       [name]: value,
@@ -109,13 +89,13 @@ const App = () => {
     setErrors([]);
     setResultImages([]);
 
-    // 시작 날짜/시간 구하기
-    const [year, month, day] = settings.startDate.split('-').map(Number);
-    const [hours, minutes] = settings.startTime.split(':').map(Number);
-    const startDateTime = new Date(year, month - 1, day, hours, minutes);
-
     try {
-      const results = await processMetadata(sortedFiles, startDateTime, settings, (completed) => setCompleted(completed));
+      // 날짜와 시간을 하나의 Date 객체로 합치기
+      const combinedDateTime = new Date(settings.startDate);
+      const timeDate = new Date(settings.startTime);
+      combinedDateTime.setHours(timeDate.getHours(), timeDate.getMinutes(), timeDate.getSeconds());
+
+      const results = await processMetadata(sortedFiles, combinedDateTime, settings, (completed) => setCompleted(completed));
 
       setResultImages(results.images);
       setErrors(results.errors);
@@ -144,8 +124,8 @@ const App = () => {
   const resetForm = () => {
     if (window.confirm('모든 설정을 초기화하고 처음부터 다시 시작하시겠습니까?')) {
       setSettings({
-        startDate: new Date().toISOString().split('T')[0],
-        startTime: '08:00',
+        startDate: new Date(),
+        startTime: new Date().setHours(8, 0, 0, 0),
         cameraMake: '',
         cameraModel: '',
         filmInfo: '',
@@ -163,6 +143,7 @@ const App = () => {
 
   return (
     <div className="min-h-screen w-full flex flex-col bg-gray-900 text-gray-200">
+      <GlobalStyles />
       <Header />
 
       <StepNavigation
