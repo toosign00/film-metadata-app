@@ -14,9 +14,7 @@ const FileList = ({ files }) => {
           {files.map((file, idx) => (
             <li key={idx} className="mb-1 flex items-center">
               <span className="mr-1 truncate">{file.name}</span>
-              <span className="text-xs text-gray-500 ml-auto whitespace-nowrap">
-                {(file.size / 1024).toFixed(1)} KB
-              </span>
+              <span className="text-xs text-gray-500 ml-auto whitespace-nowrap">{(file.size / 1024).toFixed(1)} KB</span>
             </li>
           ))}
         </ol>

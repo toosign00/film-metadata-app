@@ -14,10 +14,10 @@ const App = () => {
   useEffect(() => {
     // 배경색 설정
     document.body.classList.add('bg-gray-900');
-    
+
     // 언어 설정 변경 (한국어로 설정)
     document.documentElement.lang = 'ko';
-    
+
     // 브라우저 기본 날짜/시간 선택 아이콘 숨기기
     const style = document.createElement('style');
     style.textContent = `
@@ -35,7 +35,7 @@ const App = () => {
       }
     `;
     document.head.appendChild(style);
-    
+
     return () => {
       document.body.classList.remove('bg-gray-900');
       document.head.removeChild(style);
@@ -51,7 +51,7 @@ const App = () => {
     filmInfo: '',
     lens: '',
     lensInfo: '',
-    isoValue: ''
+    isoValue: '',
   });
   const [processing, setProcessing] = useState(false);
   const [completed, setCompleted] = useState(0);
@@ -65,22 +65,22 @@ const App = () => {
 
   // 모바일 화면인지 감지
   const [isMobile, setIsMobile] = useState(false);
-  
+
   useEffect(() => {
     const checkMobile = () => {
       setIsMobile(window.innerWidth < 768);
     };
-    
+
     checkMobile();
     window.addEventListener('resize', checkMobile);
-    
+
     return () => window.removeEventListener('resize', checkMobile);
   }, []);
 
   // 파일 선택 핸들러
   const handleFileSelect = (selectedFiles) => {
     setFiles(selectedFiles);
-    
+
     // 자연어 정렬 적용
     const sorted = [...selectedFiles].sort(naturalSort);
     setSortedFiles(sorted);
@@ -89,42 +89,37 @@ const App = () => {
   // 설정 변경 핸들러
   const handleSettingsChange = (e) => {
     const { name, value } = e.target;
-    setSettings(prev => ({
+    setSettings((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
   // 메타데이터 처리 시작 함수
   const processFiles = async (e) => {
     e.preventDefault();
-    
+
     if (sortedFiles.length === 0) {
       alert('처리할 파일을 선택해주세요.');
       return;
     }
-    
+
     setProcessing(true);
     setCompleted(0);
     setErrors([]);
     setResultImages([]);
-    
+
     // 시작 날짜/시간 구하기
     const [year, month, day] = settings.startDate.split('-').map(Number);
     const [hours, minutes] = settings.startTime.split(':').map(Number);
     const startDateTime = new Date(year, month - 1, day, hours, minutes);
 
     try {
-      const results = await processMetadata(
-        sortedFiles, 
-        startDateTime, 
-        settings, 
-        (completed) => setCompleted(completed)
-      );
-      
+      const results = await processMetadata(sortedFiles, startDateTime, settings, (completed) => setCompleted(completed));
+
       setResultImages(results.images);
       setErrors(results.errors);
-      
+
       // 처리 완료 후 자동으로 결과 섹션으로 이동
       if (results.images.length > 0) {
         setActiveStep(3);
@@ -156,7 +151,7 @@ const App = () => {
         filmInfo: '',
         lens: '',
         lensInfo: '',
-        isoValue: ''
+        isoValue: '',
       });
       setFiles([]);
       setSortedFiles([]);
@@ -169,26 +164,26 @@ const App = () => {
   return (
     <div className="min-h-screen w-full flex flex-col bg-gray-900 text-gray-200">
       <Header />
-      
-      <StepNavigation 
-        activeStep={activeStep} 
-        goToStep={goToStep} 
+
+      <StepNavigation
+        activeStep={activeStep}
+        goToStep={goToStep}
         filesCount={files.length}
         resultsCount={resultImages.length}
         resetForm={resetForm}
       />
-      
+
       <div className="flex-1 p-4 md:p-6 overflow-auto">
         <div className="max-w-6xl mx-auto w-full">
-          <FileSelection 
-            activeStep={activeStep} 
+          <FileSelection
+            activeStep={activeStep}
             onFileSelect={handleFileSelect}
-            sortedFiles={sortedFiles} 
+            sortedFiles={sortedFiles}
             goToStep={goToStep}
             resetForm={resetForm}
           />
-          
-          <MetadataSettings 
+
+          <MetadataSettings
             activeStep={activeStep}
             settings={settings}
             onSettingsChange={handleSettingsChange}
@@ -199,8 +194,8 @@ const App = () => {
             goToStep={goToStep}
             onProcessFiles={processFiles}
           />
-          
-          <ResultsViewer 
+
+          <ResultsViewer
             activeStep={activeStep}
             resultRef={resultRef}
             resultImages={resultImages}
@@ -212,11 +207,11 @@ const App = () => {
             setIsZipCompressing={setIsZipCompressing}
             goToStep={goToStep}
           />
-          
+
           {errors.length > 0 && <ErrorDisplay errors={errors} />}
         </div>
       </div>
-      
+
       <Footer />
     </div>
   );
