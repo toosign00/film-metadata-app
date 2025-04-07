@@ -73,7 +73,7 @@ const FilmMetadataApp = () => {
 
       const droppedFiles = Array.from(e.dataTransfer.files).filter((file) => {
         const ext = file.name.split('.').pop().toLowerCase();
-        return ['jpg', 'jpeg', 'png'].includes(ext);
+        return ['jpg', 'jpeg'].includes(ext);
       });
 
       if (droppedFiles.length > 0) {
@@ -138,7 +138,7 @@ const FilmMetadataApp = () => {
   const handleFileSelect = (e) => {
     const selectedFiles = Array.from(e.target.files).filter((file) => {
       const ext = file.name.split('.').pop().toLowerCase();
-      return ['jpg', 'jpeg', 'png'].includes(ext);
+      return ['jpg', 'jpeg'].includes(ext);
     });
 
     setFiles(selectedFiles);
@@ -508,7 +508,7 @@ const FilmMetadataApp = () => {
                   ref={fileInputRef}
                   onChange={handleFileSelect}
                   multiple
-                  accept=".jpg,.jpeg,.png"
+                  accept=".jpg,.jpeg"
                   className="hidden"
                   aria-describedby="file-format-info"
                 />
@@ -532,7 +532,7 @@ const FilmMetadataApp = () => {
                   {isDragging ? (
                     <div>
                       <p className="text-lg font-medium text-blue-700">파일을 여기에 놓으세요</p>
-                      <p className="text-sm text-blue-600">JPG, JPEG, PNG 파일만 지원됩니다</p>
+                      <p className="text-sm text-blue-600">JPG, JPEG 파일만 지원됩니다</p>
                     </div>
                   ) : files.length > 0 ? (
                     <div>
@@ -547,7 +547,7 @@ const FilmMetadataApp = () => {
                   )}
 
                   <p id="file-format-info" className="mt-2 text-xs text-gray-500">
-                    지원 형식: JPG, JPEG, PNG (최대 10MB)
+                    지원 형식: JPG, JPEG (최대 25MB)
                   </p>
                 </div>
               </div>
