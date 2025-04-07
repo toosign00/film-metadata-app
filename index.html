@@ -1,13 +1,58 @@
 <!doctype html>
-<html lang="en">
+<html lang="ko-KR">
   <head>
+    <!-- 기본 메타 태그 -->
     <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Vite + React</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>필름 사진 메타데이터 설정 도구</title>
+    <meta name="description" content="필름 사진의 메타데이터를 쉽고 빠르게 설정하고 관리할 수 있는 웹앱 도구입니다." />
+    <meta name="keywords" content="필름 사진, 메타데이터, 사진 관리, 이미지 정보, 필름 스캔, 필름, 필름 카메라" />
+    <meta name="author" content="노현수" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://film-metadata-app.vercel.app" />
+
+    <!-- 아이콘 및 파비콘 -->
+    <link rel="icon" href="/favicon.svg" />
+    <link rel="apple-touch-icon" sizes="180x180" href="/apple-touch-icon-180x180.png" />
+    <link rel="apple-touch-icon" sizes="167x167" href="/apple-touch-icon-167x167.png" />
+    <link rel="apple-touch-icon" sizes="152x152" href="/apple-touch-icon-152x152.png" />
+    <link rel="apple-touch-icon" sizes="120x120" href="/apple-touch-icon-120x120.png" />
+
+    <!-- Open Graph 태그 (소셜 미디어 공유용) -->
+    <meta property="og:title" content="필름 사진 메타데이터 설정 도구" />
+    <meta property="og:description" content="필름 사진의 메타데이터를 간편하게 관리하세요" />
+    <meta property="og:image" content="https://film-metadata-app.vercel.app/og-image.png" />
+    <meta property="og:url" content="https://film-metadata-app.vercel.app" />
+    <meta property="og:type" content="website" />
+
+    <!-- Twitter 카드 -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="필름 사진 메타데이터 설정 도구" />
+    <meta name="twitter:description" content="필름 사진의 메타데이터를 간편하게 관리하세요" />
+    <meta name="twitter:image" content="https://film-metadata-app.vercel.app/twitter-image.png" />
+
+    <!-- 애플 기기를 위한 웹 앱 메타 태그 -->
+    <meta name="apple-mobile-web-app-title" content="필름 메타데이터 설정 도구" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="default" />
+
+    <!-- ld+json -->
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "필름 사진 메타데이터 설정 도구",
+        "url": "https://film-metadata-app.vercel.app",
+        "description": "필름 사진의 메타데이터를 쉽고 빠르게 설정하고 관리할 수 있는 웹앱 도구",
+        "applicationCategory": "Utility",
+        "operatingSystem": "All"
+      }
+    </script>
+
+    <!-- 스크립트 로드 -->
+    <script type="module" src="/src/main.jsx"></script>
   </head>
   <body>
+    <noscript>이 앱을 사용하려면 JavaScript가 활성화되어 있어야 합니다.</noscript>
     <div id="root"></div>
-    <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
