@@ -2,6 +2,23 @@ import piexifjs from 'piexifjs';
 import { dataURItoBlob } from './fileUtils';
 
 /**
+ * 렌즈 정보 전처리 함수
+ * @param {string} lensInfo - 원래 렌즈 정보 문자열
+ * @returns {string} 처리된 렌즈 정보 문자열
+ */
+const preprocessLensInfo = (lensInfo) => {
+  if (!lensInfo) return '';
+
+  // 소문자로 변환
+  let processed = lensInfo.toLowerCase();
+
+  // f 다음의 공백 및 점(.) 제거
+  processed = processed.replace(/f[\s.]+(\d+)/i, 'f$1');
+
+  return processed;
+};
+
+/**
  * 메타데이터 설정 함수
  * @param {File} file - 이미지 파일
  * @param {Date} dateTime - 촬영 날짜/시간
@@ -38,14 +55,17 @@ export const setMetadata = async (file, dateTime, settings) => {
         exif[piexifjs.ExifIFD.LensModel] = settings.lens;
         exif[piexifjs.ExifIFD.UserComment] = `Film: ${settings.filmInfo}, Lens: ${settings.lensInfo}`;
 
+        // 렌즈 정보 전처리
+        const processedLensInfo = preprocessLensInfo(settings.lensInfo);
+
         // 초점 거리 추출 및 설정
-        const focalLength = settings.lensInfo.match(/\d+/);
+        const focalLength = processedLensInfo.match(/^(\d+(\.\d+)?)/);
         if (focalLength) {
-          exif[piexifjs.ExifIFD.FocalLength] = [parseInt(focalLength[0]), 1];
+          exif[piexifjs.ExifIFD.FocalLength] = [parseInt(focalLength[1]), 1];
         }
 
-        // F값 추출 및 설정
-        const fNumberMatch = settings.lensInfo.match(/f(\d+\.?\d*)/);
+        // F값 추출 및 설정 - 수정된 정규식
+        const fNumberMatch = processedLensInfo.match(/f(\d+\.?\d*)/);
         if (fNumberMatch) {
           const fNumber = parseFloat(fNumberMatch[1]);
           exif[piexifjs.ExifIFD.FNumber] = [fNumber * 10, 10];
