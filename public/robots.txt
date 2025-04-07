@@ -2,4 +2,4 @@ User-agent: *
 Allow: /
 
 # 사이트맵 위치
-Sitemap: https://film-metadata-app.vercel.app/sitemap.xml
+Sitemap: https://film-metadata.vercel.app/sitemap.xml
