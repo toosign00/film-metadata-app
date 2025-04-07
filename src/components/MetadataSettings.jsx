@@ -9,6 +9,19 @@ const MetadataSettings = ({ activeStep, settings, onSettingsChange, sortedFiles,
     return null;
   }
 
+  // 렌즈 정보 전처리 함수
+  const preprocessLensInfo = (lensInfo) => {
+    if (!lensInfo) return '';
+
+    // 소문자로 변환
+    let processed = lensInfo.toLowerCase();
+
+    // f 다음의 공백 및 점(.) 제거
+    processed = processed.replace(/f[\s.]+(\d+)/i, 'f$1');
+
+    return processed;
+  };
+
   // 엄격한 유효성 검사 함수
   const validateForm = () => {
     const errors = {};
@@ -41,10 +54,19 @@ const MetadataSettings = ({ activeStep, settings, onSettingsChange, sortedFiles,
       errors.lens = '올바른 렌즈 정보를 입력해주세요.';
     }
 
-    // 렌즈 정보 유효성 검사 (초점거리 + f값 형식, 더 다양한 케이스 지원)
-    const lensInfoRegex = /^(\d+(\.\d+)?)(mm)?\s*f\/?\s*(\d+(\.\d+)?)$/;
-    if (!settings.lensInfo || !lensInfoRegex.test(settings.lensInfo)) {
-      errors.lensInfo = '렌즈 정보를 정확히 입력해주세요. 예: 50mm f/1.8, 35mm f2.8, 24mm f/2';
+    // 렌즈 정보 유효성 검사 (초점거리 + f값 형식)
+    const lensInfo = settings.lensInfo;
+    const processedLensInfo = preprocessLensInfo(lensInfo);
+
+    // '/' 문자가 포함된 경우 유효성 검사 실패
+    if (lensInfo && lensInfo.includes('/')) {
+      errors.lensInfo = '렌즈 정보에 "/" 문자를 사용하지 마세요. (예: 50mm f1.8, 28mm f2.8)';
+    } else {
+      // 전처리 후 정규식 패턴 검사
+      const lensInfoRegex = /^(\d+(\.\d+)?)(mm)?\s*f(\d+(\.\d+)?)$/;
+      if (!lensInfo || !lensInfoRegex.test(processedLensInfo)) {
+        errors.lensInfo = '렌즈 정보를 정확히 입력해주세요. (예: 50mm f1.8, 28mm f2.8)';
+      }
     }
 
     // 필름 정보 유효성 검사 (한글, 영문, 숫자, 특수문자 허용)
@@ -76,6 +98,21 @@ const MetadataSettings = ({ activeStep, settings, onSettingsChange, sortedFiles,
     if (validationErrors[name]) {
       const newErrors = { ...validationErrors };
       delete newErrors[name];
+      setValidationErrors(newErrors);
+    }
+  };
+
+  // 렌즈 정보 입력 처리 함수
+  const handleLensInfoChange = (e) => {
+    const { name, value } = e.target;
+
+    // 사용자 입력값 그대로 UI에 표시
+    handleChange(name, value);
+
+    // 유효성 검사 오류 제거
+    if (validationErrors.lensInfo) {
+      const newErrors = { ...validationErrors };
+      delete newErrors.lensInfo;
       setValidationErrors(newErrors);
     }
   };
@@ -235,7 +272,7 @@ const MetadataSettings = ({ activeStep, settings, onSettingsChange, sortedFiles,
                   id="lensInfo"
                   name="lensInfo"
                   value={settings.lensInfo}
-                  onChange={handleInputChange}
+                  onChange={handleLensInfoChange}
                   placeholder="예: 35mm f2.4, 28mm f2.8"
                   className="w-full px-4 py-2.5 bg-gray-800 border text-gray-200 border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm"
                   aria-describedby="lensInfo-help"
@@ -286,8 +323,7 @@ const MetadataSettings = ({ activeStep, settings, onSettingsChange, sortedFiles,
                   value={settings.isoValue}
                   onChange={handleInputChange}
                   placeholder="예: 100, 200, 400, 800"
-                  className="w-full px-4 py-2.5 bg-gray-800 border text-gray-200 border-gray-700 rounded-lg focus:ring-2 focus:ring-blue
-                  500 focus:outline-none shadow-sm"
+                  className="w-full px-4 py-2.5 bg-gray-800 border text-gray-200 border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm"
                   aria-describedby="isoValue-help"
                 />
                 <div className="flex justify-between items-center flex-wrap">
