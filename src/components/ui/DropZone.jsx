@@ -130,7 +130,7 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
         )}
 
         <p id="file-format-info" className="mt-2 text-xs text-gray-500">
-          지원 형식: {supportedExtensionsText} (최대 10MB)
+          지원 형식: {supportedExtensionsText} (최대 25MB)
         </p>
       </div>
     </div>
