@@ -9,7 +9,12 @@ const Footer = () => {
           <br />
           <span className="text-xs text-gray-500">파일은 서버로 업로드되지 않으며, 모든 처리는 로컬에서 이루어집니다.</span>
           <br />
-          <span className="text-xs text-gray-500">&copy; 2025. Hyunsoo Ro. All rights reserved.</span>
+        </p>
+        <p className="mt-2 flex flex-row items-center justify-center gap-2">
+          <span className="text-sm text-gray-500">&copy; 2025. Hyunsoo Ro. All rights reserved.</span>
+          <a className="text-sm" href="mailto:kevinsoo1014@gmail.com?subject=문의드립니다.">
+            kevinsoo1014@gmail.com
+          </a>
         </p>
       </div>
     </footer>
