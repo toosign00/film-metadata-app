@@ -195,7 +195,9 @@ const App = () => {
       </div>
 
       <Footer />
+      <Analytics />
     </div>
+
   );
 };
 
