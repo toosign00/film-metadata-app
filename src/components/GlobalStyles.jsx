@@ -6,7 +6,7 @@ import React from 'react';
  */
 const GlobalStyles = () => {
   return (
-    <style jsx global>{`
+    <style>{`
       /* 브라우저 기본 달력/시간 아이콘 숨기기 */
       input[type='date']::-webkit-calendar-picker-indicator,
       input[type='time']::-webkit-calendar-picker-indicator {

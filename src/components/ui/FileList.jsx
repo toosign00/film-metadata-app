@@ -4,7 +4,7 @@ const FileList = ({ files }) => {
   if (!files || files.length === 0) return null;
 
   return (
-    <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-md h-full flex flex-col" style={{ maxHeight: '18.75rem' }}>
+    <div className="bg-gray-800 rounded-lg border border-gray-700 shadow-md h-full flex flex-col" style={{ maxHeight: '300px' }}>
       <div className="flex justify-between items-center p-3 border-b border-gray-700">
         <h3 className="font-medium text-gray-200">파일 처리 순서</h3>
         <span className="text-sm text-gray-300 bg-gray-700 px-2 py-0.5 rounded-full">{files.length}개</span>
