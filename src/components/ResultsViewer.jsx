@@ -27,12 +27,11 @@ const ResultsViewer = ({
   return (
     <section ref={resultRef} className="mb-8 transition-all" aria-labelledby="results-section">
       <div className="bg-gray-800 border border-gray-700 rounded-xl p-5 md:p-6 shadow-md">
-        <div className="flex justify-between items-center mb-4">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-4">
           <h2 id="results-section" className="text-xl font-bold text-gray-200 flex items-center">
             <span className="flex items-center justify-center bg-blue-600 text-white rounded-full w-6 h-6 text-sm mr-2">3</span>
             {resultImages.length > 0 ? `처리 결과 (${resultImages.length}개 파일)` : '처리 결과'}
           </h2>
-
           {resultImages.length > 0 && (
             <Button
               variant="primary"
@@ -51,8 +50,16 @@ const ResultsViewer = ({
                   </svg>
                 ) : null
               }
+              className="w-full sm:w-auto"
             >
-              {processing && zipProgress > 0 ? `${zipProgress}%` : 'ZIP으로 다운로드'}
+              {processing && zipProgress > 0 ? (
+                `${zipProgress}%`
+              ) : (
+                <>
+                  <span className="hidden sm:inline">ZIP으로 다운로드</span>
+                  <span className="inline sm:hidden">ZIP 다운로드</span>
+                </>
+              )}
             </Button>
           )}
         </div>
