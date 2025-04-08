@@ -150,7 +150,7 @@ const MetadataSettings = ({ activeStep, settings, onSettingsChange, sortedFiles,
 
               <div className="mb-4 relative">
                 <label htmlFor="startDate" className="block text-gray-300 font-medium mb-1 text-sm">
-                  시작 날짜
+                  날짜
                 </label>
                 <CustomDatePicker
                   selected={settings.startDate}
@@ -164,7 +164,7 @@ const MetadataSettings = ({ activeStep, settings, onSettingsChange, sortedFiles,
                 />
                 <div className="flex justify-between items-center flex-wrap">
                   <p id="startDate-help" className="mt-1 text-xs text-gray-500">
-                    첫 번째 사진의 촬영 날짜
+                    첫 번째 사진의 촬영 날짜 (모든 사진에 동일하게 적용됩니다)
                   </p>
                   {validationErrors.startDate && (
                     <p id="startDate-error" className="mt-1 text-xs text-red-500" role="alert">
@@ -176,7 +176,7 @@ const MetadataSettings = ({ activeStep, settings, onSettingsChange, sortedFiles,
 
               <div className="relative">
                 <label htmlFor="startTime" className="block text-gray-300 font-medium mb-1 text-sm">
-                  시작 시간
+                  시간
                 </label>
                 <CustomDatePicker
                   selected={new Date(settings.startTime)}

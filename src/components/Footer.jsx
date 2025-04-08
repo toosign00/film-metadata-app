@@ -7,7 +7,7 @@ const Footer = () => {
         <p className='text-xs sm:text-base'>
           이 도구는 이미지 파일의 EXIF 메타데이터를 브라우저에서 직접 설정합니다.
           <br />
-          <span className="text-xs text-gray-500">파일은 서버로 업로드되지 않으며, 모든 처리는 로컬에서 이루어집니다.</span>
+          <span className="text-xs text-gray-500">파일은 서버로 업로드되지 않으며, 모든 처리는 브라우저에서만 이루어집니다.</span>
           <br />
         </p>
         <p className="mt-2 flex flex-row items-center justify-center gap-2">
