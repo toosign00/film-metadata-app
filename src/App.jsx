@@ -9,6 +9,7 @@ import Footer from './components/Footer';
 import GlobalStyles from './components/GlobalStyles';
 import { naturalSort } from './utils/fileUtils';
 import { processMetadata } from './utils/metadataUtils';
+import { Analytics } from "@vercel/analytics/react"
 
 const App = () => {
   // HTML body에 스타일 적용 및 언어 설정
