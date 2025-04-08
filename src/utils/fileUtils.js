@@ -80,7 +80,7 @@ export const downloadAllAsZip = async (resultImages, setProcessing, setZipProgre
       zip.file(image.name, blob);
 
       // 진행률 업데이트
-      setZipProgress(Math.round(((i + 1) / resultImages.length) * 50));
+      setZipProgress(Math.round(((i + 1) / resultImages.length) * 100));
     }
 
     // ZIP 파일 생성
