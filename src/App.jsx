@@ -16,7 +16,6 @@ const App = () => {
     // 배경색 설정
     document.body.classList.add('bg-gray-900');
 
-
     return () => {
       document.body.classList.remove('bg-gray-900');
     };
