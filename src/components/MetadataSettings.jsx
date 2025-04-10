@@ -70,7 +70,7 @@ const MetadataSettings = ({ activeStep, settings, onSettingsChange, sortedFiles,
     }
 
     // 필름 정보 유효성 검사 (한글, 영문, 숫자, 특수문자 허용)
-    const filmInfoRegex = /^[a-zA-Z0-9가-힣\s]+\s\d+$/;
+    const filmInfoRegex = /^[a-zA-Z0-9가-힣\s]+(\s\d+)?$/;
     if (!settings.filmInfo || !filmInfoRegex.test(settings.filmInfo)) {
       errors.filmInfo = '형식: Kodak Portra 400';
     }
