@@ -1,4 +1,4 @@
-import { zipSync, strToU8 } from 'fflate';
+import JSZip from 'jszip';
 
 /**
  * 자연어 정렬 함수
@@ -56,67 +56,63 @@ export const downloadFile = (image) => {
 /**
  * 모든 결과 파일 다운로드 (ZIP 파일로)
  */
-
 export const downloadAllAsZip = async (resultImages, setProcessing, setZipProgress, setIsZipCompressing) => {
   if (resultImages.length === 0) {
     alert('다운로드할 이미지가 없습니다.');
     return;
   }
 
+  // 처리 시작 알림
   setProcessing(true);
   setZipProgress(0);
   setIsZipCompressing(true);
 
-  // 50장씩 나누기
-  const chunkSize = 50;
-  const chunks = [];
-  for (let i = 0; i < resultImages.length; i += chunkSize) {
-    chunks.push(resultImages.slice(i, i + chunkSize));
-  }
-
   try {
-    for (let chunkIndex = 0; chunkIndex < chunks.length; chunkIndex++) {
-      const chunk = chunks[chunkIndex];
+    const zip = new JSZip();
 
-      const zipObj = {};
+    // 각 이미지 파일을 ZIP에 추가
+    for (let i = 0; i < resultImages.length; i++) {
+      const image = resultImages[i];
+      const response = await fetch(image.url);
+      const blob = await response.blob();
 
-      for (let i = 0; i < chunk.length; i++) {
-        const img = chunk[i];
-        const res = await fetch(img.url);
-        const blob = await res.blob();
-        const arrayBuffer = await blob.arrayBuffer();
-        const uint8Arr = new Uint8Array(arrayBuffer);
+      // ZIP 파일에 추가
+      zip.file(image.name, blob);
 
-        zipObj[img.name] = [uint8Arr];
-
-        const percent = Math.round(((i + 1) / chunk.length) * 100);
-        setZipProgress(percent);
-      }
-
-      const zipData = zipSync(zipObj, {
-        level: 6,
-      });
-
-      const now = new Date();
-      const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
-      const zipFilename = `film_metadata_part${chunkIndex + 1}_${timestamp}.zip`;
-
-      const blob = new Blob([zipData], { type: 'application/zip' });
-      const url = URL.createObjectURL(blob);
-
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = zipFilename;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-      URL.revokeObjectURL(url); // 메모리 해제
+      // 진행률 업데이트
+      setZipProgress(Math.round(((i + 1) / resultImages.length) * 100));
     }
 
-    alert(`${resultImages.length}개 파일을 2개의 ZIP 파일로 압축 완료했습니다.`);
-  } catch (err) {
-    console.error('ZIP 압축 실패:', err);
-    alert('압축 중 오류가 발생했습니다.');
+    // ZIP 파일 생성
+    setIsZipCompressing(true);
+    const zipBlob = await zip.generateAsync({
+      type: 'blob',
+      compression: 'DEFLATE',
+      compressionOptions: { level: 6 },
+      onUpdate: (metadata) => {
+        if (metadata.percent) {
+          setZipProgress(50 + Math.round(metadata.percent / 2));
+        }
+      },
+    });
+
+    // 현재 날짜와 시간을 포함한 ZIP 파일명 생성
+    const now = new Date();
+    const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
+    const zipFileName = `film_metadata_${timestamp}.zip`;
+
+    // ZIP 파일 다운로드
+    const downloadLink = document.createElement('a');
+    downloadLink.href = URL.createObjectURL(zipBlob);
+    downloadLink.download = zipFileName;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
+
+    alert(`${resultImages.length}개 파일이 성공적으로 ZIP으로 압축되었습니다.`);
+  } catch (error) {
+    console.error('ZIP 생성 중 오류 발생:', error);
+    alert(`ZIP 파일 생성 중 오류가 발생했습니다: ${error.message}`);
   } finally {
     setProcessing(false);
     setZipProgress(0);
