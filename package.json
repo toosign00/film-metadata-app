@@ -20,6 +20,7 @@
     "piexifjs": "^1.0.6",
     "react": "^19.0.0",
     "react-datepicker": "^8.2.1",
+    "react-device-detect": "^2.2.3",
     "react-dom": "^19.0.0",
     "shadcn-ui": "^0.9.5"
   },
