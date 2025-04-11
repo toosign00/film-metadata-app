@@ -1,5 +1,5 @@
 import piexifjs from 'piexifjs';
-import { dataURItoBlob } from './fileUtils';
+import { dataURItoBlob } from './convertUtils';
 
 /**
  * 렌즈 정보 전처리 함수
