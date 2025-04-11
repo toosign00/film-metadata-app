@@ -10,7 +10,7 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
   const SUPPORTED_IMAGE_EXTENSIONS = ['jpg', 'jpeg'];
 
   // 환경에 따른 최대 파일 수 설정
-  const maxFiles = isMobile ? 45 : 100;
+  const maxFiles = isMobile ? 40 : 100;
 
   // 드래그 앤 드롭 이벤트 리스너 설정
   useEffect(() => {
@@ -141,7 +141,7 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
             지원 형식: {supportedExtensionsText} (최대 15MB)
           </p>
           <p className="mt-2 text-xs text-gray-500">
-            최대 파일 수: {isMobile ? '45개' : '100개'}
+            최대 파일 수: {isMobile ? '40개' : '100개'}
             {isMobile && <span className="ml-1">(모바일 환경)</span>}
           </p>
         </div>
