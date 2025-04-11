@@ -7,20 +7,10 @@ import ResultsViewer from './components/ResultsViewer';
 import ErrorDisplay from './components/ErrorDisplay';
 import Footer from './components/Footer';
 import GlobalStyles from './components/GlobalStyles';
-import { naturalSort } from './utils/fileUtils';
+import { naturalSort } from './utils';
 import { processMetadata } from './utils/metadataUtils';
 
 const App = () => {
-  // HTML body에 스타일 적용 및 언어 설정
-  useEffect(() => {
-    // 배경색 설정
-    document.body.classList.add('bg-gray-900');
-
-    return () => {
-      document.body.classList.remove('bg-gray-900');
-    };
-  }, []);
-
   const [files, setFiles] = useState([]);
   const [sortedFiles, setSortedFiles] = useState([]);
   const [settings, setSettings] = useState({
