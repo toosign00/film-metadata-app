@@ -1,4 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
+import { isMobile } from 'react-device-detect';
 
 const DropZone = ({ onFileSelect, filesCount = 0 }) => {
   const [isDragging, setIsDragging] = useState(false);
@@ -7,6 +8,9 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
 
   // 지원하는 이미지 확장자 배열
   const SUPPORTED_IMAGE_EXTENSIONS = ['jpg', 'jpeg'];
+
+  // 환경에 따른 최대 파일 수 설정
+  const maxFiles = isMobile ? 45 : 100;
 
   // 드래그 앤 드롭 이벤트 리스너 설정
   useEffect(() => {
@@ -43,7 +47,9 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
       });
 
       if (droppedFiles.length > 0) {
-        onFileSelect(droppedFiles);
+        // 최대 파일 수 제한 적용
+        const selectedFiles = droppedFiles.slice(0, maxFiles);
+        onFileSelect(selectedFiles);
       }
     };
 
@@ -58,7 +64,7 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
       dropArea.removeEventListener('dragleave', handleDragLeave);
       dropArea.removeEventListener('drop', handleDrop);
     };
-  }, [onFileSelect]);
+  }, [onFileSelect, maxFiles]);
 
   // 파일 선택 핸들러
   const handleFileSelect = (e) => {
@@ -68,7 +74,9 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
     });
 
     if (selectedFiles.length > 0) {
-      onFileSelect(selectedFiles);
+      // 최대 파일 수 제한 적용
+      const limitedFiles = selectedFiles.slice(0, maxFiles);
+      onFileSelect(limitedFiles);
     }
   };
 
@@ -128,9 +136,15 @@ const DropZone = ({ onFileSelect, filesCount = 0 }) => {
           </div>
         )}
 
-        <p id="file-format-info" className="mt-2 text-xs text-gray-500">
-          지원 형식: {supportedExtensionsText} (최대 25MB)
-        </p>
+        <div>
+          <p id="file-format-info" className="mt-2 text-xs text-gray-500">
+            지원 형식: {supportedExtensionsText} (최대 15MB)
+          </p>
+          <p className="mt-2 text-xs text-gray-500">
+            최대 파일 수: {isMobile ? '45개' : '100개'}
+            {isMobile && <span className="ml-1">(모바일 환경)</span>}
+          </p>
+        </div>
       </div>
     </div>
   );
