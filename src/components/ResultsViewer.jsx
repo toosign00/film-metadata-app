@@ -2,7 +2,7 @@ import React from 'react';
 import ImageCard from './ui/ImageCard';
 import ProgressBar from './ui/ProgressBar';
 import Button from './ui/Button';
-import { downloadFile, downloadAllAsZip } from '../utils/fileUtils';
+import { downloadFile, downloadAllAsZip } from '../utils';
 
 const ResultsViewer = ({
   activeStep,
