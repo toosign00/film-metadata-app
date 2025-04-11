@@ -1,4 +1,5 @@
 import { useState, useRef, useEffect } from 'react';
+import { isMobile as detectMobile } from 'react-device-detect';
 
 /**
  * 파일 드래그 앤 드롭을 위한 커스텀 훅
@@ -6,20 +7,26 @@ import { useState, useRef, useEffect } from 'react';
  * @param {Object} options - 추가 옵션
  * @param {Array} options.allowedExtensions - 허용된 파일 확장자 배열
  * @param {number} options.maxFileSize - 최대 파일 크기 (바이트)
- * @param {number} options.maxFiles - 최대 선택 가능한 파일 수
+ * @param {number} options.maxDesktopFiles - 데스크톱에서 최대 선택 가능한 파일 수
+ * @param {number} options.maxMobileFiles - 모바일에서 최대 선택 가능한 파일 수
  */
 const useFileDrop = (
   onFileSelect,
   {
     allowedExtensions = ['jpg', 'jpeg'],
-    maxFileSize = 25 * 1024 * 1024, // 25MB
-    maxFiles = 100, // 최대 파일 개수 100개로 제한
+    maxFileSize = 15 * 1024 * 1024, // 15MB
+    maxDesktopFiles = 100, // 데스크톱에서 최대 파일 개수 100개로 제한
+    maxMobileFiles = 45, // 모바일에서 최대 파일 개수 45개로 제한
   } = {}
 ) => {
   const [isDragging, setIsDragging] = useState(false);
   const [errors, setErrors] = useState([]);
   const fileInputRef = useRef(null);
   const dropAreaRef = useRef(null);
+  // react-device-detect를 사용하여 모바일 여부 결정
+  const [isMobile, setIsMobile] = useState(detectMobile);
+  // react-device-detect의 결과를 기반으로 최대 파일 수 계산
+  const maxFiles = isMobile ? maxMobileFiles : maxDesktopFiles;
 
   // 유효한 파일인지 확인하는 헬퍼 함수
   const validateFile = (file) => {
@@ -80,8 +87,11 @@ const useFileDrop = (
       });
 
       // 최대 파일 수 제한
-      const selectedFiles = validFiles.slice(0, maxFiles);
+      if (validFiles.length > maxFiles) {
+        fileErrors.push(`최대 ${maxFiles}개의 파일만 선택할 수 있습니다.`);
+      }
 
+      const selectedFiles = validFiles.slice(0, maxFiles);
       if (selectedFiles.length > 0) {
         onFileSelect(selectedFiles);
       }
@@ -122,9 +132,12 @@ const useFileDrop = (
       }
     });
 
-    // 최대 파일 수 제한
-    const finalSelectedFiles = validFiles.slice(0, maxFiles);
+    // 최대 파일 수 제한을 초과할 경우 경고 메시지 추가
+    if (validFiles.length > maxFiles) {
+      fileErrors.push(`최대 ${maxFiles}개의 파일만 선택할 수 있습니다.`);
+    }
 
+    const finalSelectedFiles = validFiles.slice(0, maxFiles);
     if (finalSelectedFiles.length > 0) {
       onFileSelect(finalSelectedFiles);
     }
@@ -153,6 +166,8 @@ const useFileDrop = (
     openFileDialog,
     errors,
     clearErrors,
+    isMobile,
+    maxFiles,
   };
 };
 
