@@ -1,6 +1,7 @@
 import { zip } from 'fflate';
 
-// 로깅 설정 - 필요 없으면 false로 설정
+// 로그 메세지 출력 여부 설정 true 는 출력, false 는 출력 안함
+// **************중요************** 배포 시에는 false로 설정해야 함
 const ENABLE_LOGGING = false;
 
 /**
