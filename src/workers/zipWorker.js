@@ -35,8 +35,7 @@ self.onmessage = (event) => {
     log(`메시지 수신: ${type}`);
     switch (type) {
       case 'START_ZIP':
-        // 초기화
-        cleanupResources();
+        // 초기화 (cleanupResources 호출 삭제)
         self.postMessage({ type: 'READY' });
         break;
       case 'ADD_FILE':
@@ -58,39 +57,7 @@ self.onmessage = (event) => {
   }
 };
 
-/**
- * 리소스 정리 함수
- */
-function cleanupResources() {
-  // 모든 파일 데이터 정리
-  for (const key in files) {
-    files[key] = null;
-    delete files[key];
-  }
-
-  // 모든 청크 데이터 정리
-  for (const key in fileChunks) {
-    if (fileChunks[key] && fileChunks[key].chunks) {
-      // 각 청크 배열 참조 해제
-      for (let i = 0; i < fileChunks[key].chunks.length; i++) {
-        fileChunks[key].chunks[i] = null;
-      }
-      fileChunks[key].chunks = null;
-    }
-    delete fileChunks[key];
-  }
-
-  fileCount = 0;
-
-  // GC 힌트
-  if (typeof self.gc === 'function') {
-    try {
-      self.gc();
-    } catch (e) {
-      // GC 호출 실패는 무시
-    }
-  }
-}
+// cleanupResources 함수 삭제
 
 /**
  * 파일 추가 처리
@@ -135,9 +102,6 @@ function handleAddFile(payload) {
         isChunk: false,
       },
     });
-
-    // 메모리 관리: 참조 변수 해제
-    fileData = null;
   } catch (error) {
     log(`파일 추가 중 오류: ${error.message}`);
     self.postMessage({
@@ -210,9 +174,6 @@ function handleAddFileChunk(payload) {
       },
     });
 
-    // 메모리 관리: 참조 변수 해제
-    chunkData = null;
-
     // 마지막 청크이거나 모든 청크를 받았으면 파일 결합
     if (isLastChunk || fileChunks[originalName].receivedChunks === totalChunks) {
       combineChunks(originalName);
@@ -244,14 +205,10 @@ function combineChunks(originalName) {
     const combinedData = new Uint8Array(totalSize);
     let offset = 0;
 
-    // 메모리 최적화: 복사 즉시 해제
     for (let i = 0; i < fileInfo.chunks.length; i++) {
       const chunk = fileInfo.chunks[i];
       combinedData.set(chunk, offset);
       offset += chunk.length;
-
-      // 복사 후 즉시 청크 메모리 해제
-      fileInfo.chunks[i] = null;
     }
 
     // 결합된 파일 저장
@@ -268,49 +225,42 @@ function combineChunks(originalName) {
         isChunk: false,
       },
     });
-
-    // 메모리에서 청크 정리
-    delete fileChunks[originalName];
-
-    // 메모리 관리: 청크 배열 메모리 해제
-    fileInfo.chunks = null;
   } catch (error) {
     log(`청크 결합 중 오류: ${error.message}`);
     throw error; // 상위 함수에서 처리
   }
 }
 
-/**
- * ZIP 파일 생성 완료 처리
- */
 function handleFinishZip() {
   try {
-    // 남은 청크 처리 시도
+    // 남은 청크 처리 시도 (기존 코드 유지)
     for (const originalName in fileChunks) {
       try {
         if (fileChunks[originalName].receivedChunks === fileChunks[originalName].totalChunks) {
           combineChunks(originalName);
         } else {
-          log(`불완전한 청크 세트 무시: ${originalName} (${fileChunks[originalName].receivedChunks}/${fileChunks[originalName].totalChunks})`);
+          log(`불완전한 청크 세트 무시: ${originalName}`);
         }
       } catch (error) {
         log(`남은 청크 처리 중 오류 (${originalName}): ${error.message}`);
-        // 개별 파일 오류는 무시하고 계속 진행
       }
     }
 
     // 파일 존재 확인
-    if (fileCount === 0 || Object.keys(files).length === 0) {
-      throw new Error('압축할 파일이 없습니다. 재다운로드를 진행하시려면 메타데이터 설정을 다시 진행 해주세요.');
+    if (Object.keys(files).length === 0) {
+      throw new Error('압축할 파일이 없습니다.');
     }
+
+    // 실제 ZIP에 포함된 파일 수 계산
+    const actualFileCount = Object.keys(files).length;
 
     // 총 데이터 크기 계산
     const totalSize = Object.values(files).reduce((sum, file) => sum + file.length, 0);
 
-    // 적응적 압축 레벨 설정: 파일 크기가 크면 압축률보다 속도 우선
+    // 압축 레벨 설정
     const compressionLevel = totalSize > 50 * 1024 * 1024 ? 3 : 6;
 
-    log(`ZIP 생성 시작 (${fileCount}개 파일, 총 ${totalSize} 바이트, 압축 레벨: ${compressionLevel})`);
+    log(`ZIP 생성 시작 (${actualFileCount}개 파일, 총 ${totalSize} 바이트)`);
 
     // 압축 시작 알림
     self.postMessage({
@@ -318,7 +268,7 @@ function handleFinishZip() {
       payload: { percent: 0 },
     });
 
-    // fflate의 zip 함수로 압축 수행
+    // ZIP 압축
     zip(files, { level: compressionLevel }, (err, data) => {
       if (err) {
         self.postMessage({
@@ -335,20 +285,17 @@ function handleFinishZip() {
       });
 
       // 압축 데이터 전송
-      log(`ZIP 생성 완료: ${data.length} 바이트`);
+      log(`ZIP 생성 완료: ${data.length} 바이트, 파일 수: ${actualFileCount}`);
       self.postMessage(
         {
           type: 'COMPLETE',
           payload: {
             zipData: data.buffer,
-            fileCount,
+            fileCount: actualFileCount, // 변경된 부분
           },
         },
-        [data.buffer] // Transferable 객체로 전송 (성능 최적화)
+        [data.buffer]
       );
-
-      // 메모리 정리
-      cleanupResources();
     });
   } catch (error) {
     log(`ZIP 완료 중 오류: ${error.message}`);

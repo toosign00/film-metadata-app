@@ -14,7 +14,7 @@ const debug = (message, data) => {
   }
 };
 
-// 다운로드 상태 관리를 위한 변수
+// 다운로드 상태 관리를 위한 변수 - 메모리 해제 로직 삭제로 이 변수는 항상 false
 let isUrlRevoked = false;
 
 /**
@@ -59,7 +59,7 @@ export const downloadFile = (image) => {
       throw new Error('다운로드할 이미지 정보가 없습니다');
     }
 
-    // URL이 이미 해제되었는지 확인
+    // URL이 이미 해제되었는지 확인 로직은 유지 (isUrlRevoked는 항상 false)
     if (isUrlRevoked) {
       alert('다운로드 URL이 만료되었습니다. 메타데이터 설정부터 다시 진행해주세요.');
       return;
@@ -72,9 +72,9 @@ export const downloadFile = (image) => {
     a.click();
     document.body.removeChild(a);
 
-    // 메모리 최적화: URL 즉시 해제
-    URL.revokeObjectURL(image.url);
-    isUrlRevoked = true; // URL이 해제되었음을 표시
+    // 메모리 해제 로직 삭제
+    // URL.revokeObjectURL(image.url);
+    // isUrlRevoked = true;
   } catch (error) {
     console.error('[DownloadUtil] 파일 다운로드 오류:', error);
     alert(`파일 다운로드 중 오류가 발생했습니다: ${error.message}`);
@@ -95,7 +95,7 @@ export const downloadAllAsZip = async (resultImages, setProcessing, setZipProgre
     return;
   }
 
-  // URL이 이미 해제되었는지 확인
+  // URL이 이미 해제되었는지 확인 (isUrlRevoked는 항상 false)
   if (isUrlRevoked) {
     alert('다운로드 URL이 만료되었습니다. 메타데이터 설정부터 다시 진행해주세요.');
     return;
@@ -339,8 +339,6 @@ export const downloadAllAsZip = async (resultImages, setProcessing, setZipProgre
           );
         }
 
-        // 여기서는 아직 URL을 해제하지 않음 (다운로드 완료 후 해제하도록 변경)
-
         // 배치 내 처리 간격 (작은 지연)
         if (batchIndex > 0 && batchIndex % 2 === 0) {
           await new Promise((resolve) => setTimeout(resolve, 10));
@@ -403,9 +401,6 @@ export const downloadAllAsZip = async (resultImages, setProcessing, setZipProgre
           await new Promise((resolve) => setTimeout(resolve, 5));
         }
       }
-
-      // 메모리 관리: 참조 해제
-      blob = null;
     };
 
     /**
@@ -426,8 +421,9 @@ export const downloadAllAsZip = async (resultImages, setProcessing, setZipProgre
       const blob = new Blob([zipData], { type: 'application/zip' });
       downloadZipFile(blob, fileCount || validImages.length);
 
-      // 리소스 정리
-      cleanup();
+      // 상태만 업데이트
+      updateProcessing(false);
+      updateIsZipCompressing(false);
     };
 
     /**
@@ -437,14 +433,8 @@ export const downloadAllAsZip = async (resultImages, setProcessing, setZipProgre
     const handleError = (message) => {
       debug(`오류 발생: ${message}`);
       alert(`ZIP 파일 생성 중 오류가 발생했습니다: ${message}`);
-      cleanup();
-    };
 
-    /**
-     * 리소스 정리
-     */
-    const cleanup = () => {
-      // 워커 종료
+      // cleanup() 함수 호출 삭제, 대신 필수 상태 업데이트만 유지
       if (worker) {
         try {
           worker.terminate();
@@ -454,23 +444,8 @@ export const downloadAllAsZip = async (resultImages, setProcessing, setZipProgre
         worker = null;
       }
 
-      // 상태 업데이트
       updateProcessing(false);
       updateIsZipCompressing(false);
-
-      // 메모리 정리 개선
-      for (let i = 0; i < validImages.length; i++) {
-        try {
-          if (validImages[i] && validImages[i].url) {
-            URL.revokeObjectURL(validImages[i].url);
-          }
-        } catch (e) {
-          // 무시
-        }
-      }
-
-      // URL 해제 상태 설정
-      isUrlRevoked = true;
     };
   } catch (error) {
     debug('ZIP 압축 중 오류:', error);
@@ -511,15 +486,6 @@ const downloadZipFile = (blob, fileCount) => {
     document.body.appendChild(a);
     a.click();
     document.body.removeChild(a);
-
-    // 메모리 정리 - URL 즉시 해제
-    setTimeout(() => {
-      URL.revokeObjectURL(url);
-      blob = null;
-    }, 100);
-
-    // URL 해제 상태 설정
-    isUrlRevoked = true;
 
     alert(`${fileCount}개 파일이 성공적으로 ZIP으로 압축되었습니다.`);
   } catch (error) {
