@@ -19,7 +19,7 @@ const log = (message, data) => {
   }
 };
 
-let zip = null;
+let zipInstance = null;
 const fileStreams = new Map();
 
 // 파일 저장소
@@ -61,7 +61,7 @@ self.onmessage = async (event) => {
 
 function handleStartZip() {
   try {
-    zip = new Zip((err, data, final) => {
+    zipInstance = new Zip((err, data, final) => {
       if (err) {
         throw new Error(`ZIP 스트림 처리 중 오류: ${err.message}`);
       }
@@ -87,7 +87,7 @@ function handleStartZip() {
 
 async function handleFileChunk(payload) {
   try {
-    if (!zip) {
+    if (!zipInstance) {
       throw new Error('ZIP 스트림이 초기화되지 않았습니다');
     }
 
@@ -95,7 +95,7 @@ async function handleFileChunk(payload) {
 
     if (!fileStreams.has(name)) {
       const streamingFile = new ZipPassThrough(name);
-      zip.add(streamingFile);
+      zipInstance.add(streamingFile);
       fileStreams.set(name, streamingFile);
       log(`새로운 파일 스트림 생성: ${name}`);
     }
@@ -129,7 +129,7 @@ async function handleFileChunk(payload) {
 
 function handleFinishZip() {
   try {
-    if (!zip) {
+    if (!zipInstance) {
       throw new Error('ZIP 스트림이 초기화되지 않았습니다');
     }
 
@@ -139,7 +139,7 @@ function handleFinishZip() {
     }
 
     log('ZIP 생성 완료');
-    zip.end();
+    zipInstance.end();
   } catch (error) {
     log(`ZIP 종료 중 오류: ${error.message}`);
     throw error;
