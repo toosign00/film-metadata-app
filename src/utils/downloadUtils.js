@@ -86,7 +86,7 @@ const downloadZipFile = (blob, fileCount) => {
 
     if (isChrome) {
       debug('Chrome 브라우저 감지됨, 특별 처리 적용');
-
+      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = zipFileName;
