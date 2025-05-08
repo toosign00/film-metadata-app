@@ -203,18 +203,18 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
             response = await fetch(image.url, { signal: controller.signal });
             clearTimeout(timeoutId);
 
-            if (response.ok) break;
-            retryCount++;
-            await new Promise((resolve) => setTimeout(resolve, STREAMING_OPTIONS.retryDelay * retryCount));
+            if (response.ok) {
+              break;
+            }
+            throw new Error('응답이 올바르지 않습니다');
           } catch (error) {
-            if (retryCount >= STREAMING_OPTIONS.maxFetchRetries) throw error;
             retryCount++;
+            if (retryCount > STREAMING_OPTIONS.maxFetchRetries) {
+              throw new Error(`파일 다운로드 실패 (${retryCount}회 시도): ${fileName}`);
+            }
             await new Promise((resolve) => setTimeout(resolve, STREAMING_OPTIONS.retryDelay * retryCount));
+            continue;
           }
-        }
-
-        if (!response || !response.ok) {
-          throw new Error(`파일 다운로드 실패: ${fileName}`);
         }
 
         const blob = await response.blob();
