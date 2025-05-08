@@ -12,7 +12,7 @@ import GlobalStyles from '@/styles/GlobalStyles';
  */
 const MainLayout = ({ children }) => {
   return (
-    <div className="min-h-screen w-full flex flex-col bg-gray-900 text-gray-200">
+    <div className="min-h-screen w-full flex flex-col bg-gray-900 text-gray-200 overflow-x-hidden">
       <GlobalStyles />
       <Header />
       {children}
