@@ -1,8 +1,6 @@
 import React from 'react';
-import ImageCard from './ui/ImageCard';
-import ProgressBar from './ui/ProgressBar';
-import Button from './ui/Button';
-import { downloadFile, downloadAllAsZip } from '../utils';
+import { ImageCard, ProgressBar, Button } from '../../ui';
+import { downloadFile, downloadAllAsZip } from '../../../utils';
 
 const ResultsViewer = ({
   activeStep,
@@ -50,14 +48,13 @@ const ResultsViewer = ({
                   </svg>
                 ) : null
               }
-              className="w-full sm:w-auto"
+              className="w-full sm:w-auto flex justify-center items-center h-10"
             >
               {processing && zipProgress > 0 ? (
                 `${zipProgress}%`
               ) : (
                 <>
-                  <span className="hidden sm:inline">ZIP으로 다운로드</span>
-                  <span className="inline sm:hidden">ZIP 다운로드</span>
+                  <span className="inline">ZIP 다운로드</span>
                 </>
               )}
             </Button>
