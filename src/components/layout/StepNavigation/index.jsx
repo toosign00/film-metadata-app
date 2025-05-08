@@ -2,7 +2,7 @@ import React from 'react';
 
 const StepNavigation = ({ activeStep, goToStep, filesCount, resultsCount, resetForm }) => {
   return (
-    <div className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700 px-4 py-3 shadow-md">
+    <nav className="sticky top-0 z-10 bg-gray-800 border-b border-gray-700 px-4 py-3 shadow-md">
       <div className="max-w-6xl mx-auto">
         <div className="flex justify-between items-center">
           <div className="flex space-x-1 w-full">
@@ -65,7 +65,7 @@ const StepNavigation = ({ activeStep, goToStep, filesCount, resultsCount, resetF
           </button>
         </div>
       </div>
-    </div>
+    </nav>
   );
 };
 
