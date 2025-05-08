@@ -13,14 +13,19 @@ const debug = (message, data) => {
   }
 };
 
+// Safari 브라우저 감지 함수
+const isSafari = () => {
+  return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
+};
+
 // ZIP 스트리밍 설정
 const STREAMING_OPTIONS = {
   // 동시 처리할 파일 수
   batchSize: 10,
   // 배치 간 딜레이 (ms)
   delayBetweenBatches: 100,
-  // 청크 크기 (2MB)
-  chunkSize: 2 * 1024 * 1024,
+  // 청크 크기 - Safari에서는 더 작은 값 사용
+  chunkSize: isSafari() ? 512 * 1024 : 2 * 1024 * 1024,
   // 최대 재시도 횟수
   maxFetchRetries: 3,
   // 요청 타임아웃 (ms)
@@ -41,9 +46,15 @@ export const downloadFile = (image) => {
     const a = document.createElement('a');
     a.href = image.url;
     a.download = image.name || 'download';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
+
+    // Safari에서는 다른 방식으로 처리
+    if (isSafari()) {
+      window.location.href = image.url;
+    } else {
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
   } catch (error) {
     console.error('[DownloadUtil] 파일 다운로드 오류:', error);
     alert(`파일 다운로드 중 오류가 발생했습니다: ${error.message}`);
@@ -57,17 +68,30 @@ const downloadZipFile = (blob, fileCount) => {
     const zipFileName = `film_metadata_${timestamp}.zip`;
 
     const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = zipFileName;
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
 
-    // URL 객체 해제
-    setTimeout(() => {
-      URL.revokeObjectURL(url);
-    }, 1000);
+    // Safari 브라우저 감지 및 별도 처리
+    if (isSafari()) {
+      debug('Safari 브라우저 감지됨, 대체 다운로드 방식 사용');
+
+      // Safari용 다운로드 메서드 - 현재 창에서 URL 열기
+      window.location.href = url;
+    } else {
+      // 다른 브라우저용 표준 다운로드 메서드
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = zipFileName;
+      document.body.appendChild(a);
+      a.click();
+      document.body.removeChild(a);
+    }
+
+    // URL 객체 해제 - Safari에서는 더 긴 시간 설정
+    setTimeout(
+      () => {
+        URL.revokeObjectURL(url);
+      },
+      isSafari() ? 5000 : 1000
+    ); // Safari에서는 더 긴 시간 대기
 
     alert(`${fileCount}개 파일이 성공적으로 ZIP으로 압축되었습니다.`);
   } catch (error) {
@@ -243,7 +267,9 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
           );
 
           cursor = nextWindow;
-          await new Promise((resolve) => setTimeout(resolve, 10));
+
+          // Safari에서는 더 긴 딜레이 사용
+          await new Promise((resolve) => setTimeout(resolve, isSafari() ? 30 : 10));
         }
       } catch (error) {
         console.error(`파일 처리 오류 (${image.name || '이미지'}):`, error);
