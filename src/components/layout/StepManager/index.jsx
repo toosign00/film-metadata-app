@@ -52,7 +52,7 @@ const StepManager = () => {
         resetForm={resetForm}
       />
 
-      <div className="flex-1 p-4 md:p-6 overflow-auto">
+      <main className="flex-1 p-4 md:p-6 overflow-auto">
         <div className="max-w-6xl mx-auto w-full">
           <FileSelection
             activeStep={activeStep}
@@ -89,7 +89,7 @@ const StepManager = () => {
 
           {errors.length > 0 && <ErrorDisplay errors={errors} />}
         </div>
-      </div>
+      </main>
     </>
   );
 };
