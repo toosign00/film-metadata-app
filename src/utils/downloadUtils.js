@@ -90,8 +90,13 @@ const downloadZipFile = (blob, fileCount) => {
     const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
     const zipFileName = `film_metadata_${timestamp}.zip`;
 
+    // MIME 타입 변경
+    const blobWithCorrectType = new Blob([blob], {
+      type: 'application/octet-stream',
+    });
+
     debug('FileSaver.js를 사용하여 다운로드 시작');
-    saveAs(blob, zipFileName);
+    saveAs(blobWithCorrectType, zipFileName, { autoBom: true });
 
     alert(`${fileCount}개 파일이 성공적으로 ZIP으로 압축되었습니다.`);
   } catch (error) {
@@ -308,7 +313,8 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
           offset += chunk.length;
         }
 
-        const blob = new Blob([finalZipData], { type: 'application/zip' });
+        // MIME 타입을 'application/octet-stream'으로 변경
+        const blob = new Blob([finalZipData], { type: 'application/octet-stream' });
         downloadZipFile(blob, validImages.length);
 
         // 정리
