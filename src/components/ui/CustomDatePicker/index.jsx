@@ -14,6 +14,8 @@ import { ko } from 'date-fns/locale';
  * @param {Object} props.dateFormat - 날짜 포맷 ("yyyy-MM-dd")
  * @param {String} props.placeholderText - 플레이스홀더 텍스트
  * @param {Boolean} props.disabled - 비활성화 여부
+ * @param {String} props.id - 입력 필드의 id
+ * @param {String} props.name - 입력 필드의 name
  */
 const CustomDatePicker = ({
   selected,
@@ -24,6 +26,8 @@ const CustomDatePicker = ({
   dateFormat = 'yyyy-MM-dd',
   placeholderText,
   disabled = false,
+  id,
+  name,
   ...rest
 }) => {
   // 커스텀 입력 컴포넌트
@@ -34,6 +38,8 @@ const CustomDatePicker = ({
         value={value || ''}
         placeholder={placeholder}
         disabled={disabled}
+        id={id}
+        name={name}
         className="w-full pl-4 pr-10 py-2.5 bg-gray-800 border text-gray-200 border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm cursor-pointer"
         readOnly={true}
         style={{ caretColor: 'transparent' }}
