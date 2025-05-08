@@ -82,19 +82,32 @@ const downloadZipFile = (blob, fileCount) => {
     const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
     const zipFileName = `film_metadata_${timestamp}.zip`;
 
-    debug(`다운로드 시작 (브라우저: ${browserName})`);
+    debug(`다운로드 시작 (브라우저: ${browserName}, 모바일: ${isMobile})`);
 
-    // Safari와 다른 브라우저 구분 (react-device-detect 사용)
-    if (isSafari) {
+    if (isChrome) {
+      debug('Chrome 브라우저 감지됨, 특별 처리 적용');
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = zipFileName;
+      a.style.display = 'none';
+
+      document.body.appendChild(a);
+      a.click();
+
+      setTimeout(() => {
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      }, 1000);
+    } else if (isSafari) {
       debug('Safari 브라우저 감지됨, MIME 타입 변경');
-      // Safari용: MIME 타입을 'application/octet-stream'으로 변경
       const blobWithCorrectType = new Blob([blob], {
         type: 'application/octet-stream',
       });
       saveAs(blobWithCorrectType, zipFileName, { autoBom: true });
     } else {
       debug(`${browserName} 브라우저 감지됨, 기본 방식 사용`);
-      // Chrome 및 기타 브라우저용: 기존 방식 유지
       saveAs(blob, zipFileName);
     }
 
@@ -291,6 +304,7 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
 
           cursor = nextWindow;
 
+          // Safari에서는 더 긴 딜레이 사용
           await new Promise((resolve) => setTimeout(resolve, isSafari ? 30 : 10));
         }
       } catch (error) {
