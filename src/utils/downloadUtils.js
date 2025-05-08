@@ -79,34 +79,52 @@ const downloadZipFile = (blob, fileCount) => {
       type: 'application/zip',
     });
 
-    // 크롬과 Safari에서 모두 동작하는 방식으로 다운로드
-    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
-      // IE에서의 처리
-      window.navigator.msSaveOrOpenBlob(newBlob, zipFileName);
+    if (isSafari) {
+      debug('Safari에서 ZIP 다운로드 처리 중...');
+
+      if (isMobile) {
+        // 모바일 Safari에서는 Data URL 사용
+        const reader = new FileReader();
+        reader.onload = () => {
+          const dataUrl = reader.result;
+          const link = document.createElement('a');
+          link.href = dataUrl;
+          link.download = zipFileName;
+          link.target = '_blank';
+          document.body.appendChild(link);
+          link.click();
+          document.body.removeChild(link);
+        };
+        reader.readAsDataURL(newBlob);
+      } else {
+        // 데스크톱 Safari에서는 새 창에서 열기
+        const url = URL.createObjectURL(newBlob);
+        const newWindow = window.open('', '_blank');
+        if (newWindow) {
+          newWindow.location.href = url;
+          // 충분한 시간 후에 URL 해제
+          setTimeout(() => {
+            URL.revokeObjectURL(url);
+            debug('Safari: Blob URL 해제됨');
+          }, 60000);
+        } else {
+          alert('팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해주세요.');
+        }
+      }
     } else {
-      const url = window.URL.createObjectURL(newBlob);
+      // 크롬 등 다른 브라우저에서는 직접 다운로드
+      const url = URL.createObjectURL(newBlob);
       const link = document.createElement('a');
       link.href = url;
       link.download = zipFileName;
-
-      // 크롬에서는 클릭 이벤트가 필요
-      if (!isSafari) {
-        document.body.appendChild(link);
-      }
-
+      document.body.appendChild(link);
       link.click();
+      document.body.removeChild(link);
 
-      if (!isSafari) {
-        document.body.removeChild(link);
-      }
-
-      // URL 해제 타이밍 조정
-      setTimeout(
-        () => {
-          window.URL.revokeObjectURL(url);
-        },
-        isSafari ? 60000 : 3000
-      );
+      setTimeout(() => {
+        URL.revokeObjectURL(url);
+        debug('Chrome: Blob URL 해제됨');
+      }, 3000);
     }
 
     alert(`${fileCount}개 파일이 성공적으로 ZIP으로 압축되었습니다.`);
