@@ -1,6 +1,6 @@
 import React from 'react';
 import { ImageCard, ProgressBar, Button } from '../../ui';
-import { downloadFile, downloadAllAsZip } from '../../../utils';
+import { downloadFile, createZipFile } from '../../../utils';
 
 const ResultsViewer = ({
   activeStep,
@@ -18,8 +18,12 @@ const ResultsViewer = ({
     return null;
   }
 
-  const handleDownloadAll = () => {
-    downloadAllAsZip(resultImages, setProcessing, setZipProgress, setIsZipCompressing);
+  const handleDownloadAll = async () => {
+    try {
+      await createZipFile(resultImages, setZipProgress, setProcessing, setIsZipCompressing);
+    } catch (error) {
+      console.error('ZIP 다운로드 중 오류:', error);
+    }
   };
 
   return (

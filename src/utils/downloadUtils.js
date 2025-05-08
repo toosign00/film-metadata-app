@@ -13,20 +13,20 @@ const debug = (message, data) => {
   }
 };
 
-/**
- * 성능 설정 계산 함수 - 디바이스 환경에 따라 최적 설정 반환
- */
-const calculatePerformanceSettings = () => {
-  const deviceMemory = navigator.deviceMemory || 4;
-  const isMobileDevice = isMobile;
-
-  return {
-    batchSize: isMobileDevice ? Math.max(2, Math.min(3, Math.floor(deviceMemory / 2))) : Math.max(5, Math.min(10, deviceMemory * 2)),
-    delayBetweenBatches: isMobileDevice ? 300 + 100 * (4 - Math.min(deviceMemory, 4)) : 50,
-    chunkSize: isMobileDevice ? Math.max(512 * 1024, deviceMemory * 256 * 1024) : Math.max(2 * 1024 * 1024, deviceMemory * 1024 * 1024),
-    maxFetchRetries: isMobileDevice ? 3 : 2,
-    fetchTimeout: isMobileDevice ? 45000 : 30000,
-  };
+// ZIP 스트리밍 설정
+const STREAMING_OPTIONS = {
+  // 동시 처리할 파일 수
+  batchSize: 10,
+  // 배치 간 딜레이 (ms)
+  delayBetweenBatches: 100,
+  // 청크 크기 (2MB)
+  chunkSize: 2 * 1024 * 1024,
+  // 최대 재시도 횟수
+  maxFetchRetries: 3,
+  // 요청 타임아웃 (ms)
+  fetchTimeout: 30000,
+  // 재시도 딜레이 (ms)
+  retryDelay: 1000,
 };
 
 /**
@@ -50,261 +50,6 @@ export const downloadFile = (image) => {
   }
 };
 
-/**
- * 모든 결과 파일 ZIP으로 다운로드
- */
-export const downloadAllAsZip = async (resultImages, setProcessing, setZipProgress, setIsZipCompressing) => {
-  if (!resultImages || !Array.isArray(resultImages) || resultImages.length === 0) {
-    alert('다운로드할 이미지가 없습니다.');
-    return;
-  }
-
-  const validImages = resultImages.filter((img) => img && img.url);
-  if (validImages.length === 0) {
-    alert('다운로드할 유효한 이미지가 없습니다.');
-    return;
-  }
-
-  const updateProcessing = typeof setProcessing === 'function' ? setProcessing : () => {};
-  const updateZipProgress = typeof setZipProgress === 'function' ? setZipProgress : () => {};
-  const updateIsZipCompressing = typeof setIsZipCompressing === 'function' ? setIsZipCompressing : () => {};
-
-  updateProcessing(true);
-  updateZipProgress(0);
-  updateIsZipCompressing(true);
-
-  let worker = null;
-  const perfSettings = calculatePerformanceSettings();
-
-  try {
-    worker = new Worker(new URL('../workers/zipWorker.js', import.meta.url), { type: 'module' });
-
-    let processedCount = 0;
-    let chunkProcessedCount = 0;
-    const totalFiles = validImages.length;
-    const FILE_PROCESSING_WEIGHT = 75;
-    const COMPRESSION_WEIGHT = 25;
-
-    worker.onmessage = (event) => {
-      const { type, payload } = event.data;
-
-      switch (type) {
-        case 'READY':
-          processFilesInBatches();
-          break;
-
-        case 'FILE_ADDED':
-          if (payload.isChunk) {
-            chunkProcessedCount++;
-          } else {
-            processedCount = Math.min(processedCount + 1, totalFiles);
-          }
-          const fileProgress = Math.min((processedCount / totalFiles) * FILE_PROCESSING_WEIGHT, FILE_PROCESSING_WEIGHT);
-          updateZipProgress(Math.round(fileProgress));
-          break;
-
-        case 'COMPRESSION_PROGRESS':
-          const compressionPercent = payload.percent || 0;
-          const compressionProgress = (compressionPercent / 100) * COMPRESSION_WEIGHT;
-          const totalProgress = Math.min(Math.round((processedCount / totalFiles) * FILE_PROCESSING_WEIGHT + compressionProgress), 100);
-          updateZipProgress(totalProgress);
-          break;
-
-        case 'COMPLETE':
-          try {
-            updateZipProgress(100);
-            finishDownload(payload);
-          } catch (error) {
-            handleError(`ZIP 다운로드 중 오류: ${error.message}`);
-          }
-          break;
-
-        case 'ERROR':
-          handleError(payload.message);
-          break;
-      }
-    };
-
-    worker.onerror = (error) => {
-      handleError(`웹 워커 오류: ${error.message || '알 수 없는 오류'}`);
-    };
-
-    worker.postMessage({ type: 'START_ZIP' });
-
-    const processFilesInBatches = async () => {
-      const totalBatches = Math.ceil(validImages.length / perfSettings.batchSize);
-
-      for (let batchIndex = 0; batchIndex < totalBatches; batchIndex++) {
-        const startIdx = batchIndex * perfSettings.batchSize;
-        const endIdx = Math.min(startIdx + perfSettings.batchSize, validImages.length);
-        const currentBatch = validImages.slice(startIdx, endIdx);
-
-        await processBatch(currentBatch);
-
-        if (batchIndex < totalBatches - 1) {
-          await new Promise((resolve) => setTimeout(resolve, perfSettings.delayBetweenBatches));
-        }
-
-        if (batchIndex > 0 && batchIndex % 5 === 0) {
-          await new Promise((resolve) => setTimeout(resolve, 200));
-        }
-      }
-
-      worker.postMessage({ type: 'FINISH_ZIP' });
-    };
-
-    const processBatch = async (batch) => {
-      const batchPromises = batch.map((image, i) => processFile(image, i));
-      await Promise.allSettled(batchPromises);
-    };
-
-    const processFile = async (image, batchIndex) => {
-      try {
-        const fileName = image.name || `image_${validImages.indexOf(image) + 1}.jpg`;
-        let response;
-        let retryCount = 0;
-
-        while (retryCount <= perfSettings.maxFetchRetries) {
-          try {
-            const controller = new AbortController();
-            const timeoutId = setTimeout(() => controller.abort(), perfSettings.fetchTimeout);
-
-            response = await fetch(image.url, { signal: controller.signal });
-            clearTimeout(timeoutId);
-
-            if (response.ok) break;
-
-            retryCount++;
-
-            if (retryCount <= perfSettings.maxFetchRetries) {
-              await new Promise((resolve) => setTimeout(resolve, 1000 * retryCount));
-            }
-          } catch (fetchError) {
-            retryCount++;
-
-            if (retryCount <= perfSettings.maxFetchRetries) {
-              await new Promise((resolve) => setTimeout(resolve, 1000 * retryCount));
-            } else {
-              throw fetchError;
-            }
-          }
-        }
-
-        if (!response || !response.ok) {
-          return;
-        }
-
-        const blob = await response.blob();
-
-        if (blob.size === 0) {
-          return;
-        }
-
-        if (blob.size > perfSettings.chunkSize) {
-          await processLargeFile(blob, fileName);
-        } else {
-          const arrayBuffer = await blob.arrayBuffer();
-          worker.postMessage(
-            {
-              type: 'ADD_FILE',
-              payload: {
-                name: fileName,
-                data: arrayBuffer,
-              },
-            },
-            [arrayBuffer]
-          );
-        }
-
-        if (batchIndex > 0 && batchIndex % 2 === 0) {
-          await new Promise((resolve) => setTimeout(resolve, 10));
-        }
-      } catch (error) {
-        debug(`파일 처리 오류 (${image.name || `이미지`}): ${error.message}`);
-      }
-    };
-
-    const processLargeFile = async (blob, fileName) => {
-      const totalSize = blob.size;
-      let processedSize = 0;
-      let chunkIndex = 0;
-
-      const adjustedChunkSize = totalSize > 100 * 1024 * 1024 ? perfSettings.chunkSize / 2 : perfSettings.chunkSize;
-      const totalChunks = Math.ceil(totalSize / adjustedChunkSize);
-
-      while (processedSize < totalSize) {
-        const end = Math.min(processedSize + adjustedChunkSize, totalSize);
-        const chunk = blob.slice(processedSize, end);
-        const chunkBuffer = await chunk.arrayBuffer();
-
-        worker.postMessage(
-          {
-            type: 'ADD_FILE_CHUNK',
-            payload: {
-              name: `${fileName}.part${chunkIndex}`,
-              originalName: fileName,
-              data: chunkBuffer,
-              isLastChunk: end >= totalSize,
-              chunkIndex: chunkIndex,
-              totalChunks: totalChunks,
-            },
-          },
-          [chunkBuffer]
-        );
-
-        processedSize = end;
-        chunkIndex++;
-
-        if (chunkIndex % 5 === 0) {
-          await new Promise((resolve) => setTimeout(resolve, 20));
-        } else {
-          await new Promise((resolve) => setTimeout(resolve, 5));
-        }
-      }
-    };
-
-    const finishDownload = (payload) => {
-      const { zipData, fileCount } = payload;
-
-      if (!zipData || !zipData.byteLength) {
-        throw new Error('생성된 ZIP 데이터가 없습니다');
-      }
-
-      const blob = new Blob([zipData], { type: 'application/zip' });
-      downloadZipFile(blob, fileCount || validImages.length);
-
-      updateProcessing(false);
-      updateIsZipCompressing(false);
-    };
-
-    const handleError = (message) => {
-      alert(`ZIP 파일 생성 중 오류가 발생했습니다: ${message}`);
-
-      if (worker) {
-        try {
-          worker.terminate();
-        } catch (e) {}
-        worker = null;
-      }
-
-      updateProcessing(false);
-      updateIsZipCompressing(false);
-    };
-  } catch (error) {
-    alert(`ZIP 파일 생성 중 오류가 발생했습니다: ${error.message}`);
-
-    if (worker) {
-      try {
-        worker.terminate();
-      } catch (e) {}
-    }
-
-    updateProcessing(false);
-    updateZipProgress(0);
-    updateIsZipCompressing(false);
-  }
-};
-
 const downloadZipFile = (blob, fileCount) => {
   try {
     const now = new Date();
@@ -319,9 +64,222 @@ const downloadZipFile = (blob, fileCount) => {
     a.click();
     document.body.removeChild(a);
 
+    // URL 객체 해제
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 1000);
+
     alert(`${fileCount}개 파일이 성공적으로 ZIP으로 압축되었습니다.`);
   } catch (error) {
     console.error('[DownloadUtil] ZIP 파일 다운로드 오류:', error);
     alert(`ZIP 파일 다운로드 중 오류가 발생했습니다: ${error.message}`);
+  }
+};
+
+/**
+ * 모든 결과 파일 ZIP으로 다운로드 (스트리밍 방식)
+ */
+export const createZipFile = async (validImages, updateZipProgress, updateProcessing, updateIsZipCompressing) => {
+  if (!validImages || !Array.isArray(validImages) || validImages.length === 0) {
+    alert('다운로드할 이미지가 없습니다.');
+    return;
+  }
+
+  updateProcessing(true);
+  updateZipProgress(0);
+  updateIsZipCompressing(true);
+
+  let worker = null;
+  let zipChunks = [];
+
+  const handleError = (message) => {
+    console.error('ZIP 오류:', message);
+    alert(`ZIP 파일 생성 중 오류가 발생했습니다: ${message}`);
+
+    if (worker) {
+      try {
+        worker.terminate();
+      } catch (e) {
+        console.error('워커 종료 중 오류:', e);
+      }
+      worker = null;
+    }
+
+    updateProcessing(false);
+    updateIsZipCompressing(false);
+    updateZipProgress(0);
+  };
+
+  try {
+    worker = new Worker(new URL('../workers/zipWorker.js', import.meta.url), { type: 'module' });
+
+    let processedCount = 0;
+    const totalFiles = validImages.length;
+    const FILE_PROCESSING_WEIGHT = 75;
+    const COMPRESSION_WEIGHT = 25;
+
+    return new Promise((resolve, reject) => {
+      worker.onmessage = (event) => {
+        const { type, payload } = event.data;
+
+        switch (type) {
+          case 'READY':
+            processFiles().catch((error) => {
+              handleError(error.message);
+              reject(error);
+            });
+            break;
+
+          case 'ZIP_DATA':
+            if (payload.data) {
+              zipChunks.push(new Uint8Array(payload.data));
+            }
+            if (payload.final) {
+              finishDownload();
+              resolve();
+            }
+            break;
+
+          case 'FILE_ADDED':
+            processedCount = Math.min(processedCount + 1, totalFiles);
+            const fileProgress = Math.min((processedCount / totalFiles) * FILE_PROCESSING_WEIGHT, FILE_PROCESSING_WEIGHT);
+            updateZipProgress(Math.round(fileProgress));
+            break;
+
+          case 'COMPRESSION_PROGRESS':
+            const compressionPercent = payload.percent || 0;
+            const compressionProgress = (compressionPercent / 100) * COMPRESSION_WEIGHT;
+            const totalProgress = Math.min(Math.round((processedCount / totalFiles) * FILE_PROCESSING_WEIGHT + compressionProgress), 100);
+            updateZipProgress(totalProgress);
+            break;
+
+          case 'ERROR':
+            handleError(payload.message);
+            reject(new Error(payload.message));
+            break;
+        }
+      };
+
+      worker.onerror = (error) => {
+        const errorMessage = `웹 워커 오류: ${error.message || '알 수 없는 오류'}`;
+        handleError(errorMessage);
+        reject(new Error(errorMessage));
+      };
+
+      worker.postMessage({ type: 'START_ZIP' });
+    });
+
+    async function processFiles() {
+      const maxConcurrent = STREAMING_OPTIONS.batchSize;
+
+      for (let i = 0; i < validImages.length; i += maxConcurrent) {
+        const batch = validImages.slice(i, i + maxConcurrent);
+        const promises = batch.map(processFile);
+        await Promise.allSettled(promises);
+
+        if (i + maxConcurrent < validImages.length) {
+          await new Promise((resolve) => setTimeout(resolve, STREAMING_OPTIONS.delayBetweenBatches));
+        }
+      }
+
+      if (worker) {
+        worker.postMessage({ type: 'FINISH_ZIP' });
+      }
+    }
+
+    async function processFile(image) {
+      try {
+        if (!worker) return;
+
+        const fileName = image.name || `image_${validImages.indexOf(image) + 1}.jpg`;
+        let response;
+        let retryCount = 0;
+
+        while (retryCount <= STREAMING_OPTIONS.maxFetchRetries) {
+          try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), STREAMING_OPTIONS.fetchTimeout);
+
+            response = await fetch(image.url, { signal: controller.signal });
+            clearTimeout(timeoutId);
+
+            if (response.ok) break;
+            retryCount++;
+            await new Promise((resolve) => setTimeout(resolve, STREAMING_OPTIONS.retryDelay * retryCount));
+          } catch (error) {
+            if (retryCount >= STREAMING_OPTIONS.maxFetchRetries) throw error;
+            retryCount++;
+            await new Promise((resolve) => setTimeout(resolve, STREAMING_OPTIONS.retryDelay * retryCount));
+          }
+        }
+
+        if (!response || !response.ok) {
+          throw new Error(`파일 다운로드 실패: ${fileName}`);
+        }
+
+        const blob = await response.blob();
+        const maxChunkSize = STREAMING_OPTIONS.chunkSize;
+        let cursor = 0;
+
+        while (cursor < blob.size) {
+          if (!worker) break;
+
+          const nextWindow = Math.min(blob.size, cursor + maxChunkSize);
+          const chunk = await blob.slice(cursor, nextWindow).arrayBuffer();
+          const isLast = nextWindow >= blob.size;
+
+          worker.postMessage(
+            {
+              type: 'ADD_FILE_CHUNK',
+              payload: {
+                name: fileName,
+                data: chunk,
+                isLast,
+                totalSize: blob.size,
+                currentPosition: cursor,
+              },
+            },
+            [chunk]
+          );
+
+          cursor = nextWindow;
+          await new Promise((resolve) => setTimeout(resolve, 10));
+        }
+      } catch (error) {
+        console.error(`파일 처리 오류 (${image.name || '이미지'}):`, error);
+        throw error;
+      }
+    }
+
+    function finishDownload() {
+      try {
+        const totalSize = zipChunks.reduce((sum, chunk) => sum + chunk.length, 0);
+        const finalZipData = new Uint8Array(totalSize);
+        let offset = 0;
+
+        for (const chunk of zipChunks) {
+          finalZipData.set(chunk, offset);
+          offset += chunk.length;
+        }
+
+        const blob = new Blob([finalZipData], { type: 'application/zip' });
+        downloadZipFile(blob, validImages.length);
+
+        // 정리
+        zipChunks = [];
+        if (worker) {
+          worker.terminate();
+          worker = null;
+        }
+
+        updateProcessing(false);
+        updateIsZipCompressing(false);
+        updateZipProgress(100);
+      } catch (error) {
+        handleError(`ZIP 파일 생성 중 오류: ${error.message}`);
+      }
+    }
+  } catch (error) {
+    handleError(error.message);
   }
 };
