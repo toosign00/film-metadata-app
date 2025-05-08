@@ -1,7 +1,5 @@
 import React from 'react';
-import DropZone from './ui/DropZone';
-import FileList from './ui/FileList';
-import Button from './ui/Button';
+import { DropZone, FileList, Button } from '../../ui';
 
 const FileSelection = ({ activeStep, onFileSelect, sortedFiles, goToStep, resetForm }) => {
   if (activeStep !== 1) {
