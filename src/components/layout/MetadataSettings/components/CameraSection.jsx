@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 
 const CameraSection = ({ settings, validationErrors, handleInputChange }) => {
   return (
@@ -67,22 +66,6 @@ const CameraSection = ({ settings, validationErrors, handleInputChange }) => {
       </div>
     </div>
   );
-};
-
-CameraSection.propTypes = {
-  settings: PropTypes.shape({
-    cameraMake: PropTypes.string,
-    cameraModel: PropTypes.string,
-  }).isRequired,
-  validationErrors: PropTypes.shape({
-    cameraMake: PropTypes.string,
-    cameraModel: PropTypes.string,
-  }),
-  handleInputChange: PropTypes.func.isRequired,
-};
-
-CameraSection.defaultProps = {
-  validationErrors: {},
 };
 
 export default CameraSection;
