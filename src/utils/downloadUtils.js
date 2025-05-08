@@ -1,3 +1,4 @@
+import { saveAs } from 'file-saver';
 import { isMobile } from 'react-device-detect';
 
 // 로그 메세지 출력 여부 설정
@@ -51,75 +52,20 @@ export const downloadFile = (image) => {
       throw new Error('다운로드할 이미지 정보가 없습니다');
     }
 
-    // Safari를 위한 분기 처리
-    if (isSafari) {
-      safariFriendlyDownload(image.url, image.name || 'download');
-    } else {
-      const a = document.createElement('a');
-      a.href = image.url;
-      a.download = image.name || 'download';
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
+    // FileSaver.js를 사용하여 다운로드
+    fetch(image.url)
+      .then((response) => response.blob())
+      .then((blob) => {
+        saveAs(blob, image.name || 'download');
+      })
+      .catch((error) => {
+        console.error('[DownloadUtil] 파일 다운로드 오류:', error);
+        alert(`파일 다운로드 중 오류가 발생했습니다: ${error.message}`);
+      });
   } catch (error) {
     console.error('[DownloadUtil] 파일 다운로드 오류:', error);
     alert(`파일 다운로드 중 오류가 발생했습니다: ${error.message}`);
   }
-};
-
-// Safari용 대체 다운로드 함수 추가
-const safariFriendlyDownload = (url, filename) => {
-  debug('Safari 친화적 다운로드 사용 중...');
-
-  // 이미 Blob URL인지 확인
-  if (url.startsWith('blob:')) {
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = filename;
-    link.target = '_blank'; // Safari에서 중요
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    return;
-  }
-
-  // 외부 URL인 경우 먼저 Blob으로 가져옴
-  fetch(url)
-    .then((response) => response.blob())
-    .then((blob) => {
-      // 5MB 미만인 경우 Data URL 사용
-      if (blob.size < 5 * 1024 * 1024) {
-        const reader = new FileReader();
-        reader.onload = () => {
-          const dataUrl = reader.result;
-          const link = document.createElement('a');
-          link.href = dataUrl;
-          link.download = filename;
-          link.target = '_blank';
-          document.body.appendChild(link);
-          link.click();
-          document.body.removeChild(link);
-        };
-        reader.readAsDataURL(blob);
-      } else {
-        // 큰 파일은 새 창에서 Blob URL 열기
-        const blobUrl = URL.createObjectURL(blob);
-
-        if (isMobile) {
-          window.location.href = blobUrl;
-        } else {
-          window.open(blobUrl, '_blank');
-        }
-
-        // 충분히 긴 시간 후에 URL 해제
-        setTimeout(() => URL.revokeObjectURL(blobUrl), 60000); // 1분 후 해제
-      }
-    })
-    .catch((error) => {
-      console.error('[DownloadUtil] Safari 다운로드 오류:', error);
-      alert(`파일 다운로드 중 오류가 발생했습니다: ${error.message}`);
-    });
 };
 
 const downloadZipFile = (blob, fileCount) => {
@@ -128,45 +74,8 @@ const downloadZipFile = (blob, fileCount) => {
     const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
     const zipFileName = `film_metadata_${timestamp}.zip`;
 
-    const url = URL.createObjectURL(blob);
-
-    // Safari 호환성을 위한 다운로드 처리
-    if (isSafari) {
-      debug('Safari에서 ZIP 다운로드 처리 중...');
-
-      if (isMobile) {
-        // Safari 모바일에서는 새 창에서 열기
-        window.location.href = url;
-      } else {
-        // Safari 데스크톱에서는 새 창 열기
-        const newWindow = window.open(url, '_blank');
-        if (!newWindow) {
-          alert('팝업이 차단되었습니다. 팝업 차단을 해제하고 다시 시도해주세요.');
-        }
-      }
-
-      // 더 긴 시간 이후에 URL 해제 (Safari가 다운로드를 시작하기에 충분한 시간)
-      setTimeout(() => URL.revokeObjectURL(url), 60000); // 1분 후 해제
-    } else {
-      // 다른 브라우저에서는 기존 방식 사용
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = zipFileName;
-
-      // 클릭 이벤트 리스너로 다운로드 완료 후 URL 해제
-      a.addEventListener(
-        'click',
-        () => {
-          // 다운로드 시작 후 지연 시간을 더 길게 설정
-          setTimeout(() => URL.revokeObjectURL(url), 3000);
-        },
-        { once: true }
-      );
-
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
+    // FileSaver.js를 사용하여 ZIP 파일 다운로드
+    saveAs(blob, zipFileName);
 
     alert(`${fileCount}개 파일이 성공적으로 ZIP으로 압축되었습니다.`);
   } catch (error) {
