@@ -1,8 +1,20 @@
-import { isMobile } from 'react-device-detect';
+/**
+ * @fileoverview 파일 다운로드 유틸리티 모듈
+ * 단일 파일 및 ZIP 압축 파일 다운로드 기능을 제공합니다.
+ * @module DownloadUtil
+ */
 
-// 로그 메세지 출력 여부 설정
+import { isMobile } from 'react-device-detect';
+import { saveAs } from 'file-saver';
+
+/** 로그 출력 여부 설정 */
 const ENABLE_LOGGING = true;
 
+/**
+ * 디버그 로그를 출력합니다
+ * @param {string} message - 로그 메시지
+ * @param {any} [data] - 추가 데이터 (선택적)
+ */
 const debug = (message, data) => {
   if (ENABLE_LOGGING) {
     if (data !== undefined) {
@@ -13,29 +25,39 @@ const debug = (message, data) => {
   }
 };
 
-// Safari 브라우저 감지 함수
+/**
+ * Safari 브라우저 감지 함수
+ * @returns {boolean} Safari 브라우저 여부
+ */
 const isSafari = () => {
   return /^((?!chrome|android).)*safari/i.test(navigator.userAgent);
 };
 
-// ZIP 스트리밍 설정
+/**
+ * ZIP 스트리밍 설정 객체
+ * @typedef {Object} StreamingOptions
+ * @property {number} batchSize - 동시 처리할 파일 수
+ * @property {number} delayBetweenBatches - 배치 간 딜레이 (ms)
+ * @property {number} chunkSize - 청크 크기 (바이트)
+ * @property {number} maxFetchRetries - 최대 재시도 횟수
+ * @property {number} fetchTimeout - 요청 타임아웃 (ms)
+ * @property {number} retryDelay - 재시도 딜레이 (ms)
+ */
 const STREAMING_OPTIONS = {
-  // 동시 처리할 파일 수
   batchSize: 10,
-  // 배치 간 딜레이 (ms)
   delayBetweenBatches: 100,
-  // 청크 크기 - Safari에서는 더 작은 값 사용
   chunkSize: isSafari() ? 512 * 1024 : 2 * 1024 * 1024,
-  // 최대 재시도 횟수
   maxFetchRetries: 3,
-  // 요청 타임아웃 (ms)
   fetchTimeout: 30000,
-  // 재시도 딜레이 (ms)
   retryDelay: 1000,
 };
 
 /**
  * 단일 파일 다운로드 함수
+ * @param {Object} image - 다운로드할 이미지 객체
+ * @param {string} image.url - 이미지 URL
+ * @param {string} [image.name] - 저장할 파일명
+ * @returns {Promise<void>}
  */
 export const downloadFile = (image) => {
   try {
@@ -43,55 +65,33 @@ export const downloadFile = (image) => {
       throw new Error('다운로드할 이미지 정보가 없습니다');
     }
 
-    const a = document.createElement('a');
-    a.href = image.url;
-    a.download = image.name || 'download';
-
-    // Safari에서는 다른 방식으로 처리
-    if (isSafari()) {
-      window.location.href = image.url;
-    } else {
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
+    fetch(image.url)
+      .then((response) => response.blob())
+      .then((blob) => {
+        saveAs(blob, image.name || 'download');
+      })
+      .catch((error) => {
+        throw error;
+      });
   } catch (error) {
     console.error('[DownloadUtil] 파일 다운로드 오류:', error);
     alert(`파일 다운로드 중 오류가 발생했습니다: ${error.message}`);
   }
 };
 
+/**
+ * ZIP 파일을 다운로드합니다
+ * @param {Blob} blob - ZIP 파일 Blob
+ * @param {number} fileCount - 압축된 파일 개수
+ */
 const downloadZipFile = (blob, fileCount) => {
   try {
     const now = new Date();
     const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
     const zipFileName = `film_metadata_${timestamp}.zip`;
 
-    const url = URL.createObjectURL(blob);
-
-    // Safari 브라우저 감지 및 별도 처리
-    if (isSafari()) {
-      debug('Safari 브라우저 감지됨, 대체 다운로드 방식 사용');
-
-      // Safari용 다운로드 메서드 - 현재 창에서 URL 열기
-      window.location.href = url;
-    } else {
-      // 다른 브라우저용 표준 다운로드 메서드
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = zipFileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    }
-
-    // URL 객체 해제 - Safari에서는 더 긴 시간 설정
-    setTimeout(
-      () => {
-        URL.revokeObjectURL(url);
-      },
-      isSafari() ? 5000 : 1000
-    ); // Safari에서는 더 긴 시간 대기
+    debug('FileSaver.js를 사용하여 다운로드 시작');
+    saveAs(blob, zipFileName);
 
     alert(`${fileCount}개 파일이 성공적으로 ZIP으로 압축되었습니다.`);
   } catch (error) {
@@ -101,7 +101,12 @@ const downloadZipFile = (blob, fileCount) => {
 };
 
 /**
- * 모든 결과 파일 ZIP으로 다운로드 (스트리밍 방식)
+ * 여러 이미지를 ZIP으로 압축하여 다운로드합니다
+ * @param {Array<Object>} validImages - 다운로드할 이미지 객체 배열
+ * @param {Function} updateZipProgress - 압축 진행률 업데이트 콜백 (0-100)
+ * @param {Function} updateProcessing - 처리 상태 업데이트 콜백
+ * @param {Function} updateIsZipCompressing - 압축 상태 업데이트 콜백
+ * @returns {Promise<void>}
  */
 export const createZipFile = async (validImages, updateZipProgress, updateProcessing, updateIsZipCompressing) => {
   if (!validImages || !Array.isArray(validImages) || validImages.length === 0) {
@@ -116,6 +121,10 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
   let worker = null;
   let zipChunks = [];
 
+  /**
+   * 오류 처리 함수
+   * @param {string} message - 오류 메시지
+   */
   const handleError = (message) => {
     console.error('ZIP 오류:', message);
     alert(`ZIP 파일 생성 중 오류가 발생했습니다: ${message}`);
@@ -193,6 +202,10 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
       worker.postMessage({ type: 'START_ZIP' });
     });
 
+    /**
+     * 파일 일괄 처리 함수
+     * @async
+     */
     async function processFiles() {
       const maxConcurrent = STREAMING_OPTIONS.batchSize;
 
@@ -211,6 +224,11 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
       }
     }
 
+    /**
+     * 단일 파일 처리 함수
+     * @async
+     * @param {Object} image - 이미지 객체
+     */
     async function processFile(image) {
       try {
         if (!worker) return;
@@ -268,7 +286,6 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
 
           cursor = nextWindow;
 
-          // Safari에서는 더 긴 딜레이 사용
           await new Promise((resolve) => setTimeout(resolve, isSafari() ? 30 : 10));
         }
       } catch (error) {
@@ -277,6 +294,9 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
       }
     }
 
+    /**
+     * 다운로드 완료 처리 함수
+     */
     function finishDownload() {
       try {
         const totalSize = zipChunks.reduce((sum, chunk) => sum + chunk.length, 0);
