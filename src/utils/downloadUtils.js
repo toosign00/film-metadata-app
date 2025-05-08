@@ -1,7 +1,8 @@
 import { isMobile } from 'react-device-detect';
+import { saveAs } from 'file-saver';
 
 // 로그 메세지 출력 여부 설정
-const ENABLE_LOGGING = true;
+const ENABLE_LOGGING = false;
 
 const debug = (message, data) => {
   if (ENABLE_LOGGING) {
@@ -43,14 +44,26 @@ export const downloadFile = (image) => {
       throw new Error('다운로드할 이미지 정보가 없습니다');
     }
 
-    const a = document.createElement('a');
-    a.href = image.url;
-    a.download = image.name || 'download';
-
-    // Safari에서는 다른 방식으로 처리
+    // Safari에서는 FileSaver.js 사용
     if (isSafari()) {
-      window.location.href = image.url;
+      debug('Safari 브라우저에서 단일 파일 다운로드 시도 (FileSaver 사용)');
+
+      // Blob URL에서 실제 Blob을 가져오기 위한 fetch
+      fetch(image.url)
+        .then((response) => response.blob())
+        .then((blob) => {
+          saveAs(blob, image.name || 'download.jpg');
+        })
+        .catch((error) => {
+          console.error('FileSaver 다운로드 오류:', error);
+          // 실패 시 기본 방식으로 시도
+          window.location.href = image.url;
+        });
     } else {
+      // 다른 브라우저는 기존 방식 사용
+      const a = document.createElement('a');
+      a.href = image.url;
+      a.download = image.name || 'download';
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
@@ -67,31 +80,25 @@ const downloadZipFile = (blob, fileCount) => {
     const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
     const zipFileName = `film_metadata_${timestamp}.zip`;
 
-    const url = URL.createObjectURL(blob);
-
-    // Safari 브라우저 감지 및 별도 처리
+    // Safari 브라우저에서는 FileSaver.js 사용
     if (isSafari()) {
-      debug('Safari 브라우저 감지됨, 대체 다운로드 방식 사용');
-
-      // Safari용 다운로드 메서드 - 현재 창에서 URL 열기
-      window.location.href = url;
+      debug('Safari 브라우저에서 ZIP 다운로드 시도 (FileSaver 사용)');
+      saveAs(blob, zipFileName);
     } else {
       // 다른 브라우저용 표준 다운로드 메서드
+      const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
       a.download = zipFileName;
       document.body.appendChild(a);
       a.click();
       document.body.removeChild(a);
-    }
 
-    // URL 객체 해제 - Safari에서는 더 긴 시간 설정
-    setTimeout(
-      () => {
+      // URL 객체 해제
+      setTimeout(() => {
         URL.revokeObjectURL(url);
-      },
-      isSafari() ? 5000 : 1000
-    ); // Safari에서는 더 긴 시간 대기
+      }, 1000);
+    }
 
     alert(`${fileCount}개 파일이 성공적으로 ZIP으로 압축되었습니다.`);
   } catch (error) {
