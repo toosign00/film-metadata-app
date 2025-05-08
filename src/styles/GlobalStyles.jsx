@@ -1,0 +1,167 @@
+import React from 'react';
+
+/**
+ * 전역 스타일 컴포넌트
+ * react-datepicker 다크 테마 스타일 적용
+ */
+const GlobalStyles = () => {
+  return (
+    <style>{`
+      /* 브라우저 기본 달력/시간 아이콘 숨기기 */
+      input[type='date']::-webkit-calendar-picker-indicator,
+      input[type='time']::-webkit-calendar-picker-indicator {
+        display: none;
+        -webkit-appearance: none;
+      }
+
+      /* Firefox에서의 기본 아이콘 숨기기 */
+      input[type='date'],
+      input[type='time'] {
+        -moz-appearance: textfield;
+      }
+
+      /* 포커스 테두리 제거 */
+      input:focus,
+      select:focus,
+      textarea:focus,
+      button:focus {
+        outline: none !important;
+      }
+
+      /* 포커스 효과 커스텀화 */
+      .react-datepicker__input-container input:focus {
+        box-shadow: 0 0 0 2px rgba(49, 130, 246, 0.5) !important;
+        border-color: #3182f6 !important;
+      }
+
+      /* DatePicker 다크 테마 스타일 */
+      .react-datepicker {
+        font-family: inherit;
+        background-color: #1f2937;
+        color: #e5e7eb;
+        border: 1px solid #374151;
+        border-radius: 0.5rem;
+        box-shadow:
+          0 10px 15px -3px rgba(0, 0, 0, 0.1),
+          0 4px 6px -2px rgba(0, 0, 0, 0.05);
+      }
+
+      .react-datepicker-wrapper {
+        width: 100%;
+      }
+
+      .react-datepicker__header {
+        background-color: #111827;
+        border-bottom: 1px solid #374151;
+        border-top-left-radius: 0.5rem;
+        border-top-right-radius: 0.5rem;
+        padding-top: 0.5rem;
+      }
+
+      .react-datepicker__current-month,
+      .react-datepicker-time__header,
+      .react-datepicker__day-name {
+        color: #e5e7eb;
+      }
+
+      /*
+      .react-datepicker__day--outside-month {
+        visibility: hidden;
+        pointer-events: none;
+      }
+      */
+
+      .react-datepicker__day,
+      .react-datepicker__time-name {
+        color: #d1d5db;
+      }
+
+      .react-datepicker__day:hover,
+      .react-datepicker__month-text:hover,
+      .react-datepicker__quarter-text:hover,
+      .react-datepicker__year-text:hover {
+        background-color: #707680 !important;
+        border-radius: 0.375rem;
+      }
+
+      .react-datepicker__day--selected,
+      .react-datepicker__day--keyboard-selected {
+        background-color: #3182f6;
+        color: white;
+        border-radius: 0.375rem;
+      }
+
+      .react-datepicker__day--selected:hover,
+      .react-datepicker__day--keyboard-selected:hover {
+        background-color: #2563eb;
+      }
+
+      .react-datepicker__day--disabled,
+      .react-datepicker__month-text--disabled,
+      .react-datepicker__quarter-text--disabled,
+      .react-datepicker__year-text--disabled {
+        color: #6b7280;
+      }
+
+      .react-datepicker__input-container input {
+        width: 100%;
+      }
+
+      .react-datepicker__navigation {
+        top: 0.5rem;
+      }
+
+      .react-datepicker__navigation-icon::before {
+        border-color: #9ca3af;
+      }
+
+      .react-datepicker__navigation:hover *::before {
+        border-color: #e5e7eb;
+      }
+
+      /* 시간 선택 섹션 */
+      .react-datepicker__time-container {
+        border-left: 1px solid #374151;
+      }
+
+      .react-datepicker__time {
+        background-color: #1f2937;
+      }
+
+      .react-datepicker__time-box {
+        width: 85px !important;
+      }
+
+      .react-datepicker__time-list-item {
+        background-color: #1f2937;
+        color: #d1d5db;
+        height: 30px !important;
+        line-height: 30px !important;
+        padding: 0 !important;
+      }
+
+      .react-datepicker__time-list-item:hover {
+        background-color: #707680 !important;
+      }
+
+      .react-datepicker__time-list-item--selected {
+        background-color: #3182f6 !important;
+        color: white !important;
+      }
+
+      .react-datepicker__time-list-item--selected:hover {
+        background-color: #2563eb !important;
+      }
+
+      .react-datepicker-popper {
+        z-index: 10;
+      }
+
+      .react-datepicker-dark {
+        z-index: 10;
+      }
+    `}</style>
+  );
+};
+
+export default GlobalStyles;
