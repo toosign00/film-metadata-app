@@ -74,8 +74,40 @@ const downloadZipFile = (blob, fileCount) => {
     const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(now.getMinutes()).padStart(2, '0')}`;
     const zipFileName = `film_metadata_${timestamp}.zip`;
 
-    // FileSaver.js를 사용하여 ZIP 파일 다운로드
-    saveAs(blob, zipFileName);
+    // MIME 타입을 명시적으로 지정한 새로운 Blob 생성
+    const newBlob = new Blob([blob], {
+      type: 'application/zip',
+    });
+
+    // 크롬과 Safari에서 모두 동작하는 방식으로 다운로드
+    if (window.navigator && window.navigator.msSaveOrOpenBlob) {
+      // IE에서의 처리
+      window.navigator.msSaveOrOpenBlob(newBlob, zipFileName);
+    } else {
+      const url = window.URL.createObjectURL(newBlob);
+      const link = document.createElement('a');
+      link.href = url;
+      link.download = zipFileName;
+
+      // 크롬에서는 클릭 이벤트가 필요
+      if (!isSafari) {
+        document.body.appendChild(link);
+      }
+
+      link.click();
+
+      if (!isSafari) {
+        document.body.removeChild(link);
+      }
+
+      // URL 해제 타이밍 조정
+      setTimeout(
+        () => {
+          window.URL.revokeObjectURL(url);
+        },
+        isSafari ? 60000 : 3000
+      );
+    }
 
     alert(`${fileCount}개 파일이 성공적으로 ZIP으로 압축되었습니다.`);
   } catch (error) {
