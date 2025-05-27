@@ -9,6 +9,7 @@ input[type='time']::-webkit-calendar-picker-indicator {
 input[type='date'],
 input[type='time'] {
   -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 /* 포커스 테두리 제거 */
