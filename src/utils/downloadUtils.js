@@ -84,16 +84,7 @@ const downloadZipFile = (blob, fileCount) => {
 
     debug(`다운로드 시작 (브라우저: ${browserName}, 모바일: ${isMobile})`);
 
-    if (isChrome) {
-      debug('Chrome 브라우저 감지됨, 특별 처리 적용');
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = zipFileName;
-      document.body.appendChild(a);
-      a.click();
-      document.body.removeChild(a);
-    } else if (isSafari) {
+    if (isSafari) {
       debug('Safari 브라우저 감지됨, MIME 타입 변경');
       const blobWithCorrectType = new Blob([blob], {
         type: 'application/octet-stream',
