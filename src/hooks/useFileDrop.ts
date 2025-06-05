@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect, useMemo } from 'react';
+import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
 import { isMobile as detectMobile } from 'react-device-detect';
 import { UseFileDropOptions, UseFileDropReturn } from '../types/hooks.type';
 
@@ -28,22 +28,25 @@ const useFileDrop = (
   const maxFiles = isMobile ? maxMobileFiles : maxDesktopFiles;
 
   // 유효한 파일인지 확인하는 헬퍼 함수
-  const validateFile = (file: File): string[] => {
-    const errors: string[] = [];
-    const ext = file.name.split('.').pop()?.toLowerCase();
+  const validateFile = useCallback(
+    (file: File): string[] => {
+      const errors: string[] = [];
+      const ext = file.name.split('.').pop()?.toLowerCase();
 
-    // 확장자 검사
-    if (!ext || !allowedExtensions.includes(ext)) {
-      errors.push(`지원되지 않는 파일 형식입니다: ${file.name}`);
-    }
+      // 확장자 검사
+      if (!ext || !allowedExtensions.includes(ext)) {
+        errors.push(`지원되지 않는 파일 형식입니다: ${file.name}`);
+      }
 
-    // 파일 크기 검사
-    if (file.size > maxFileSize) {
-      errors.push(`파일 크기가 너무 큽니다: ${file.name} (최대 ${maxFileSize / 1024 / 1024}MB)`);
-    }
+      // 파일 크기 검사
+      if (file.size > maxFileSize) {
+        errors.push(`파일 크기가 너무 큽니다: ${file.name} (최대 ${maxFileSize / 1024 / 1024}MB)`);
+      }
 
-    return errors;
-  };
+      return errors;
+    },
+    [allowedExtensions, maxFileSize]
+  );
 
   useEffect(() => {
     const dropArea = dropAreaRef.current;
@@ -116,7 +119,7 @@ const useFileDrop = (
       dropArea.removeEventListener('dragleave', handleDragLeave);
       dropArea.removeEventListener('drop', handleDrop);
     };
-  }, [onFileSelect, allowedExtensions, maxFiles, maxFileSize]);
+  }, [onFileSelect, allowedExtensions, maxFiles, maxFileSize, validateFile]);
 
   // 파일 선택 핸들러
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>): void => {
