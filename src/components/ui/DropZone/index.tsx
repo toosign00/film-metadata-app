@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
 import { DropZoneProps } from '../../../types/dropZone.type';
 
@@ -8,7 +8,7 @@ const DropZone: React.FC<DropZoneProps> = ({ onFileSelect, filesCount = 0 }) => 
   const dropAreaRef = useRef<HTMLDivElement>(null);
 
   // 지원하는 이미지 확장자 배열
-  const SUPPORTED_IMAGE_EXTENSIONS = ['jpg', 'jpeg'] as const;
+  const SUPPORTED_IMAGE_EXTENSIONS = useMemo(() => ['jpg', 'jpeg'] as const, []);
 
   // 환경에 따른 최대 파일 수 설정
   const maxFiles = isMobile ? 40 : 100;
@@ -67,7 +67,7 @@ const DropZone: React.FC<DropZoneProps> = ({ onFileSelect, filesCount = 0 }) => 
       dropArea.removeEventListener('dragleave', handleDragLeave);
       dropArea.removeEventListener('drop', handleDrop);
     };
-  }, [onFileSelect, maxFiles]);
+  }, [onFileSelect, maxFiles, SUPPORTED_IMAGE_EXTENSIONS]);
 
   // 파일 선택 핸들러
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {

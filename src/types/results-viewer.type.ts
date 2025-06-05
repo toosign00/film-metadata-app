@@ -1,10 +1,9 @@
-import { RefObject } from 'react';
-import { MetadataResult } from './metadata.type';
+import { Image } from '../ui/imageCard.type';
 
 export interface ResultsViewerProps {
   activeStep: number;
-  resultRef: RefObject<HTMLElement>;
-  resultImages: MetadataResult[];
+  resultRef: React.RefObject<HTMLElement>;
+  resultImages: Image[];
   processing: boolean;
   zipProgress: number;
   setZipProgress: (progress: number) => void;
