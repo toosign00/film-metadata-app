@@ -69,7 +69,10 @@ export const WorkerConfig: WorkerConfigType = {
  * @param {number} deviceMemory - 디바이스 메모리 (GB)
  * @returns {WorkerConfigType} 최적화된 설정
  */
-export const getOptimizedConfig = (isMobileDevice: boolean, deviceMemory: number = 4): WorkerConfigType => {
+export const getOptimizedConfig = (
+  isMobileDevice: boolean,
+  deviceMemory: number = 4,
+): WorkerConfigType => {
   const baseConfig = { ...WorkerConfig };
 
   if (isMobileDevice) {
@@ -129,7 +132,10 @@ export const validateConfig = (config: WorkerConfigType): boolean => {
 
     return true;
   } catch (error) {
-    console.error('Config validation failed:', error instanceof Error ? error.message : 'Unknown error');
+    console.error(
+      'Config validation failed:',
+      error instanceof Error ? error.message : 'Unknown error',
+    );
     return false;
   }
 };

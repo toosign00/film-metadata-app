@@ -1,4 +1,4 @@
-import { InitialSettings } from './config.type';
+import type { InitialSettings } from './config.type';
 
 export interface ProcessResult {
   images: Array<{
@@ -6,7 +6,7 @@ export interface ProcessResult {
     name: string;
     dateTime?: string;
   }>;
-  errors: string[];
+  errors: { file: string; error: string }[];
 }
 
 export interface UseFileHandlersOptions {
@@ -18,7 +18,7 @@ export interface UseFileHandlersReturn {
   sortedFiles: File[];
   processing: boolean;
   completed: number;
-  errors: string[];
+  errors: { file: string; error: string }[];
   resultImages: ProcessResult['images'];
   handleFileSelect: (files: File[]) => void;
   processFiles: (e: React.FormEvent, settings: InitialSettings) => Promise<void>;
@@ -28,7 +28,10 @@ export interface UseFileHandlersReturn {
 
 export interface UseMetadataHandlersReturn {
   settings: InitialSettings;
-  handleSettingsChange: (name: keyof InitialSettings, value: InitialSettings[keyof InitialSettings]) => void;
+  handleSettingsChange: (
+    name: keyof InitialSettings,
+    value: InitialSettings[keyof InitialSettings],
+  ) => void;
   resetSettings: () => void;
 }
 

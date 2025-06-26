@@ -121,7 +121,12 @@ const downloadZipFile = (blob, fileCount) => {
  * @param {Function} updateIsZipCompressing - 압축 상태 업데이트 콜백
  * @returns {Promise<void>}
  */
-export const createZipFile = async (validImages, updateZipProgress, updateProcessing, updateIsZipCompressing) => {
+export const createZipFile = async (
+  validImages,
+  updateZipProgress,
+  updateProcessing,
+  updateIsZipCompressing,
+) => {
   if (!validImages || !Array.isArray(validImages) || validImages.length === 0) {
     alert('다운로드할 이미지가 없습니다.');
     return;
@@ -188,14 +193,22 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
 
           case 'FILE_ADDED':
             processedCount = Math.min(processedCount + 1, totalFiles);
-            const fileProgress = Math.min((processedCount / totalFiles) * FILE_PROCESSING_WEIGHT, FILE_PROCESSING_WEIGHT);
+            const fileProgress = Math.min(
+              (processedCount / totalFiles) * FILE_PROCESSING_WEIGHT,
+              FILE_PROCESSING_WEIGHT,
+            );
             updateZipProgress(Math.round(fileProgress));
             break;
 
           case 'COMPRESSION_PROGRESS':
             const compressionPercent = payload.percent || 0;
             const compressionProgress = (compressionPercent / 100) * COMPRESSION_WEIGHT;
-            const totalProgress = Math.min(Math.round((processedCount / totalFiles) * FILE_PROCESSING_WEIGHT + compressionProgress), 100);
+            const totalProgress = Math.min(
+              Math.round(
+                (processedCount / totalFiles) * FILE_PROCESSING_WEIGHT + compressionProgress,
+              ),
+              100,
+            );
             updateZipProgress(totalProgress);
             break;
 
@@ -228,7 +241,9 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
         await Promise.allSettled(promises);
 
         if (i + maxConcurrent < validImages.length) {
-          await new Promise((resolve) => setTimeout(resolve, STREAMING_OPTIONS.delayBetweenBatches));
+          await new Promise((resolve) =>
+            setTimeout(resolve, STREAMING_OPTIONS.delayBetweenBatches),
+          );
         }
       }
 
@@ -267,7 +282,9 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
             if (retryCount > STREAMING_OPTIONS.maxFetchRetries) {
               throw new Error(`파일 다운로드 실패 (${retryCount}회 시도): ${fileName}`);
             }
-            await new Promise((resolve) => setTimeout(resolve, STREAMING_OPTIONS.retryDelay * retryCount));
+            await new Promise((resolve) =>
+              setTimeout(resolve, STREAMING_OPTIONS.retryDelay * retryCount),
+            );
             continue;
           }
         }
@@ -294,7 +311,7 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
                 currentPosition: cursor,
               },
             },
-            [chunk]
+            [chunk],
           );
 
           cursor = nextWindow;

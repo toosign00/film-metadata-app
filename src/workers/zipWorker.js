@@ -74,7 +74,7 @@ function handleStartZip() {
             final,
           },
         },
-        [data.buffer]
+        [data.buffer],
       );
     });
 
@@ -116,7 +116,10 @@ async function handleFileChunk(payload) {
     }
 
     // 진행률 업데이트
-    const progress = Math.min(Math.round(((currentPosition + chunk.length) / totalSize) * 100), 100);
+    const progress = Math.min(
+      Math.round(((currentPosition + chunk.length) / totalSize) * 100),
+      100,
+    );
     self.postMessage({
       type: 'COMPRESSION_PROGRESS',
       payload: { percent: progress },

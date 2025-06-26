@@ -1,14 +1,19 @@
-import React from 'react';
 import { ErrorDisplayProps } from '@/types/error-display.type';
 
-const ErrorDisplay: React.FC<ErrorDisplayProps> = ({ errors }) => {
+export const ErrorDisplay = ({ errors }: ErrorDisplayProps) => {
   if (!errors || errors.length === 0) return null;
 
   return (
     <section className="mb-8" aria-labelledby="errors-section">
-      <div className="p-4 bg-red-900 bg-opacity-20 rounded-lg border border-red-800 shadow-md">
-        <div className="flex items-center mb-3">
-          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-red-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className="bg-opacity-20 rounded-lg border border-red-800 bg-red-900 p-4 shadow-md">
+        <div className="mb-3 flex items-center">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="mr-2 h-5 w-5 text-red-500"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
             <path
               strokeLinecap="round"
               strokeLinejoin="round"
@@ -20,7 +25,7 @@ const ErrorDisplay: React.FC<ErrorDisplayProps> = ({ errors }) => {
             오류 발생 ({errors.length}개)
           </h2>
         </div>
-        <ul className="text-sm text-red-400 list-disc list-inside">
+        <ul className="list-inside list-disc text-sm text-red-400">
           {errors.map((error, idx) => (
             <li key={idx} className="mb-1">
               {error.file}: {error.error}
@@ -31,5 +36,3 @@ const ErrorDisplay: React.FC<ErrorDisplayProps> = ({ errors }) => {
     </section>
   );
 };
-
-export default ErrorDisplay;

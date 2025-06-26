@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { naturalSort } from '../utils';
+import { naturalSort } from '../utils/sortUtils';
 import { processMetadata } from '../utils/metadataUtils';
 import { InitialSettings } from '../types/config.type';
 import { ProcessResult, UseFileHandlersOptions, UseFileHandlersReturn } from '../types/hooks.type';
@@ -15,7 +15,7 @@ export const useFileHandlers = ({ onComplete }: UseFileHandlersOptions): UseFile
   const [sortedFiles, setSortedFiles] = useState<File[]>([]);
   const [processing, setProcessing] = useState(false);
   const [completed, setCompleted] = useState(0);
-  const [errors, setErrors] = useState<string[]>([]);
+  const [errors, setErrors] = useState<{ file: string; error: string }[]>([]);
   const [resultImages, setResultImages] = useState<ProcessResult['images']>([]);
 
   // 파일 선택 핸들러
@@ -45,7 +45,17 @@ export const useFileHandlers = ({ onComplete }: UseFileHandlersOptions): UseFile
       const timeDate = new Date(settings.startTime);
       combinedDateTime.setHours(timeDate.getHours(), timeDate.getMinutes(), timeDate.getSeconds());
 
-      const results = await processMetadata(sortedFiles, combinedDateTime, settings, (completed: number) => setCompleted(completed));
+      const metadataSettings = {
+        ...settings,
+        startTime: new Date(settings.startTime),
+      };
+
+      const results = await processMetadata(
+        sortedFiles,
+        combinedDateTime,
+        metadataSettings,
+        (completed: number) => setCompleted(completed),
+      );
 
       setResultImages(results.images);
       setErrors(results.errors);

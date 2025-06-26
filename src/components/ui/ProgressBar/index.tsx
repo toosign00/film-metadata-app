@@ -1,15 +1,17 @@
-import React from 'react';
-import { ProgressBarProps } from '../../../types/progressBar.type';
+import { ProgressBarProps } from '@/types/progressBar.type';
 
-const ProgressBar: React.FC<ProgressBarProps> = ({ progress, label, className = '' }) => {
+export const ProgressBar = ({ progress, label, className = '' }: ProgressBarProps) => {
   return (
-    <div className={`mb-4 bg-gray-800 rounded-lg border border-gray-700 p-3 shadow-sm ${className}`} aria-live="polite">
-      <p className="text-gray-200 font-medium mb-2">
+    <div
+      className={`mb-4 rounded-lg border border-gray-700 bg-gray-800 p-3 shadow-sm ${className}`}
+      aria-live="polite"
+    >
+      <p className="mb-2 font-medium text-gray-200">
         {label}: {progress}%
       </p>
-      <div className="w-full bg-gray-700 rounded-full h-2.5 overflow-hidden">
+      <div className="h-2.5 w-full overflow-hidden rounded-full bg-gray-700">
         <div
-          className="bg-blue-600 h-2.5 rounded-full transition-all duration-300 ease-in-out"
+          className="h-2.5 rounded-full bg-blue-600 transition-all duration-300 ease-in-out"
           style={{ width: `${progress}%` }}
           role="progressbar"
           aria-valuenow={progress}
@@ -20,5 +22,3 @@ const ProgressBar: React.FC<ProgressBarProps> = ({ progress, label, className = 
     </div>
   );
 };
-
-export default ProgressBar;

@@ -1,5 +1,9 @@
-import React, { useState, useCallback, useRef } from 'react';
-import { ResultsViewer, FileSelection, MetadataSettings, ErrorDisplay, StepNavigation } from '@/components/layout';
+import { useState, useCallback, useRef } from 'react';
+import { ResultsViewer } from '@/components/layout/ResultsViewer';
+import { FileSelection } from '@/components/layout/FileSelection';
+import { MetadataSettings } from '@/components/layout/MetadataSettings';
+import { ErrorDisplay } from '@/components/layout/ErrorDisplay';
+import { StepNavigation } from '@/components/layout/StepNavigation';
 import { useFileHandlers } from '@/hooks/useFileHandlers';
 import { useMetadataHandlers } from '@/hooks/useMetadataHandlers';
 import { STEPS } from '@/config/constants';
@@ -12,29 +16,39 @@ import { InitialSettings } from '@/types/config.type';
  *
  * @returns {JSX.Element} 단계 관리 UI
  */
-const StepManager: React.FC<StepManagerProps> = ({ onComplete }) => {
+export const StepManager = ({ onComplete }: StepManagerProps) => {
   const [activeStep, setActiveStep] = useState(STEPS.FILE_SELECTION);
   const [zipProgress, setZipProgress] = useState(0);
 
   const resultRef = useRef<HTMLElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { files, sortedFiles, processing, completed, errors, resultImages, handleFileSelect, processFiles, resetFiles, setProcessing } =
-    useFileHandlers({
-      onComplete: (results) => {
-        setActiveStep(STEPS.RESULTS_VIEW);
-        setTimeout(() => {
-          resultRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }, 500);
-        onComplete?.(
-          results.images.map((img) => ({
-            ...img,
-            file: new File([], img.name),
-            dateTime: img.dateTime || '',
-          }))
-        );
-      },
-    });
+  const {
+    files,
+    sortedFiles,
+    processing,
+    completed,
+    errors,
+    resultImages,
+    handleFileSelect,
+    processFiles,
+    resetFiles,
+    setProcessing,
+  } = useFileHandlers({
+    onComplete: (results) => {
+      setActiveStep(STEPS.RESULTS_VIEW);
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+      onComplete?.(
+        results.images.map((img) => ({
+          ...img,
+          file: new File([], img.name),
+          dateTime: img.dateTime || '',
+        })),
+      );
+    },
+  });
 
   const { settings, handleSettingsChange, resetSettings } = useMetadataHandlers();
 
@@ -58,14 +72,14 @@ const StepManager: React.FC<StepManagerProps> = ({ onComplete }) => {
       };
       processFiles(e, metadataSettings);
     },
-    [processFiles, settings]
+    [processFiles, settings],
   );
 
   const handleSettingsChangeWrapper = useCallback(
     (name: string, value: any) => {
       handleSettingsChange(name as keyof InitialSettings, value);
     },
-    [handleSettingsChange]
+    [handleSettingsChange],
   );
 
   return (
@@ -78,8 +92,8 @@ const StepManager: React.FC<StepManagerProps> = ({ onComplete }) => {
         resetForm={resetForm}
       />
 
-      <main className="flex-1 p-4 md:p-6 overflow-auto">
-        <div className="max-w-6xl mx-auto w-full">
+      <main className="flex-1 overflow-auto p-4 md:p-6">
+        <div className="mx-auto w-full max-w-6xl">
           <FileSelection
             activeStep={activeStep}
             onFileSelect={handleFileSelect}
@@ -118,18 +132,9 @@ const StepManager: React.FC<StepManagerProps> = ({ onComplete }) => {
             goToStep={goToStep}
           />
 
-          {errors.length > 0 && (
-            <ErrorDisplay
-              errors={errors.map((err) => ({
-                file: '파일',
-                error: err,
-              }))}
-            />
-          )}
+          {errors.length > 0 && <ErrorDisplay errors={errors} />}
         </div>
       </main>
     </>
   );
 };
-
-export default StepManager;

@@ -11,7 +11,10 @@ export const useMetadataHandlers = (): UseMetadataHandlersReturn => {
   const [settings, setSettings] = useState<InitialSettings>(INITIAL_SETTINGS);
 
   // 설정 변경 핸들러
-  const handleSettingsChange = (name: keyof InitialSettings, value: InitialSettings[keyof InitialSettings]): void => {
+  const handleSettingsChange = (
+    name: keyof InitialSettings,
+    value: InitialSettings[keyof InitialSettings],
+  ): void => {
     setSettings((prev) => ({
       ...prev,
       [name]: value,

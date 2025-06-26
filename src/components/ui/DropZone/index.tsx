@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect, useMemo } from 'react';
+import { useRef, useState, useEffect, useMemo } from 'react';
 import { isMobile } from 'react-device-detect';
-import { DropZoneProps } from '../../../types/dropZone.type';
+import { DropZoneProps } from '@/types/dropZone.type';
 
-const DropZone: React.FC<DropZoneProps> = ({ onFileSelect, filesCount = 0 }) => {
+export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const dropAreaRef = useRef<HTMLDivElement>(null);
@@ -46,7 +46,10 @@ const DropZone: React.FC<DropZoneProps> = ({ onFileSelect, filesCount = 0 }) => 
 
       const droppedFiles = Array.from(e.dataTransfer.files).filter((file) => {
         const ext = file.name.split('.').pop()?.toLowerCase();
-        return ext && SUPPORTED_IMAGE_EXTENSIONS.includes(ext as (typeof SUPPORTED_IMAGE_EXTENSIONS)[number]);
+        return (
+          ext &&
+          SUPPORTED_IMAGE_EXTENSIONS.includes(ext as (typeof SUPPORTED_IMAGE_EXTENSIONS)[number])
+        );
       });
 
       if (droppedFiles.length > 0) {
@@ -75,7 +78,10 @@ const DropZone: React.FC<DropZoneProps> = ({ onFileSelect, filesCount = 0 }) => 
 
     const selectedFiles = Array.from(e.target.files).filter((file) => {
       const ext = file.name.split('.').pop()?.toLowerCase();
-      return ext && SUPPORTED_IMAGE_EXTENSIONS.includes(ext as (typeof SUPPORTED_IMAGE_EXTENSIONS)[number]);
+      return (
+        ext &&
+        SUPPORTED_IMAGE_EXTENSIONS.includes(ext as (typeof SUPPORTED_IMAGE_EXTENSIONS)[number])
+      );
     });
 
     if (selectedFiles.length > 0) {
@@ -91,9 +97,13 @@ const DropZone: React.FC<DropZoneProps> = ({ onFileSelect, filesCount = 0 }) => 
   return (
     <div
       ref={dropAreaRef}
-      className={`flex items-center justify-center border-2 border-dashed rounded-lg ${
-        isDragging ? 'border-blue-500 bg-gray-800' : filesCount > 0 ? 'border-gray-600 bg-gray-800' : 'border-gray-600 bg-gray-800'
-      } p-4 text-center cursor-pointer transition-all hover:border-blue-500`}
+      className={`flex items-center justify-center rounded-lg border-2 border-dashed ${
+        isDragging
+          ? 'border-blue-500 bg-gray-800'
+          : filesCount > 0
+            ? 'border-gray-600 bg-gray-800'
+            : 'border-gray-600 bg-gray-800'
+      } cursor-pointer p-4 text-center transition-all hover:border-blue-500`}
       onClick={() => fileInputRef.current?.click()}
       style={{ minHeight: '300px', height: '100%' }}
     >
@@ -111,7 +121,7 @@ const DropZone: React.FC<DropZoneProps> = ({ onFileSelect, filesCount = 0 }) => 
       <div className="flex flex-col items-center justify-center py-5">
         <svg
           xmlns="http://www.w3.org/2000/svg"
-          className={`h-12 w-12 mb-2 ${isDragging ? 'text-blue-500' : filesCount > 0 ? 'text-blue-500' : 'text-gray-500'}`}
+          className={`mb-2 h-12 w-12 ${isDragging ? 'text-blue-500' : filesCount > 0 ? 'text-blue-500' : 'text-gray-500'}`}
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -154,5 +164,3 @@ const DropZone: React.FC<DropZoneProps> = ({ onFileSelect, filesCount = 0 }) => 
     </div>
   );
 };
-
-export default DropZone;
