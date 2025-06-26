@@ -1,6 +1,11 @@
 import piexifjs from 'piexifjs';
 import { dataURItoBlob } from './convertUtils';
-import { MetadataSettings, MetadataResult, ProcessMetadataResults, ProgressCallback } from '../types/metadata.type';
+import type {
+  MetadataSettings,
+  MetadataResult,
+  ProcessMetadataResults,
+  ProgressCallback,
+} from '../types/metadata.type';
 
 /**
  * 렌즈 정보 전처리 함수
@@ -28,7 +33,7 @@ const preprocessLensInfo = (lensInfo: string): string => {
 export const setMetadata = async (
   file: File,
   dateTime: Date,
-  settings: MetadataSettings
+  settings: MetadataSettings,
 ): Promise<MetadataResult> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
@@ -52,13 +57,15 @@ export const setMetadata = async (
         // EXIF 태그 ID와 값 설정
         zeroth[piexifjs.ImageIFD.Make] = settings.cameraMake;
         zeroth[piexifjs.ImageIFD.Model] = settings.cameraModel;
-        zeroth[piexifjs.ImageIFD.ImageDescription] = `Shot on ${settings.cameraModel} with ${settings.filmInfo}`;
+        zeroth[piexifjs.ImageIFD.ImageDescription] =
+          `Shot on ${settings.cameraModel} with ${settings.filmInfo}`;
         zeroth[piexifjs.ImageIFD.Software] = 'Film Metadata Web App';
 
         exif[piexifjs.ExifIFD.DateTimeOriginal] = dateTimeStr;
         exif[piexifjs.ExifIFD.DateTimeDigitized] = dateTimeStr;
         exif[piexifjs.ExifIFD.LensModel] = settings.lens;
-        exif[piexifjs.ExifIFD.UserComment] = `Film: ${settings.filmInfo}, Lens: ${settings.lensInfo}`;
+        exif[piexifjs.ExifIFD.UserComment] =
+          `Film: ${settings.filmInfo}, Lens: ${settings.lensInfo}`;
 
         // 렌즈 정보 전처리
         const processedLensInfo = preprocessLensInfo(settings.lensInfo);
@@ -129,7 +136,7 @@ export const processMetadata = async (
   files: File[],
   startDateTime: Date,
   settings: MetadataSettings,
-  onProgress: ProgressCallback
+  onProgress: ProgressCallback,
 ): Promise<ProcessMetadataResults> => {
   const results: ProcessMetadataResults = {
     images: [],

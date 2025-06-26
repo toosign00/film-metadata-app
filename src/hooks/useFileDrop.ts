@@ -18,7 +18,7 @@ const useFileDrop = (
     maxFileSize = 15 * 1024 * 1024, // 15MB
     maxDesktopFiles = 100, // 데스크톱에서 최대 파일 개수 100개로 제한
     maxMobileFiles = 40, // 모바일에서 최대 파일 개수 40개로 제한
-  }: UseFileDropOptions = {}
+  }: UseFileDropOptions = {},
 ): UseFileDropReturn => {
   const [isDragging, setIsDragging] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
@@ -45,7 +45,7 @@ const useFileDrop = (
 
       return errors;
     },
-    [allowedExtensions, maxFileSize]
+    [allowedExtensions, maxFileSize],
   );
 
   useEffect(() => {

@@ -1,15 +1,25 @@
-import React from 'react';
 import { CameraSectionProps } from '@/types/metadata-settings.type';
 
-const CameraSection: React.FC<CameraSectionProps> = ({ settings, validationErrors, handleInputChange }) => {
+export const CameraSection = ({
+  settings,
+  validationErrors,
+  handleInputChange,
+}: CameraSectionProps) => {
   return (
-    <div className="bg-gray-900 rounded-lg border border-gray-700 p-4 shadow-md" role="group" aria-labelledby="camera-heading">
-      <h3 id="camera-heading" className="font-medium text-gray-200 mb-3 pb-2 border-b border-gray-700">
+    <div
+      className="rounded-lg border border-gray-700 bg-gray-900 p-4 shadow-md"
+      role="group"
+      aria-labelledby="camera-heading"
+    >
+      <h3
+        id="camera-heading"
+        className="mb-3 border-b border-gray-700 pb-2 font-medium text-gray-200"
+      >
         카메라 정보
       </h3>
 
-      <div className="mb-4 relative">
-        <label htmlFor="cameraMake" className="block text-gray-300 font-medium mb-1 text-sm">
+      <div className="relative mb-4">
+        <label htmlFor="cameraMake" className="mb-1 block text-sm font-medium text-gray-300">
           제조사
         </label>
         <input
@@ -18,14 +28,14 @@ const CameraSection: React.FC<CameraSectionProps> = ({ settings, validationError
           name="cameraMake"
           value={settings.cameraMake}
           onChange={handleInputChange}
-          className="w-full bg-gray-800 text-gray-200 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-gray-200 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
           placeholder="예: Nikon"
           aria-describedby="cameraMake-help cameraMake-error"
           aria-invalid={!!validationErrors.cameraMake}
           autoComplete="off"
           required
         />
-        <div className="flex justify-between items-center flex-wrap">
+        <div className="flex flex-wrap items-center justify-between">
           <p id="cameraMake-help" className="mt-1 text-xs text-gray-500">
             카메라 제조사를 입력하세요
           </p>
@@ -38,7 +48,7 @@ const CameraSection: React.FC<CameraSectionProps> = ({ settings, validationError
       </div>
 
       <div className="relative">
-        <label htmlFor="cameraModel" className="block text-gray-300 font-medium mb-1 text-sm">
+        <label htmlFor="cameraModel" className="mb-1 block text-sm font-medium text-gray-300">
           모델명
         </label>
         <input
@@ -47,14 +57,14 @@ const CameraSection: React.FC<CameraSectionProps> = ({ settings, validationError
           name="cameraModel"
           value={settings.cameraModel}
           onChange={handleInputChange}
-          className="w-full bg-gray-800 text-gray-200 border border-gray-700 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+          className="w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-gray-200 focus:border-transparent focus:ring-2 focus:ring-blue-500 focus:outline-none"
           placeholder="예: FM2"
           aria-describedby="cameraModel-help cameraModel-error"
           aria-invalid={!!validationErrors.cameraModel}
           autoComplete="off"
           required
         />
-        <div className="flex justify-between items-center flex-wrap">
+        <div className="flex flex-wrap items-center justify-between">
           <p id="cameraModel-help" className="mt-1 text-xs text-gray-500">
             카메라 모델명을 입력하세요
           </p>
@@ -68,5 +78,3 @@ const CameraSection: React.FC<CameraSectionProps> = ({ settings, validationError
     </div>
   );
 };
-
-export default CameraSection;

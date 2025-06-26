@@ -1,5 +1,6 @@
 import React from 'react';
-import { MainLayout, StepManager } from '@/components/layout';
+import { MainLayout } from './components/layout/MainLayout';
+import { StepManager } from './components/layout/StepManager';
 
 /**
  * 애플리케이션 루트 컴포넌트

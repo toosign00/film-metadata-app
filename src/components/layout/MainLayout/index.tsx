@@ -1,7 +1,7 @@
-import React from 'react';
-import { Header, Footer } from '@/components/layout';
-import GlobalStyles from '@/styles/GlobalStyles';
-import { MainLayoutProps } from '@/types/main-layout.type';
+import { Header } from '@/components/layout/Header';
+import { Footer } from '@/components/layout/Footer';
+import { GlobalStyles } from '@/assets/styles/GlobalStyles';
+import type { MainLayoutProps } from '@/types/main-layout.type';
 
 /**
  * 메인 레이아웃 컴포넌트
@@ -11,9 +11,9 @@ import { MainLayoutProps } from '@/types/main-layout.type';
  * @param {React.ReactNode} props.children - 레이아웃 내부에 렌더링될 컴포넌트
  * @returns {JSX.Element} 메인 레이아웃 UI
  */
-const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
+export const MainLayout = ({ children }: MainLayoutProps) => {
   return (
-    <div className="min-h-screen w-full flex flex-col bg-gray-900 text-gray-200 overflow-x-hidden">
+    <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-gray-900 text-gray-200">
       <GlobalStyles />
       <Header />
       {children}
@@ -21,5 +21,3 @@ const MainLayout: React.FC<MainLayoutProps> = ({ children }) => {
     </div>
   );
 };
-
-export default MainLayout;

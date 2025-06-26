@@ -1,9 +1,10 @@
-import React from 'react';
-import { ImageCard, ProgressBar, Button } from '../../ui';
-import { downloadFile, createZipFile } from '../../../utils';
+import { ImageCard } from '@/components/ui/ImageCard';
+import { ProgressBar } from '@/components/ui/ProgressBar';
+import { Button } from '@/components/ui/Button';
+import { downloadFile, createZipFile } from '@/utils/downloadUtils';
 import { ResultsViewerProps } from '@/types/results-viewer.type';
 
-const ResultsViewer: React.FC<ResultsViewerProps> = ({
+export const ResultsViewer = ({
   activeStep,
   resultRef,
   resultImages,
@@ -12,7 +13,7 @@ const ResultsViewer: React.FC<ResultsViewerProps> = ({
   setZipProgress,
   setProcessing,
   goToStep,
-}) => {
+}: ResultsViewerProps) => {
   if (activeStep !== 3) {
     return null;
   }
@@ -29,10 +30,12 @@ const ResultsViewer: React.FC<ResultsViewerProps> = ({
 
   return (
     <section ref={resultRef} className="mb-8 transition-all" aria-labelledby="results-section">
-      <div className="bg-gray-800 border border-gray-700 rounded-xl p-5 md:p-6 shadow-md">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2 sm:gap-0 mb-4">
-          <h2 id="results-section" className="text-xl font-bold text-gray-200 flex items-center">
-            <span className="flex items-center justify-center bg-blue-600 text-white rounded-full w-6 h-6 text-sm mr-2">3</span>
+      <div className="rounded-xl border border-gray-700 bg-gray-800 p-5 shadow-md md:p-6">
+        <div className="mb-4 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center sm:gap-0">
+          <h2 id="results-section" className="flex items-center text-xl font-bold text-gray-200">
+            <span className="mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-sm text-white">
+              3
+            </span>
             {resultImages.length > 0 ? `처리 결과 (${resultImages.length}개 파일)` : '처리 결과'}
           </h2>
           {resultImages.length > 0 && (
@@ -43,7 +46,13 @@ const ResultsViewer: React.FC<ResultsViewerProps> = ({
               isLoading={processing && zipProgress > 0}
               icon={
                 !processing ? (
-                  <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 mr-1.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="mr-1.5 h-5 w-5"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke="currentColor"
+                  >
                     <path
                       strokeLinecap="round"
                       strokeLinejoin="round"
@@ -53,7 +62,7 @@ const ResultsViewer: React.FC<ResultsViewerProps> = ({
                   </svg>
                 ) : null
               }
-              className="w-full sm:w-auto flex justify-center items-center h-10"
+              className="flex h-10 w-full items-center justify-center sm:w-auto"
             >
               {processing && zipProgress > 0 ? (
                 `${zipProgress}%`
@@ -67,19 +76,21 @@ const ResultsViewer: React.FC<ResultsViewerProps> = ({
         </div>
 
         {/* 압축 진행 상태 표시 */}
-        {processing && zipProgress > 0 && <ProgressBar progress={zipProgress} label="ZIP 파일 생성 중" />}
+        {processing && zipProgress > 0 && (
+          <ProgressBar progress={zipProgress} label="ZIP 파일 생성 중" />
+        )}
 
         {resultImages.length > 0 ? (
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3 md:gap-4">
+          <div className="grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4">
             {resultImages.map((image, idx) => (
               <ImageCard key={idx} image={image} onDownload={downloadFile} />
             ))}
           </div>
         ) : (
-          <div className="bg-gray-900 rounded-lg border border-gray-700 p-8 text-center shadow-md">
+          <div className="rounded-lg border border-gray-700 bg-gray-900 p-8 text-center shadow-md">
             <svg
               xmlns="http://www.w3.org/2000/svg"
-              className="h-12 w-12 mx-auto text-gray-500 mb-3"
+              className="mx-auto mb-3 h-12 w-12 text-gray-500"
               fill="none"
               viewBox="0 0 24 24"
               stroke="currentColor"
@@ -92,10 +103,12 @@ const ResultsViewer: React.FC<ResultsViewerProps> = ({
               />
             </svg>
             <p className="text-gray-300">처리된 이미지가 여기에 표시됩니다.</p>
-            <p className="text-sm text-gray-500 mt-2">메타데이터를 설정하기 위해 2단계로 이동하세요.</p>
+            <p className="mt-2 text-sm text-gray-500">
+              메타데이터를 설정하기 위해 2단계로 이동하세요.
+            </p>
             <button
               onClick={() => goToStep(2)}
-              className="mt-4 px-4 py-2 bg-gray-700 text-gray-300 rounded-lg text-sm font-medium hover:bg-gray-600 transition"
+              className="mt-4 rounded-lg bg-gray-700 px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-gray-600"
             >
               메타데이터 설정으로 이동
             </button>
@@ -112,5 +125,3 @@ const ResultsViewer: React.FC<ResultsViewerProps> = ({
     </section>
   );
 };
-
-export default ResultsViewer;
