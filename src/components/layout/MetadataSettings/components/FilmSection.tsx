@@ -1,15 +1,25 @@
-import React from 'react';
 import { FilmSectionProps } from '@/types/metadata-settings.type';
 
-const FilmSection: React.FC<FilmSectionProps> = ({ settings, validationErrors, handleInputChange }) => {
+export const FilmSection = ({
+  settings,
+  validationErrors,
+  handleInputChange: handleInputChange,
+}: FilmSectionProps) => {
   return (
-    <div className="bg-gray-900 rounded-lg border border-gray-700 p-4 shadow-md" role="group" aria-labelledby="film-info-heading">
-      <h3 id="film-info-heading" className="font-medium text-gray-200 mb-3 pb-2 border-b border-gray-700">
+    <div
+      className="rounded-lg border border-gray-700 bg-gray-900 p-4 shadow-md"
+      role="group"
+      aria-labelledby="film-info-heading"
+    >
+      <h3
+        id="film-info-heading"
+        className="mb-3 border-b border-gray-700 pb-2 font-medium text-gray-200"
+      >
         필름 정보
       </h3>
 
-      <div className="mb-4 relative">
-        <label htmlFor="filmInfo" className="block text-gray-300 font-medium mb-1 text-sm">
+      <div className="relative mb-4">
+        <label htmlFor="filmInfo" className="mb-1 block text-sm font-medium text-gray-300">
           필름 정보
         </label>
         <input
@@ -19,12 +29,12 @@ const FilmSection: React.FC<FilmSectionProps> = ({ settings, validationErrors, h
           value={settings.filmInfo}
           onChange={handleInputChange}
           placeholder="예: Kodak Portra 400, Fuji Superia 200"
-          className="w-full px-4 py-2.5 bg-gray-800 border text-gray-200 border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm"
+          className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
           aria-describedby="filmInfo-help filmInfo-error"
           aria-required="true"
           aria-invalid={!!validationErrors.filmInfo}
         />
-        <div className="flex justify-between items-center flex-wrap">
+        <div className="flex flex-wrap items-center justify-between">
           <p id="filmInfo-help" className="mt-1 text-xs text-gray-500">
             필름 브랜드와 종류
           </p>
@@ -37,7 +47,7 @@ const FilmSection: React.FC<FilmSectionProps> = ({ settings, validationErrors, h
       </div>
 
       <div className="relative">
-        <label htmlFor="isoValue" className="block text-gray-300 font-medium mb-1 text-sm">
+        <label htmlFor="isoValue" className="mb-1 block text-sm font-medium text-gray-300">
           ISO 값
         </label>
         <input
@@ -47,12 +57,12 @@ const FilmSection: React.FC<FilmSectionProps> = ({ settings, validationErrors, h
           value={settings.isoValue}
           onChange={handleInputChange}
           placeholder="예: 100, 200, 400, 800"
-          className="w-full px-4 py-2.5 bg-gray-800 border text-gray-200 border-gray-700 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none shadow-sm"
+          className="w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
           aria-describedby="isoValue-help isoValue-error"
           aria-required="true"
           aria-invalid={!!validationErrors.isoValue}
         />
-        <div className="flex justify-between items-center flex-wrap">
+        <div className="flex flex-wrap items-center justify-between">
           <p id="isoValue-help" className="mt-1 text-xs text-gray-500">
             필름의 ISO 감도
           </p>
@@ -66,5 +76,3 @@ const FilmSection: React.FC<FilmSectionProps> = ({ settings, validationErrors, h
     </div>
   );
 };
-
-export default FilmSection;

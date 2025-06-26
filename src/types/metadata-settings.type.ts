@@ -1,5 +1,5 @@
-import { RefObject, FormEvent, ChangeEvent } from 'react';
-import { MetadataSettings as MetadataSettingsType } from './metadata.type';
+import type { RefObject, FormEvent, ChangeEvent } from 'react';
+import type { MetadataSettings as MetadataSettingsType } from './metadata.type';
 
 export interface ValidationErrors {
   [key: string]: string;

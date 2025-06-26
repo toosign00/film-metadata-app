@@ -1,4 +1,4 @@
-import { Image } from '../ui/imageCard.type';
+import type { Image } from './imageCard.type';
 
 export interface ResultsViewerProps {
   activeStep: number;

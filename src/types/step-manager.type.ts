@@ -1,5 +1,5 @@
-import { MetadataSettings as MetadataSettingsType } from './metadata.type';
-import { MetadataResult } from './metadata.type';
+import type { MetadataSettings as MetadataSettingsType } from './metadata.type';
+import type { MetadataResult } from './metadata.type';
 
 export interface StepManagerProps {
   onComplete?: (results: MetadataResult[]) => void;
