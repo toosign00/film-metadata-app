@@ -1,6 +1,5 @@
-import { Header } from '@/components/layout/Header';
 import { Footer } from '@/components/layout/Footer';
-import { GlobalStyles } from '@/assets/styles/GlobalStyles';
+import { Header } from '@/components/layout/Header';
 import type { MainLayoutProps } from '@/types/main-layout.type';
 
 /**
@@ -13,8 +12,7 @@ import type { MainLayoutProps } from '@/types/main-layout.type';
  */
 export const MainLayout = ({ children }: MainLayoutProps) => {
   return (
-    <div className="flex min-h-screen w-full flex-col overflow-x-hidden bg-gray-900 text-gray-200">
-      <GlobalStyles />
+    <div className='flex min-h-screen w-full flex-col overflow-x-hidden bg-gray-900 text-gray-200'>
       <Header />
       {children}
       <Footer />

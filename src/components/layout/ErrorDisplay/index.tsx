@@ -1,33 +1,21 @@
-import { ErrorDisplayProps } from '@/types/error-display.type';
+import { TriangleAlert } from 'lucide-react';
+import type { ErrorDisplayProps } from '@/types/error-display.type';
 
 export const ErrorDisplay = ({ errors }: ErrorDisplayProps) => {
   if (!errors || errors.length === 0) return null;
 
   return (
-    <section className="mb-8" aria-labelledby="errors-section">
-      <div className="bg-opacity-20 rounded-lg border border-red-800 bg-red-900 p-4 shadow-md">
-        <div className="mb-3 flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="mr-2 h-5 w-5 text-red-500"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"
-            />
-          </svg>
-          <h2 id="errors-section" className="text-lg font-bold text-red-500">
+    <section className='mb-8' aria-labelledby='errors-section'>
+      <div className='bg-opacity-20 rounded-lg border border-red-800 bg-red-900 p-4 shadow-md'>
+        <div className='mb-3 flex items-center'>
+          <TriangleAlert className='mr-2 text-red-500' size={20} />
+          <h2 id='errors-section' className='text-lg font-bold text-red-500'>
             오류 발생 ({errors.length}개)
           </h2>
         </div>
-        <ul className="list-inside list-disc text-sm text-red-400">
+        <ul className='list-inside list-disc text-sm text-red-400'>
           {errors.map((error, idx) => (
-            <li key={idx} className="mb-1">
+            <li key={`${error.file}-${idx}`} className='mb-1'>
               {error.file}: {error.error}
             </li>
           ))}
