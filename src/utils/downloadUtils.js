@@ -280,7 +280,8 @@ export const createZipFile = async (
               break;
             }
             throw new Error('응답이 올바르지 않습니다');
-          } catch {
+          } catch (err) {
+            debug(`파일 다운로드 재시도 (${retryCount + 1}/${STREAMING_OPTIONS.maxFetchRetries + 1}) 실패: ${fileName}`, err);
             retryCount++;
             if (retryCount > STREAMING_OPTIONS.maxFetchRetries) {
               throw new Error(`파일 다운로드 실패 (${retryCount}회 시도): ${fileName}`);
