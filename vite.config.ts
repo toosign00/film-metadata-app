@@ -4,6 +4,17 @@ import { visualizer } from 'rollup-plugin-visualizer';
 import { defineConfig } from 'vite';
 
 export default defineConfig(({ mode }: { mode: string }) => ({
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks: {
+          vendor: ['react', 'react-dom'],
+          ui: ['@radix-ui/react-alert-dialog', '@radix-ui/react-slot'],
+          utils: ['date-fns', 'fflate', 'piexifjs'],
+        },
+      },
+    },
+  },
   plugins: [
     react(),
     tailwindcss(),
