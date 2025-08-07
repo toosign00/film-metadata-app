@@ -1,4 +1,4 @@
-import React from 'react';
+import { Toaster } from 'sonner';
 import { MainLayout } from './components/layout/MainLayout';
 import { StepManager } from './components/layout/StepManager';
 
@@ -8,10 +8,11 @@ import { StepManager } from './components/layout/StepManager';
  *
  * @returns {JSX.Element} 애플리케이션 UI
  */
-const App: React.FC = () => {
+const App = () => {
   return (
     <MainLayout>
       <StepManager />
+      <Toaster />
     </MainLayout>
   );
 };
