@@ -1,0 +1,136 @@
+{
+  "$schema": "https://biomejs.dev/schemas/2.1.3/schema.json",
+  "files": {
+    "includes": ["src/**", "public/**", "*.js", "*.jsx", "*.ts", "*.tsx", "*.json"],
+    "ignoreUnknown": true
+  },
+  "assist": {
+    "enabled": true,
+    "includes": ["src/**", "*.js", "*.jsx", "*.ts", "*.tsx"],
+    "actions": {
+      "source": {
+        "organizeImports": "on",
+        "useSortedKeys": "off"
+      }
+    }
+  },
+  "formatter": {
+    "enabled": true,
+    "formatWithErrors": false,
+    "indentStyle": "space",
+    "indentWidth": 2,
+    "lineEnding": "lf",
+    "lineWidth": 100,
+    "attributePosition": "auto"
+  },
+  "javascript": {
+    "formatter": {
+      "quoteStyle": "single",
+      "jsxQuoteStyle": "single",
+      "trailingCommas": "es5",
+      "semicolons": "always",
+      "arrowParentheses": "always"
+    }
+  },
+  "json": {
+    "formatter": {
+      "indentStyle": "space",
+      "indentWidth": 2,
+      "lineWidth": 100
+    }
+  },
+  "css": {
+    "formatter": {
+      "enabled": true,
+      "indentStyle": "space",
+      "indentWidth": 2,
+      "lineWidth": 100
+    },
+    "linter": {
+      "enabled": true
+    }
+  },
+  "linter": {
+    "enabled": true,
+    "rules": {
+      "recommended": true,
+      "style": {
+        "noParameterAssign": "error",
+        "useDefaultParameterLast": "error",
+        "useSingleVarDeclarator": "error",
+        "useConst": "error",
+        "noUselessElse": "error",
+        "useSelfClosingElements": "error",
+        "useTemplate": "error"
+      },
+      "correctness": {
+        "noUnusedImports": "error",
+        "noUnusedVariables": "error",
+        "noUndeclaredDependencies": "error"
+      },
+      "suspicious": {
+        "noVar": "error",
+        "noExplicitAny": "warn",
+        "noEmptyBlockStatements": "error",
+        "noArrayIndexKey": "error"
+      },
+      "complexity": {
+        "noVoid": "error",
+        "useLiteralKeys": "error"
+      },
+      "performance": {
+        "noDelete": "error"
+      },
+      "a11y": {
+        "useKeyWithClickEvents": "error",
+        "useAltText": "error",
+        "noAutofocus": "warn",
+        "useValidAnchor": "error",
+        "useButtonType": "error"
+      },
+      "nursery": {
+        "noFloatingPromises": "error"
+      }
+    }
+  },
+  "overrides": [
+    {
+      "includes": ["*.config.js", "*.config.ts", "vite.config.*", "next.config.*"],
+      "linter": {
+        "rules": {
+          "suspicious": {}
+        }
+      }
+    },
+    {
+      "includes": ["**/*.test.*", "**/*.spec.*", "src/test/**"],
+      "linter": {
+        "rules": {
+          "suspicious": {
+            "noExplicitAny": "off"
+          },
+          "style": {
+            "noParameterAssign": "off"
+          }
+        }
+      }
+    },
+    {
+      "includes": ["**/*.d.ts", "src/vite-env.d.ts"],
+      "linter": {
+        "rules": {
+          "correctness": {
+            "noUnusedVariables": "off"
+          }
+        }
+      }
+    }
+  ],
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+    "root": ".",
+    "defaultBranch": "main"
+  }
+}
