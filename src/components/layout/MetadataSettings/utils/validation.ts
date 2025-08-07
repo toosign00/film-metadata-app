@@ -1,5 +1,5 @@
+import type { MetadataSettings } from '@/types/metadata.type';
 import { preprocessLensInfo } from './preprocessors';
-import { MetadataSettings } from '@/types/metadata.type';
 
 export interface ValidationErrors {
   [key: string]: string;
@@ -25,13 +25,13 @@ export const validateForm = (settings: MetadataSettings): ValidationErrors => {
   }
 
   // 카메라 모델 유효성 검사 (한글, 영문, 숫자, 모든 특수문자 허용)
-  const cameraModelRegex = /^[a-zA-Z0-9가-힣\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/;
+  const cameraModelRegex = /^[a-zA-Z0-9가-힣\s!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+$/;
   if (!settings.cameraModel || !cameraModelRegex.test(settings.cameraModel)) {
     errors.cameraModel = '올바른 카메라 모델을 입력해주세요.';
   }
 
   // 렌즈 유효성 검사 (한글, 영문, 숫자, 모든 특수문자 허용)
-  const lensRegex = /^[a-zA-Z0-9가-힣\s!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]+$/;
+  const lensRegex = /^[a-zA-Z0-9가-힣\s!@#$%^&*()_+\-=[\]{};':"\\|,.<>/?]+$/;
   if (!settings.lens || !lensRegex.test(settings.lens)) {
     errors.lens = '올바른 렌즈 정보를 입력해주세요.';
   }
@@ -41,7 +41,7 @@ export const validateForm = (settings: MetadataSettings): ValidationErrors => {
   const processedLensInfo = preprocessLensInfo(lensInfo);
 
   // '/' 문자가 포함된 경우 유효성 검사 실패
-  if (lensInfo && lensInfo.includes('/')) {
+  if (lensInfo?.includes('/')) {
     errors.lensInfo = '렌즈 정보에 "/" 문자를 사용하지 마세요. (예: 50mm f1.8, 28mm f2.8)';
   } else {
     // 전처리 후 정규식 패턴 검사
