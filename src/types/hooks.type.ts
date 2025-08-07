@@ -30,7 +30,7 @@ export interface UseMetadataHandlersReturn {
   settings: InitialSettings;
   handleSettingsChange: (
     name: keyof InitialSettings,
-    value: InitialSettings[keyof InitialSettings],
+    value: InitialSettings[keyof InitialSettings]
   ) => void;
   resetSettings: () => void;
 }

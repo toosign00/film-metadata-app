@@ -1,12 +1,13 @@
-import type { MouseEvent } from 'react';
+import type { KeyboardEvent, MouseEvent } from 'react';
 
 export interface CustomInputProps {
   value?: string;
-  onClick?: (event: MouseEvent<HTMLDivElement>) => void;
+  onClick?: (event: MouseEvent<HTMLElement> | KeyboardEvent<HTMLElement>) => void;
   placeholder?: string;
   disabled?: boolean;
   id?: string;
   name?: string;
+  showTimeSelectOnly?: boolean;
 }
 
 export interface CustomDatePickerProps {
@@ -20,5 +21,5 @@ export interface CustomDatePickerProps {
   disabled?: boolean;
   id?: string;
   name?: string;
-  [key: string]: any;
+  [key: string]: unknown;
 }
