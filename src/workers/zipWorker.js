@@ -23,11 +23,11 @@ let zipInstance = null;
 const fileStreams = new Map();
 
 // 파일 저장소
-const files = {};
-let fileCount = 0;
+const _files = {};
+const _fileCount = 0;
 
 // 파일 청크 저장소
-const fileChunks = {};
+const _fileChunks = {};
 
 /**
  * 워커 메시지 처리
@@ -74,7 +74,7 @@ function handleStartZip() {
             final,
           },
         },
-        [data.buffer],
+        [data.buffer]
       );
     });
 
@@ -118,7 +118,7 @@ async function handleFileChunk(payload) {
     // 진행률 업데이트
     const progress = Math.min(
       Math.round(((currentPosition + chunk.length) / totalSize) * 100),
-      100,
+      100
     );
     self.postMessage({
       type: 'COMPRESSION_PROGRESS',
