@@ -1,5 +1,4 @@
-import type { MetadataSettings as MetadataSettingsType } from './metadata.type';
-import type { MetadataResult } from './metadata.type';
+import type { MetadataResult, MetadataSettings as MetadataSettingsType } from './metadata.type';
 
 export interface StepManagerProps {
   onComplete?: (results: MetadataResult[]) => void;
@@ -20,6 +19,6 @@ export interface FileHandlersResult {
 
 export interface MetadataHandlersResult {
   settings: MetadataSettingsType;
-  handleSettingsChange: (name: string, value: any) => void;
+  handleSettingsChange: (name: string, value: string | Date) => void;
   resetSettings: () => void;
 }
