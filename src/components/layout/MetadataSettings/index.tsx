@@ -1,11 +1,11 @@
-import { useState, FormEvent, ChangeEvent } from 'react';
+import { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Button } from '@/components/ui/Button';
-import { DateTimeSection } from './components/DateTimeSection';
+import type { MetadataSettingsProps, ValidationErrors } from '@/types/metadata-settings.type';
 import { CameraSection } from './components/CameraSection';
-import { LensSection } from './components/LensSection';
+import { DateTimeSection } from './components/DateTimeSection';
 import { FilmSection } from './components/FilmSection';
+import { LensSection } from './components/LensSection';
 import { validateForm } from './utils/validation';
-import { MetadataSettingsProps, ValidationErrors } from '@/types/metadata-settings.type';
 
 export const MetadataSettings = ({
   activeStep,
@@ -34,7 +34,7 @@ export const MetadataSettings = ({
     }
   };
 
-  const handleChange = (name: string, value: any) => {
+  const handleChange = (name: string, value: string | Date) => {
     onSettingsChange(name, value);
     if (validationErrors[name]) {
       const newErrors = { ...validationErrors };
@@ -51,7 +51,7 @@ export const MetadataSettings = ({
 
   const handleTimeChange = (date: Date | null) => {
     if (date) {
-      handleChange('startTime', date.getTime());
+      handleChange('startTime', date);
     }
   };
 
@@ -66,15 +66,15 @@ export const MetadataSettings = ({
   };
 
   return (
-    <section className="mb-8 transition-all" aria-labelledby="metadata-section">
-      <div className="rounded-xl border border-gray-700 bg-gray-800 p-5 shadow-md md:p-6">
+    <section className='mb-8 transition-all' aria-labelledby='metadata-section'>
+      <div className='rounded-xl border border-gray-700 bg-gray-800 p-5 shadow-md md:p-6'>
         <h2
-          id="metadata-section"
-          className="mb-4 flex items-center text-xl font-bold text-gray-200"
+          id='metadata-section'
+          className='mb-4 flex items-center text-xl font-bold text-gray-200'
         >
           <span
-            className="mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-sm text-white"
-            aria-hidden="true"
+            className='mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-sm text-white'
+            aria-hidden='true'
           >
             2
           </span>
@@ -84,11 +84,11 @@ export const MetadataSettings = ({
         <form
           ref={formRef}
           onSubmit={handleSubmit}
-          className="space-y-6"
+          className='space-y-6'
           noValidate
-          aria-label="메타데이터 설정 폼"
+          aria-label='메타데이터 설정 폼'
         >
-          <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
+          <div className='grid grid-cols-1 gap-5 md:grid-cols-2'>
             <DateTimeSection
               settings={settings}
               validationErrors={validationErrors}
@@ -113,30 +113,28 @@ export const MetadataSettings = ({
             />
           </div>
 
-          <div className="mt-6 flex justify-between">
+          <div className='mt-6 flex justify-between'>
             <Button
-              variant="text"
-              type="button"
+              variant='text'
+              type='button'
               onClick={() => goToStep(1)}
-              aria-label="이전 단계로 이동"
+              aria-label='이전 단계로 이동'
             >
               &larr; 이전
             </Button>
 
             <Button
-              variant="primary"
-              type="submit"
+              variant='primary'
+              type='submit'
               disabled={processing || sortedFiles.length === 0}
               isLoading={processing && completed > 0}
               aria-busy={processing && completed > 0}
-              aria-label="메타데이터 설정 완료"
+              aria-label='메타데이터 설정 완료'
               icon={
                 processing && completed > 0 ? (
-                  <>
-                    <span aria-live="polite">
-                      {completed}/{sortedFiles.length}
-                    </span>
-                  </>
+                  <span aria-live='polite'>
+                    {completed}/{sortedFiles.length}
+                  </span>
                 ) : null
               }
             >
@@ -144,7 +142,7 @@ export const MetadataSettings = ({
             </Button>
           </div>
 
-          <div className="sr-only" aria-live="polite">
+          <div className='sr-only' aria-live='polite'>
             {Object.keys(validationErrors).length > 0
               ? '입력 정보에 오류가 있습니다. 각 필드의 오류 메시지를 확인해주세요.'
               : ''}
