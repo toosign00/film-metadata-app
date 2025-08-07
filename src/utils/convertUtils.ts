@@ -29,7 +29,7 @@ export const dataURItoBlob = (dataURI: string, type: string): Blob => {
 export const processBlobInChunks = async (
   blob: Blob,
   processor: (chunk: Uint8Array, offset: number) => Promise<void>,
-  chunkSize: number = 2 * 1024 * 1024,
+  chunkSize: number = 2 * 1024 * 1024
 ): Promise<void> => {
   const fileSize = blob.size;
   let offset = 0;

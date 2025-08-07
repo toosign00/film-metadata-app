@@ -71,7 +71,7 @@ export const WorkerConfig: WorkerConfigType = {
  */
 export const getOptimizedConfig = (
   isMobileDevice: boolean,
-  deviceMemory: number = 4,
+  deviceMemory: number = 4
 ): WorkerConfigType => {
   const baseConfig = { ...WorkerConfig };
 
@@ -134,7 +134,7 @@ export const validateConfig = (config: WorkerConfigType): boolean => {
   } catch (error) {
     console.error(
       'Config validation failed:',
-      error instanceof Error ? error.message : 'Unknown error',
+      error instanceof Error ? error.message : 'Unknown error'
     );
     return false;
   }
