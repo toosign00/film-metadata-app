@@ -1,11 +1,12 @@
-import React, { useRef, useState, useEffect, useMemo } from 'react';
+import { ImageUp } from 'lucide-react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import { isMobile } from 'react-device-detect';
-import { DropZoneProps } from '../../../types/dropZone.type';
+import type { DropZoneProps } from '@/types/dropZone.type';
 
-const DropZone: React.FC<DropZoneProps> = ({ onFileSelect, filesCount = 0 }) => {
+export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
   const [isDragging, setIsDragging] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const dropAreaRef = useRef<HTMLDivElement>(null);
+  const dropAreaRef = useRef<HTMLButtonElement>(null);
 
   // 지원하는 이미지 확장자 배열
   const SUPPORTED_IMAGE_EXTENSIONS = useMemo(() => ['jpg', 'jpeg'] as const, []);
@@ -46,7 +47,10 @@ const DropZone: React.FC<DropZoneProps> = ({ onFileSelect, filesCount = 0 }) => 
 
       const droppedFiles = Array.from(e.dataTransfer.files).filter((file) => {
         const ext = file.name.split('.').pop()?.toLowerCase();
-        return ext && SUPPORTED_IMAGE_EXTENSIONS.includes(ext as (typeof SUPPORTED_IMAGE_EXTENSIONS)[number]);
+        return (
+          ext &&
+          SUPPORTED_IMAGE_EXTENSIONS.includes(ext as (typeof SUPPORTED_IMAGE_EXTENSIONS)[number])
+        );
       });
 
       if (droppedFiles.length > 0) {
@@ -75,7 +79,10 @@ const DropZone: React.FC<DropZoneProps> = ({ onFileSelect, filesCount = 0 }) => 
 
     const selectedFiles = Array.from(e.target.files).filter((file) => {
       const ext = file.name.split('.').pop()?.toLowerCase();
-      return ext && SUPPORTED_IMAGE_EXTENSIONS.includes(ext as (typeof SUPPORTED_IMAGE_EXTENSIONS)[number]);
+      return (
+        ext &&
+        SUPPORTED_IMAGE_EXTENSIONS.includes(ext as (typeof SUPPORTED_IMAGE_EXTENSIONS)[number])
+      );
     });
 
     if (selectedFiles.length > 0) {
@@ -88,71 +95,75 @@ const DropZone: React.FC<DropZoneProps> = ({ onFileSelect, filesCount = 0 }) => 
   // 지원되는 확장자 문자열 생성 (UI에 표시용)
   const supportedExtensionsText = SUPPORTED_IMAGE_EXTENSIONS.join(', ').toUpperCase();
 
+  // 키보드 이벤트 핸들러
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      fileInputRef.current?.click();
+    }
+  };
+
   return (
-    <div
+    <button
       ref={dropAreaRef}
-      className={`flex items-center justify-center border-2 border-dashed rounded-lg ${
-        isDragging ? 'border-blue-500 bg-gray-800' : filesCount > 0 ? 'border-gray-600 bg-gray-800' : 'border-gray-600 bg-gray-800'
-      } p-4 text-center cursor-pointer transition-all hover:border-blue-500`}
+      className={`flex items-center justify-center rounded-lg border-2 border-dashed w-full ${
+        isDragging
+          ? 'border-blue-500 bg-gray-800'
+          : filesCount > 0
+            ? 'border-gray-600 bg-gray-800'
+            : 'border-gray-600 bg-gray-800'
+      } cursor-pointer p-4 text-center transition-all hover:border-blue-500`}
       onClick={() => fileInputRef.current?.click()}
+      onKeyDown={handleKeyDown}
+      aria-label='파일 선택 영역'
       style={{ minHeight: '300px', height: '100%' }}
+      type='button'
     >
       <input
-        type="file"
-        id="file-input"
+        type='file'
+        id='file-input'
         ref={fileInputRef}
         onChange={handleFileSelect}
         multiple
         accept={`.${SUPPORTED_IMAGE_EXTENSIONS.join(',.')}`}
-        className="hidden"
-        aria-describedby="file-format-info"
+        className='hidden'
+        aria-describedby='file-format-info'
       />
 
-      <div className="flex flex-col items-center justify-center py-5">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          className={`h-12 w-12 mb-2 ${isDragging ? 'text-blue-500' : filesCount > 0 ? 'text-blue-500' : 'text-gray-500'}`}
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            strokeWidth={1.5}
-            d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"
-          />
-        </svg>
+      <div className='flex flex-col items-center justify-center py-5'>
+        <ImageUp
+          className={`mb-2 h-12 w-12 ${isDragging ? 'text-blue-500' : filesCount > 0 ? 'text-blue-500' : 'text-gray-500'}`}
+          aria-hidden='true'
+          role='img'
+        />
 
         {isDragging ? (
           <div>
-            <p className="text-lg font-medium text-blue-400">파일을 여기에 놓으세요</p>
-            <p className="text-sm text-blue-300">{supportedExtensionsText} 파일만 지원됩니다</p>
+            <p className='text-lg font-medium text-blue-400'>파일을 여기에 놓으세요</p>
+            <p className='text-sm text-blue-300'>{supportedExtensionsText} 파일만 지원됩니다</p>
           </div>
         ) : filesCount > 0 ? (
           <div>
-            <p className="text-lg font-medium text-gray-200">{filesCount}개의 파일이 선택됨</p>
-            <p className="text-sm text-gray-400">클릭하여 다른 파일 선택</p>
+            <p className='text-lg font-medium text-gray-200'>{filesCount}개의 파일이 선택됨</p>
+            <p className='text-sm text-gray-400'>클릭하여 다른 파일 선택</p>
           </div>
         ) : (
           <div>
-            <p className="text-lg font-medium text-gray-300">이미지 파일을 선택하세요</p>
-            <p className="text-sm text-gray-400">또는 여기에 파일을 끌어다 놓으세요</p>
+            <p className='text-lg font-medium text-gray-300'>이미지 파일을 선택하세요</p>
+            <p className='text-sm text-gray-400'>또는 여기에 파일을 끌어다 놓으세요</p>
           </div>
         )}
 
         <div>
-          <p id="file-format-info" className="mt-2 text-xs text-gray-500">
+          <p id='file-format-info' className='mt-2 text-xs text-gray-500'>
             지원 형식: {supportedExtensionsText} (최대 15MB)
           </p>
-          <p className="mt-2 text-xs text-gray-500">
+          <p className='mt-2 text-xs text-gray-500'>
             최대 파일 수: {isMobile ? '40개' : '100개'}
-            {isMobile && <span className="ml-1">(모바일 환경)</span>}
+            {isMobile && <span className='ml-1'>(모바일 환경)</span>}
           </p>
         </div>
       </div>
-    </div>
+    </button>
   );
 };
-
-export default DropZone;

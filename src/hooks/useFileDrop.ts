@@ -1,6 +1,6 @@
-import { useState, useRef, useEffect, useMemo, useCallback } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isMobile as detectMobile } from 'react-device-detect';
-import { UseFileDropOptions, UseFileDropReturn } from '../types/hooks.type';
+import type { UseFileDropOptions, UseFileDropReturn } from '../types/hooks.type';
 
 /**
  * 파일 드래그 앤 드롭을 위한 커스텀 훅
@@ -119,7 +119,7 @@ const useFileDrop = (
       dropArea.removeEventListener('dragleave', handleDragLeave);
       dropArea.removeEventListener('drop', handleDrop);
     };
-  }, [onFileSelect, allowedExtensions, maxFiles, maxFileSize, validateFile]);
+  }, [onFileSelect, maxFiles, validateFile]);
 
   // 파일 선택 핸들러
   const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>): void => {

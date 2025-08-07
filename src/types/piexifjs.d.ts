@@ -16,6 +16,7 @@ declare module 'piexifjs' {
     ISOSpeedRatings: number;
   };
 
+  // biome-ignore lint/suspicious/noExplicitAny: external library type definition
   export function dump(exifObj: any): string;
   export function insert(exifStr: string, dataURI: string): string;
 }

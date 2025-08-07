@@ -1,6 +1,11 @@
 import piexifjs from 'piexifjs';
+import type {
+  MetadataResult,
+  MetadataSettings,
+  ProcessMetadataResults,
+  ProgressCallback,
+} from '../types/metadata.type';
 import { dataURItoBlob } from './convertUtils';
-import { MetadataSettings, MetadataResult, ProcessMetadataResults, ProgressCallback } from '../types/metadata.type';
 
 /**
  * 렌즈 정보 전처리 함수
@@ -33,12 +38,12 @@ export const setMetadata = async (
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
-    reader.onload = function (e: ProgressEvent<FileReader>) {
+    reader.onload = (e: ProgressEvent<FileReader>) => {
       try {
         // 기본 EXIF 데이터 구조 생성
         const zeroth: Record<number, string> = {};
-        const exif: Record<number, any> = {};
-        const gps: Record<number, any> = {};
+        const exif: Record<number, string | number | number[]> = {};
+        const gps: Record<number, string | number | number[]> = {};
 
         // 날짜 시간 포맷팅 (YYYY:MM:DD HH:MM:SS)
         const year = dateTime.getFullYear();
@@ -52,13 +57,15 @@ export const setMetadata = async (
         // EXIF 태그 ID와 값 설정
         zeroth[piexifjs.ImageIFD.Make] = settings.cameraMake;
         zeroth[piexifjs.ImageIFD.Model] = settings.cameraModel;
-        zeroth[piexifjs.ImageIFD.ImageDescription] = `Shot on ${settings.cameraModel} with ${settings.filmInfo}`;
+        zeroth[piexifjs.ImageIFD.ImageDescription] =
+          `Shot on ${settings.cameraModel} with ${settings.filmInfo}`;
         zeroth[piexifjs.ImageIFD.Software] = 'Film Metadata Web App';
 
         exif[piexifjs.ExifIFD.DateTimeOriginal] = dateTimeStr;
         exif[piexifjs.ExifIFD.DateTimeDigitized] = dateTimeStr;
         exif[piexifjs.ExifIFD.LensModel] = settings.lens;
-        exif[piexifjs.ExifIFD.UserComment] = `Film: ${settings.filmInfo}, Lens: ${settings.lensInfo}`;
+        exif[piexifjs.ExifIFD.UserComment] =
+          `Film: ${settings.filmInfo}, Lens: ${settings.lensInfo}`;
 
         // 렌즈 정보 전처리
         const processedLensInfo = preprocessLensInfo(settings.lensInfo);
@@ -109,7 +116,7 @@ export const setMetadata = async (
       }
     };
 
-    reader.onerror = function () {
+    reader.onerror = () => {
       reject(new Error(`Failed to read file: ${file.name}`));
     };
 

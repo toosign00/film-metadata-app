@@ -1,10 +1,16 @@
-import React, { useState, useCallback, useRef } from 'react';
-import { ResultsViewer, FileSelection, MetadataSettings, ErrorDisplay, StepNavigation } from '@/components/layout';
+import { useCallback, useRef, useState } from 'react';
+import { toast } from 'sonner';
+import { ErrorDisplay } from '@/components/layout/ErrorDisplay';
+import { FileSelection } from '@/components/layout/FileSelection';
+import { MetadataSettings } from '@/components/layout/MetadataSettings';
+import { ResultsViewer } from '@/components/layout/ResultsViewer';
+import { StepNavigation } from '@/components/layout/StepNavigation';
+import { ConfirmDialog } from '@/components/ui/AlertDialog';
+import { STEPS } from '@/config/constants';
 import { useFileHandlers } from '@/hooks/useFileHandlers';
 import { useMetadataHandlers } from '@/hooks/useMetadataHandlers';
-import { STEPS } from '@/config/constants';
-import { StepManagerProps } from '@/types/step-manager.type';
-import { InitialSettings } from '@/types/config.type';
+import type { InitialSettings } from '@/types/config.type';
+import type { StepManagerProps } from '@/types/step-manager.type';
 
 /**
  * 단계 관리 컴포넌트
@@ -12,29 +18,40 @@ import { InitialSettings } from '@/types/config.type';
  *
  * @returns {JSX.Element} 단계 관리 UI
  */
-const StepManager: React.FC<StepManagerProps> = ({ onComplete }) => {
+export const StepManager = ({ onComplete }: StepManagerProps) => {
   const [activeStep, setActiveStep] = useState(STEPS.FILE_SELECTION);
   const [zipProgress, setZipProgress] = useState(0);
+  const [showResetDialog, setShowResetDialog] = useState(false);
 
   const resultRef = useRef<HTMLElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
 
-  const { files, sortedFiles, processing, completed, errors, resultImages, handleFileSelect, processFiles, resetFiles, setProcessing } =
-    useFileHandlers({
-      onComplete: (results) => {
-        setActiveStep(STEPS.RESULTS_VIEW);
-        setTimeout(() => {
-          resultRef.current?.scrollIntoView({ behavior: 'smooth' });
-        }, 500);
-        onComplete?.(
-          results.images.map((img) => ({
-            ...img,
-            file: new File([], img.name),
-            dateTime: img.dateTime || '',
-          }))
-        );
-      },
-    });
+  const {
+    files,
+    sortedFiles,
+    processing,
+    completed,
+    errors,
+    resultImages,
+    handleFileSelect,
+    processFiles,
+    resetFiles,
+    setProcessing,
+  } = useFileHandlers({
+    onComplete: (results) => {
+      setActiveStep(STEPS.RESULTS_VIEW);
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: 'smooth' });
+      }, 500);
+      onComplete?.(
+        results.images.map((img) => ({
+          ...img,
+          file: new File([], img.name),
+          dateTime: img.dateTime || '',
+        }))
+      );
+    },
+  });
 
   const { settings, handleSettingsChange, resetSettings } = useMetadataHandlers();
 
@@ -43,11 +60,14 @@ const StepManager: React.FC<StepManagerProps> = ({ onComplete }) => {
   }, []);
 
   const resetForm = useCallback(() => {
-    if (window.confirm('모든 설정을 초기화하고 처음부터 다시 시작하시겠습니까?')) {
-      resetSettings();
-      resetFiles();
-      setActiveStep(STEPS.FILE_SELECTION);
-    }
+    setShowResetDialog(true);
+  }, []);
+
+  const handleResetConfirm = useCallback(() => {
+    resetSettings();
+    resetFiles();
+    setActiveStep(STEPS.FILE_SELECTION);
+    toast.success('설정이 초기화되었습니다.');
   }, [resetSettings, resetFiles]);
 
   const handleProcessFiles = useCallback(
@@ -62,7 +82,7 @@ const StepManager: React.FC<StepManagerProps> = ({ onComplete }) => {
   );
 
   const handleSettingsChangeWrapper = useCallback(
-    (name: string, value: any) => {
+    (name: string, value: string | Date) => {
       handleSettingsChange(name as keyof InitialSettings, value);
     },
     [handleSettingsChange]
@@ -78,8 +98,8 @@ const StepManager: React.FC<StepManagerProps> = ({ onComplete }) => {
         resetForm={resetForm}
       />
 
-      <main className="flex-1 p-4 md:p-6 overflow-auto">
-        <div className="max-w-6xl mx-auto w-full">
+      <main className='flex-1 overflow-auto p-4 md:p-6'>
+        <div className='mx-auto w-full max-w-6xl'>
           <FileSelection
             activeStep={activeStep}
             onFileSelect={handleFileSelect}
@@ -118,18 +138,19 @@ const StepManager: React.FC<StepManagerProps> = ({ onComplete }) => {
             goToStep={goToStep}
           />
 
-          {errors.length > 0 && (
-            <ErrorDisplay
-              errors={errors.map((err) => ({
-                file: '파일',
-                error: err,
-              }))}
-            />
-          )}
+          {errors.length > 0 && <ErrorDisplay errors={errors} />}
         </div>
       </main>
+
+      <ConfirmDialog
+        open={showResetDialog}
+        onOpenChange={setShowResetDialog}
+        title='설정 초기화'
+        description='모든 설정을 초기화하고 처음부터 다시 시작하시겠습니까? 이 작업은 되돌릴 수 없습니다.'
+        confirmText='초기화'
+        cancelText='취소'
+        onConfirm={handleResetConfirm}
+      />
     </>
   );
 };
-
-export default StepManager;

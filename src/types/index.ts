@@ -1,19 +1,3 @@
-// Metadata types
-export * from './metadata';
-
-// UI types
-export * from './ui';
-
-// File types
-export * from './file';
-
-// Layout types
-export * from './layout';
-
-// Common types
-export * from './common';
-
-// 공통으로 사용되는 타입 정의
 export interface BaseResponse<T> {
   data: T;
   status: number;

@@ -1,5 +1,5 @@
-import { RefObject, FormEvent, ChangeEvent } from 'react';
-import { MetadataSettings as MetadataSettingsType } from './metadata.type';
+import type { ChangeEvent, FormEvent, RefObject } from 'react';
+import type { MetadataSettings as MetadataSettingsType } from './metadata.type';
 
 export interface ValidationErrors {
   [key: string]: string;
@@ -8,7 +8,7 @@ export interface ValidationErrors {
 export interface MetadataSettingsProps {
   activeStep: number;
   settings: MetadataSettingsType;
-  onSettingsChange: (name: string, value: any) => void;
+  onSettingsChange: (name: string, value: string | Date) => void;
   sortedFiles: File[];
   processing: boolean;
   completed: number;

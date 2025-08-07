@@ -1,8 +1,10 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
-import './styles/index.css';
-import App from './App';
+import 'react-datepicker/dist/react-datepicker.css';
+import '@/assets/styles/datepicker.css';
+import '@/assets/styles/global.css';
 import { Analytics } from '@vercel/analytics/react';
+import App from './App';
 
 const rootElement = document.getElementById('root');
 

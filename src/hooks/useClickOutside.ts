@@ -1,4 +1,4 @@
-import { useEffect, RefObject } from 'react';
+import { type RefObject, useEffect } from 'react';
 
 /**
  * 특정 요소 외부 클릭을 감지하는 훅

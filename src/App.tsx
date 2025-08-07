@@ -1,5 +1,6 @@
-import React from 'react';
-import { MainLayout, StepManager } from '@/components/layout';
+import { Toaster } from 'sonner';
+import { MainLayout } from './components/layout/MainLayout';
+import { StepManager } from './components/layout/StepManager';
 
 /**
  * 애플리케이션 루트 컴포넌트
@@ -7,10 +8,11 @@ import { MainLayout, StepManager } from '@/components/layout';
  *
  * @returns {JSX.Element} 애플리케이션 UI
  */
-const App: React.FC = () => {
+const App = () => {
   return (
     <MainLayout>
       <StepManager />
+      <Toaster />
     </MainLayout>
   );
 };

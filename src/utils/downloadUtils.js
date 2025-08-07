@@ -4,8 +4,9 @@
  * @module DownloadUtil
  */
 
-import { isMobile, isSafari, isChrome, browserName } from 'react-device-detect';
 import { saveAs } from 'file-saver';
+import { browserName, isMobile, isSafari } from 'react-device-detect';
+import { toast } from 'sonner';
 
 /** 로그 출력 여부 설정 */
 const ENABLE_LOGGING = true;
@@ -67,7 +68,7 @@ export const downloadFile = (image) => {
       });
   } catch (error) {
     console.error('[DownloadUtil] 파일 다운로드 오류:', error);
-    alert(`파일 다운로드 중 오류가 발생했습니다: ${error.message}`);
+    toast.error(`파일 다운로드 중 오류가 발생했습니다: ${error.message}`);
   }
 };
 
@@ -106,10 +107,10 @@ const downloadZipFile = (blob, fileCount) => {
       saveAs(blob, zipFileName);
     }
 
-    alert(`${fileCount}개 파일이 성공적으로 ZIP으로 압축되었습니다.`);
+    toast.success(`${fileCount}개 파일이 성공적으로 ZIP으로 압축되었습니다.`);
   } catch (error) {
     console.error('[DownloadUtil] ZIP 파일 다운로드 오류:', error);
-    alert(`ZIP 파일 다운로드 중 오류가 발생했습니다: ${error.message}`);
+    toast.error(`ZIP 파일 다운로드 중 오류가 발생했습니다: ${error.message}`);
   }
 };
 
@@ -121,9 +122,14 @@ const downloadZipFile = (blob, fileCount) => {
  * @param {Function} updateIsZipCompressing - 압축 상태 업데이트 콜백
  * @returns {Promise<void>}
  */
-export const createZipFile = async (validImages, updateZipProgress, updateProcessing, updateIsZipCompressing) => {
+export const createZipFile = async (
+  validImages,
+  updateZipProgress,
+  updateProcessing,
+  updateIsZipCompressing
+) => {
   if (!validImages || !Array.isArray(validImages) || validImages.length === 0) {
-    alert('다운로드할 이미지가 없습니다.');
+    toast.error('다운로드할 이미지가 없습니다.');
     return;
   }
 
@@ -140,7 +146,7 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
    */
   const handleError = (message) => {
     console.error('ZIP 오류:', message);
-    alert(`ZIP 파일 생성 중 오류가 발생했습니다: ${message}`);
+    toast.error(`ZIP 파일 생성 중 오류가 발생했습니다: ${message}`);
 
     if (worker) {
       try {
@@ -186,18 +192,28 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
             }
             break;
 
-          case 'FILE_ADDED':
+          case 'FILE_ADDED': {
             processedCount = Math.min(processedCount + 1, totalFiles);
-            const fileProgress = Math.min((processedCount / totalFiles) * FILE_PROCESSING_WEIGHT, FILE_PROCESSING_WEIGHT);
+            const fileProgress = Math.min(
+              (processedCount / totalFiles) * FILE_PROCESSING_WEIGHT,
+              FILE_PROCESSING_WEIGHT
+            );
             updateZipProgress(Math.round(fileProgress));
             break;
+          }
 
-          case 'COMPRESSION_PROGRESS':
+          case 'COMPRESSION_PROGRESS': {
             const compressionPercent = payload.percent || 0;
             const compressionProgress = (compressionPercent / 100) * COMPRESSION_WEIGHT;
-            const totalProgress = Math.min(Math.round((processedCount / totalFiles) * FILE_PROCESSING_WEIGHT + compressionProgress), 100);
+            const totalProgress = Math.min(
+              Math.round(
+                (processedCount / totalFiles) * FILE_PROCESSING_WEIGHT + compressionProgress
+              ),
+              100
+            );
             updateZipProgress(totalProgress);
             break;
+          }
 
           case 'ERROR':
             handleError(payload.message);
@@ -228,7 +244,9 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
         await Promise.allSettled(promises);
 
         if (i + maxConcurrent < validImages.length) {
-          await new Promise((resolve) => setTimeout(resolve, STREAMING_OPTIONS.delayBetweenBatches));
+          await new Promise((resolve) =>
+            setTimeout(resolve, STREAMING_OPTIONS.delayBetweenBatches)
+          );
         }
       }
 
@@ -262,13 +280,15 @@ export const createZipFile = async (validImages, updateZipProgress, updateProces
               break;
             }
             throw new Error('응답이 올바르지 않습니다');
-          } catch (error) {
+          } catch (err) {
+            debug(`파일 다운로드 재시도 (${retryCount + 1}/${STREAMING_OPTIONS.maxFetchRetries + 1}) 실패: ${fileName}`, err);
             retryCount++;
             if (retryCount > STREAMING_OPTIONS.maxFetchRetries) {
               throw new Error(`파일 다운로드 실패 (${retryCount}회 시도): ${fileName}`);
             }
-            await new Promise((resolve) => setTimeout(resolve, STREAMING_OPTIONS.retryDelay * retryCount));
-            continue;
+            await new Promise((resolve) =>
+              setTimeout(resolve, STREAMING_OPTIONS.retryDelay * retryCount)
+            );
           }
         }
 

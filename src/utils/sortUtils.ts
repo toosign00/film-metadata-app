@@ -12,13 +12,16 @@
 export const naturalSort = (a: File, b: File): number => {
   const chunkify = (t: string): (string | number)[] => {
     const tz: string[] = [];
-    let x = 0,
-      y = -1,
-      n = false,
-      i: number,
-      j: string;
+    let x = 0;
+    let y = -1;
+    let n = false;
+    let i: number;
+    let j: string;
 
-    while ((i = (j = t.charAt(x++)).charCodeAt(0))) {
+    while (true) {
+      j = t.charAt(x++);
+      i = j.charCodeAt(0);
+      if (!i) break;
       const m = i === 46 || (i >= 48 && i <= 57);
       if (m !== n) {
         tz[++y] = '';
