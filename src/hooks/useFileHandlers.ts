@@ -1,8 +1,12 @@
 import { useState } from 'react';
-import { naturalSort } from '../utils/sortUtils';
+import type { InitialSettings } from '../types/config.type';
+import type {
+  ProcessResult,
+  UseFileHandlersOptions,
+  UseFileHandlersReturn,
+} from '../types/hooks.type';
 import { processMetadata } from '../utils/metadataUtils';
-import { InitialSettings } from '../types/config.type';
-import { ProcessResult, UseFileHandlersOptions, UseFileHandlersReturn } from '../types/hooks.type';
+import { naturalSort } from '../utils/sortUtils';
 
 /**
  * 파일 처리 관련 로직을 관리하는 커스텀 훅
@@ -54,7 +58,7 @@ export const useFileHandlers = ({ onComplete }: UseFileHandlersOptions): UseFile
         sortedFiles,
         combinedDateTime,
         metadataSettings,
-        (completed: number) => setCompleted(completed),
+        (completed: number) => setCompleted(completed)
       );
 
       setResultImages(results.images);

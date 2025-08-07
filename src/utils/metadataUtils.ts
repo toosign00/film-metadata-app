@@ -1,11 +1,11 @@
 import piexifjs from 'piexifjs';
-import { dataURItoBlob } from './convertUtils';
 import type {
-  MetadataSettings,
   MetadataResult,
+  MetadataSettings,
   ProcessMetadataResults,
   ProgressCallback,
 } from '../types/metadata.type';
+import { dataURItoBlob } from './convertUtils';
 
 /**
  * 렌즈 정보 전처리 함수
@@ -33,17 +33,17 @@ const preprocessLensInfo = (lensInfo: string): string => {
 export const setMetadata = async (
   file: File,
   dateTime: Date,
-  settings: MetadataSettings,
+  settings: MetadataSettings
 ): Promise<MetadataResult> => {
   return new Promise((resolve, reject) => {
     const reader = new FileReader();
 
-    reader.onload = function (e: ProgressEvent<FileReader>) {
+    reader.onload = (e: ProgressEvent<FileReader>) => {
       try {
         // 기본 EXIF 데이터 구조 생성
         const zeroth: Record<number, string> = {};
-        const exif: Record<number, any> = {};
-        const gps: Record<number, any> = {};
+        const exif: Record<number, string | number | number[]> = {};
+        const gps: Record<number, string | number | number[]> = {};
 
         // 날짜 시간 포맷팅 (YYYY:MM:DD HH:MM:SS)
         const year = dateTime.getFullYear();
@@ -116,7 +116,7 @@ export const setMetadata = async (
       }
     };
 
-    reader.onerror = function () {
+    reader.onerror = () => {
       reject(new Error(`Failed to read file: ${file.name}`));
     };
 
@@ -136,7 +136,7 @@ export const processMetadata = async (
   files: File[],
   startDateTime: Date,
   settings: MetadataSettings,
-  onProgress: ProgressCallback,
+  onProgress: ProgressCallback
 ): Promise<ProcessMetadataResults> => {
   const results: ProcessMetadataResults = {
     images: [],
