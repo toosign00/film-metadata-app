@@ -7,4 +7,5 @@ export interface Image {
 export interface ImageCardProps {
   image: Image;
   onDownload: (image: Image) => void;
+  processing?: boolean;
 }

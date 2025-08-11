@@ -4,4 +4,5 @@ export interface StepNavigationProps {
   filesCount: number;
   resultsCount: number;
   resetForm: () => void;
+  processing?: boolean;
 }
