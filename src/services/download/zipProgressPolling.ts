@@ -3,7 +3,7 @@
  * 요청 ID 기반으로 서버의 ZIP 진행률을 폴링하여 클라이언트 진행률을 갱신합니다.
  */
 
-export type ProgressUpdater = (value: number) => void;
+import type { ProgressPollingHandler, ProgressUpdater } from '@/types/service.types';
 
 /**
  * 서버 진행률 폴링을 시작합니다.
@@ -11,13 +11,17 @@ export type ProgressUpdater = (value: number) => void;
  * @param {string} requestId - 서버가 인식하는 진행률 식별자
  * @param {number} totalFiles - 총 파일 수(서버가 total을 주지 않는 경우 대비)
  * @param {ProgressUpdater} updateZipProgress - 진행률(0-100)을 갱신하는 콜백
- * @returns {{ stop: () => void }} 폴링 중단 함수를 가진 객체
+ * @param {number} startOffset - 시작 진행률 오프셋 (기본값: 0)
+ * @param {number} maxProgress - 최대 진행률 (기본값: 95)
+ * @returns 폴링 중단 함수를 가진 객체
  */
 export function startProgressPolling(
   requestId: string,
   totalFiles: number,
-  updateZipProgress: ProgressUpdater
-) {
+  updateZipProgress: ProgressUpdater,
+  startOffset: number = 0,
+  maxProgress: number = 95
+): ProgressPollingHandler {
   let stopped = false;
 
   const tick = async () => {
@@ -30,9 +34,17 @@ export function startProgressPolling(
         const data = (await res.json()) as { processed: number; total: number; done: boolean };
         const total = data.total || totalFiles;
         const processed = Math.min(data.processed || 0, total);
-        const percent = total > 0 ? Math.min(95, Math.round((processed / total) * 95)) : 0;
+
+        // 진행률을 startOffset부터 maxProgress까지 매핑
+        const progressRange = maxProgress - startOffset;
+        const percent =
+          total > 0 ? Math.round(startOffset + (processed / total) * progressRange) : startOffset;
+
         updateZipProgress(percent);
-        if (data.done) return; // 완료는 호출 측에서 100%로 마무리
+        if (data.done) {
+          updateZipProgress(100); // 완료되면 100%로 설정
+          return;
+        }
       }
     } catch {
       // 폴링 에러는 무시 (일시적 네트워크/캐시 문제 등)
