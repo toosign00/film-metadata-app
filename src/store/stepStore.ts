@@ -2,10 +2,10 @@
 
 import { create } from 'zustand';
 import { INITIAL_SETTINGS } from '@/config/constants';
+import { processMetadata } from '@/services/metadata';
 import type { InitialSettings } from '@/types/config.type';
 import type { ProcessMetadataResults } from '@/types/metadata.type';
 import { naturalSort } from '@/utils/sortUtils';
-import { processMetadata } from '@/services/metadata';
 
 interface StepStoreState {
   files: File[];
