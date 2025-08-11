@@ -3,7 +3,7 @@
  * 네이티브 브라우저 다운로드를 위해 폼/iframe을 사용하여 POST를 전송합니다.
  */
 
-export type NativeDownloadPayload = Array<{ url: string; name: string }>;
+import type { NativeDownloadPayload } from '@/types/service.types';
 
 /**
  * 폼/iframe을 이용해 `/api/zip`으로 POST 전송하여 네이티브 다운로드를 시작합니다.
@@ -46,15 +46,55 @@ export function submitNativeZipDownload(
   form.appendChild(inputId);
   document.body.appendChild(form);
 
-  const handleLoad = () => {
-    onLoad();
+  const cleanup = () => {
     try {
       form.remove();
     } catch (error) {
       console.error('Failed to remove form:', error);
     }
-    iframe?.removeEventListener('load', handleLoad);
   };
+
+  const handleLoad = () => {
+    console.log('ZIP download iframe loaded');
+    cleanup();
+    onLoad();
+  };
+
+  const handleError = (error: Event) => {
+    console.error('ZIP download iframe error:', error);
+    cleanup();
+    // 에러가 발생해도 onLoad를 호출하여 처리 상태를 해제
+    onLoad();
+  };
+
   iframe.addEventListener('load', handleLoad, { once: true });
+  iframe.addEventListener('error', handleError, { once: true });
+
+  // 일정 시간 후 강제로 완료 처리 (브라우저별 차이로 인한 fallback)
+  const timeoutId = setTimeout(() => {
+    console.log('ZIP download timeout - forcing completion');
+    iframe?.removeEventListener('load', handleLoad);
+    iframe?.removeEventListener('error', handleError);
+    cleanup();
+    onLoad();
+  }, 10000); // 10초 후 강제 완료
+
+  // 이벤트가 정상적으로 발생하면 타임아웃 취소
+  const originalOnLoad = onLoad;
+  const wrappedOnLoad = () => {
+    clearTimeout(timeoutId);
+    originalOnLoad();
+  };
+
+  // onLoad 함수를 래핑된 버전으로 교체
+  const wrappedHandleLoad = () => {
+    console.log('ZIP download iframe loaded');
+    cleanup();
+    wrappedOnLoad();
+  };
+
+  iframe.removeEventListener('load', handleLoad);
+  iframe.addEventListener('load', wrappedHandleLoad, { once: true });
+
   form.submit();
 }
