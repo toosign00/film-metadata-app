@@ -1,9 +1,9 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import Script from 'next/script';
-import './globals.css';
+import '@/styles/globals.css';
 import 'react-datepicker/dist/react-datepicker.css';
-import '@/assets/styles/datepicker.css';
+import '@/styles/datepicker.css';
 
 const pretendard = localFont({
   src: [{ path: '../../public/fonts/PretendardVariable.woff2', weight: '45 920', style: 'normal' }],
