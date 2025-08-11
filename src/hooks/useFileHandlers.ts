@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { processMetadata } from '@/services/metadata';
 import type { InitialSettings } from '../types/config.type';
 import type {
@@ -21,6 +21,18 @@ export const useFileHandlers = ({ onComplete }: UseFileHandlersOptions): UseFile
   const [completed, setCompleted] = useState(0);
   const [errors, setErrors] = useState<{ file: string; error: string }[]>([]);
   const [resultImages, setResultImages] = useState<ProcessResult['images']>([]);
+
+  // Object URL 정리를 위한 useEffect
+  useEffect(() => {
+    return () => {
+      // 컴포넌트 언마운트 시 모든 Object URL 해제
+      resultImages.forEach((image) => {
+        if (image.url?.startsWith('blob:')) {
+          URL.revokeObjectURL(image.url);
+        }
+      });
+    };
+  }, [resultImages]);
 
   // 파일 선택 핸들러
   const handleFileSelect = (selectedFiles: File[]): void => {
@@ -77,6 +89,13 @@ export const useFileHandlers = ({ onComplete }: UseFileHandlersOptions): UseFile
 
   // 초기화 함수
   const resetFiles = (): void => {
+    // 기존 Object URL 해제
+    resultImages.forEach((image) => {
+      if (image.url?.startsWith('blob:')) {
+        URL.revokeObjectURL(image.url);
+      }
+    });
+    
     setFiles([]);
     setSortedFiles([]);
     setResultImages([]);
