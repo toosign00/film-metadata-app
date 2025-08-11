@@ -20,7 +20,6 @@
 # 🐳 chore: 빌드, 의존성, 설정 파일 수정
 # 🔄 revert: 커밋 되돌리기
 # 💫 merge: Pull 과정 중 자동 병합 발생 시
-# 📬 api: api 관련 작업 시
 # 
 # [UI/UX]
 # 💄 style: CSS 스타일 변경 (UI 변경)
