@@ -20,7 +20,7 @@ export const FileList = ({ files }: FileListProps) => {
             <li key={`${file.name}-${idx}`} className='mb-1 flex items-center'>
               <span className='mr-1 truncate'>{file.name}</span>
               <span className='ml-auto text-xs whitespace-nowrap text-gray-500'>
-                {(file.size / 1024).toFixed(1)} KB
+                {(file.size / 1024 / 1024).toFixed(1)} MB
               </span>
             </li>
           ))}

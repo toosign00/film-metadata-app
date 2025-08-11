@@ -12,7 +12,7 @@ export async function POST(request: Request): Promise<NextResponse> {
       request,
       onBeforeGenerateToken: async () => ({
         allowedContentTypes: ['image/jpeg', 'image/jpg', 'application/octet-stream'],
-        maximumSizeInBytes: 25 * 1024 * 1024, // 25MB
+        maximumSizeInBytes: 15 * 1024 * 1024, // 15MB
         addRandomSuffix: true,
       }),
       onUploadCompleted: async ({ blob, tokenPayload }) => {
