@@ -2,7 +2,7 @@ import type { Image } from './imageCard.type';
 
 export interface ResultsViewerProps {
   activeStep: number;
-  resultRef: React.RefObject<HTMLElement>;
+  resultRef: React.RefObject<HTMLElement | null>;
   resultImages: Image[];
   processing: boolean;
   zipProgress: number;
