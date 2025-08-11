@@ -8,6 +8,7 @@ import { toast } from 'sonner';
 import { submitNativeZipDownload } from '@/services/download/nativeZipDownload';
 import { uploadLocalFilesAndDownloadZip } from '@/services/download/uploadAndDownloadZip';
 import { startProgressPolling } from '@/services/download/zipProgressPolling';
+import { ChunkUploader } from './chunkUpload';
 import type { Image as AppImage } from '@/types/imageCard.type';
 
 type ProgressUpdater = (value: number) => void;
@@ -125,6 +126,89 @@ export async function createZipFile(
     const msg = error instanceof Error ? error.message : String(error);
     console.error('[DownloadService] 서버 ZIP 요청 오류:', error);
     toast.error(`ZIP 다운로드 요청 중 오류가 발생했습니다: ${msg}`);
+    updateProcessing(false);
+    updateIsZipCompressing?.(false);
+    updateZipProgress(0);
+  }
+}
+
+/**
+ * 청크 업로드 방식으로 ZIP 다운로드 (대용량 파일 지원)
+ */
+export async function createZipFileWithChunks(
+  validImages: AppImage[],
+  updateZipProgress: ProgressUpdater,
+  updateProcessing: BooleanUpdater,
+  updateIsZipCompressing?: BooleanUpdater
+): Promise<void> {
+  if (!validImages || validImages.length === 0) {
+    toast.error('다운로드할 이미지가 없습니다.');
+    return;
+  }
+
+  try {
+    updateProcessing(true);
+    updateZipProgress(1);
+    updateIsZipCompressing?.(true);
+
+    const httpFiles: Array<{ url: string; name: string }> = [];
+    const localFiles: Array<{ url: string; name: string }> = [];
+
+    validImages.forEach((img, idx) => {
+      const name = img.name || `image_${idx + 1}.jpg`;
+      if (isHttpUrl(img.url)) {
+        httpFiles.push({ url: img.url, name });
+      } else {
+        localFiles.push({ url: img.url, name });
+      }
+    });
+
+    if (localFiles.length === 0) {
+      // HTTP 파일만 있는 경우 기존 방식 사용
+      const requestId =
+        crypto.randomUUID?.() ?? `${Date.now()}_${Math.random().toString(36).slice(2)}`;
+      let stopPolling: () => void = () => undefined;
+      setTimeout(() => {
+        const handler = startProgressPolling(requestId, validImages.length, updateZipProgress);
+        stopPolling = handler.stop;
+      }, 300);
+
+      submitNativeZipDownload(httpFiles, requestId, () => {
+        stopPolling();
+        updateProcessing(false);
+        updateIsZipCompressing?.(false);
+        updateZipProgress(100);
+        toast.success(`${validImages.length}개 파일을 ZIP으로 다운로드합니다.`);
+      });
+
+      setTimeout(() => {
+        stopPolling();
+        updateIsZipCompressing?.(false);
+        updateProcessing(false);
+      }, 120000);
+      return;
+    }
+
+    // 로컬 파일이 있는 경우 청크 업로드 방식 사용
+    const chunkUploader = new ChunkUploader();
+
+    // 진행률 업데이트 콜백
+    const onChunkProgress = (progress: { progress: number; isComplete: boolean }) => {
+      updateZipProgress(progress.progress);
+      if (progress.isComplete) {
+        updateProcessing(false);
+        updateIsZipCompressing?.(false);
+        updateZipProgress(100);
+        toast.success(`${validImages.length}개 파일을 ZIP으로 다운로드합니다.`);
+      }
+    };
+
+    // 로컬 파일들을 청크로 업로드
+    await chunkUploader.uploadLocalFiles(localFiles, onChunkProgress);
+  } catch (error) {
+    const msg = error instanceof Error ? error.message : String(error);
+    console.error('[DownloadService] 청크 업로드 ZIP 요청 오류:', error);
+    toast.error(`청크 업로드 ZIP 다운로드 중 오류가 발생했습니다: ${msg}`);
     updateProcessing(false);
     updateIsZipCompressing?.(false);
     updateZipProgress(0);

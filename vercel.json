@@ -1,0 +1,44 @@
+{
+  "functions": {
+    "src/app/api/zip/route.ts": {
+      "maxDuration": 60
+    },
+    "src/app/api/upload-chunk/route.ts": {
+      "maxDuration": 300,
+      "memory": 3008
+    },
+    "src/app/api/merge-chunks/route.ts": {
+      "maxDuration": 300,
+      "memory": 3008
+    }
+  },
+  "routes": [
+    {
+      "src": "/api/zip",
+      "dest": "/api/zip",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+      }
+    },
+    {
+      "src": "/api/upload-chunk",
+      "dest": "/api/upload-chunk",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, GET, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+      }
+    },
+    {
+      "src": "/api/merge-chunks",
+      "dest": "/api/merge-chunks",
+      "headers": {
+        "Access-Control-Allow-Origin": "*",
+        "Access-Control-Allow-Methods": "POST, OPTIONS",
+        "Access-Control-Allow-Headers": "Content-Type"
+      }
+    }
+  ]
+}

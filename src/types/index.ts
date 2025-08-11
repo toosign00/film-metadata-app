@@ -67,3 +67,17 @@ export interface DropZoneProps {
 export interface FileListProps {
   files: File[];
 }
+
+// 청크 업로드 관련 타입 정의
+export interface ChunkUploadProgress {
+  uploadedChunks: number;
+  totalChunks: number;
+  progress: number;
+  isComplete: boolean;
+}
+
+export interface ChunkUploadOptions {
+  chunkSize?: number;
+  maxRetries?: number;
+  retryDelay?: number;
+}
