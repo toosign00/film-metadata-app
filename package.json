@@ -23,10 +23,10 @@
     "typescript"
   ],
   "engines": {
-    "node": "22.18.0",
-    "pnpm": "10.14.0"
+    "node": "22.x",
+    "pnpm": "10.x"
   },
-  "packageManager": "pnpm@10.14.0",
+  "packageManager": "pnpm@10.x",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
