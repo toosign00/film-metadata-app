@@ -1,27 +1,23 @@
-import { Zip, ZipPassThrough } from 'fflate';
+import { Zip } from 'fflate';
+import type { ZipInputFile, ZipProgressEntry } from '@/types/api.types';
+import { createErrorResponse, handleApiError } from '@/utils/apiUtils';
+import {
+  addFileToZip,
+  addUploadedFileToZip,
+  generateRequestId,
+  generateZipFileName,
+} from '@/utils/zipUtils';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
 
-type ProgressEntry = {
-  processed: number;
-  total: number;
-  done: boolean;
-  error?: string;
-};
+const progressStore = new Map<string, ZipProgressEntry>();
 
-const progressStore = new Map<string, ProgressEntry>();
-
-type ZipInputFile = {
-  url: string;
-  name: string;
-};
-
-type ParsedRequest = {
+interface ParsedRequest {
   urlFiles: ZipInputFile[];
   uploadFiles: File[];
   requestId?: string;
-};
+}
 
 async function parseRequest(req: Request): Promise<ParsedRequest> {
   const contentType = req.headers.get('content-type') || '';
@@ -73,31 +69,29 @@ async function parseRequest(req: Request): Promise<ParsedRequest> {
   return { urlFiles: [], uploadFiles: [], requestId: undefined };
 }
 
+export async function OPTIONS() {
+  return new Response(null, {
+    status: 200,
+    headers: {
+      'access-control-allow-origin': '*',
+      'access-control-allow-methods': 'GET, POST, OPTIONS',
+      'access-control-allow-headers': 'Content-Type',
+    },
+  });
+}
+
 export async function POST(req: Request) {
   try {
     const { urlFiles, uploadFiles, requestId } = await parseRequest(req);
 
     if ((!urlFiles || urlFiles.length === 0) && uploadFiles.length === 0) {
-      return new Response(JSON.stringify({ error: 'No files provided' }), {
-        status: 400,
-        headers: { 'content-type': 'application/json; charset=utf-8' },
-      });
+      return createErrorResponse('No files provided');
     }
 
-    const now = new Date();
-    const timestamp = `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(
-      now.getDate()
-    ).padStart(2, '0')}_${String(now.getHours()).padStart(2, '0')}${String(
-      now.getMinutes()
-    ).padStart(2, '0')}`;
-    const zipFileName = `film_metadata_${timestamp}.zip`;
-
-    const id =
-      requestId ??
-      globalThis.crypto?.randomUUID?.() ??
-      `${Date.now()}_${Math.random().toString(36).slice(2)}`;
-
+    const zipFileName = generateZipFileName();
+    const id = requestId ?? generateRequestId();
     const totalFiles = (urlFiles?.length ?? 0) + (uploadFiles?.length ?? 0);
+
     progressStore.set(id, { processed: 0, total: totalFiles, done: false });
 
     const stream = new ReadableStream<Uint8Array>({
@@ -110,11 +104,20 @@ export async function POST(req: Request) {
             return;
           }
           // Ensure ArrayBuffer-backed chunk (avoid SharedArrayBuffer typing issue)
-          if (data) {
-            const source = data as Uint8Array;
-            const safe = new Uint8Array(source.byteLength);
-            safe.set(source);
-            controller.enqueue(safe);
+          if (data && data.byteLength > 0) {
+            try {
+              const source = data as Uint8Array;
+              // Check if ArrayBuffer is detached before creating a new one
+              if (source.buffer.byteLength === 0) {
+                console.warn('Skipping detached ArrayBuffer');
+                return;
+              }
+              const safe = new Uint8Array(source);
+              controller.enqueue(safe);
+            } catch (error) {
+              console.error('Error processing ZIP data chunk:', error);
+              // Continue processing other chunks instead of failing completely
+            }
           }
           if (final) {
             const entry = progressStore.get(id);
@@ -125,68 +128,29 @@ export async function POST(req: Request) {
         });
 
         // Process files sequentially to minimize memory usage
-        (async () => {
-          // Prefer uploaded files when present
-          if (uploadFiles.length > 0) {
-            for (const file of uploadFiles) {
-              const entry = new ZipPassThrough((file as File).name || 'file');
-              zip.add(entry);
-              try {
-                // Use arrayBuffer() for stability across runtimes
-                const buf = await (file as File).arrayBuffer();
-                entry.push(new Uint8Array(buf), true);
-                const prog = progressStore.get(id);
-                if (prog)
-                  progressStore.set(id, {
-                    ...prog,
-                    processed: Math.min(prog.processed + 1, prog.total),
-                  });
-              } catch (e) {
-                const err = e instanceof Error ? e : new Error(String(e));
-                const prog = progressStore.get(id);
-                if (prog) progressStore.set(id, { ...prog, error: err.message, done: true });
-                controller.error(err);
-                return;
+        const processFiles = async () => {
+          try {
+            // Prefer uploaded files when present
+            if (uploadFiles.length > 0) {
+              for (const file of uploadFiles) {
+                await addUploadedFileToZip(zip, file as File, progressStore, id);
+              }
+            } else {
+              // Fallback: fetch from provided URLs (only http/https supported)
+              for (const file of urlFiles) {
+                await addFileToZip(zip, file, progressStore, id);
               }
             }
-          } else {
-            // Fallback: fetch from provided URLs (only http/https supported)
-            for (const file of urlFiles) {
-              const entry = new ZipPassThrough(file.name || 'file');
-              zip.add(entry);
-              try {
-                const u = new URL(file.url);
-                if (u.protocol !== 'http:' && u.protocol !== 'https:') {
-                  throw new Error(`Unsupported URL scheme: ${u.protocol}`);
-                }
-                const res = await fetch(file.url, { cache: 'no-store' });
-                if (!res.ok || !res.body) {
-                  throw new Error(`Failed to fetch ${file.url}`);
-                }
-                const reader = res.body.getReader();
-                while (true) {
-                  const { value, done } = await reader.read();
-                  if (done) break;
-                  if (value) entry.push(value);
-                }
-                entry.push(new Uint8Array(0), true);
-                const prog = progressStore.get(id);
-                if (prog)
-                  progressStore.set(id, {
-                    ...prog,
-                    processed: Math.min(prog.processed + 1, prog.total),
-                  });
-              } catch (e) {
-                const err = e instanceof Error ? e : new Error(String(e));
-                const prog = progressStore.get(id);
-                if (prog) progressStore.set(id, { ...prog, error: err.message, done: true });
-                controller.error(err);
-                return;
-              }
-            }
+            zip.end();
+          } catch (error) {
+            controller.error(error);
           }
-          zip.end();
-        })().catch((e) => controller.error(e));
+        };
+
+        processFiles().catch((error) => {
+          console.error('Error processing files:', error);
+          controller.error(error);
+        });
       },
       type: 'bytes',
     });
@@ -198,30 +162,28 @@ export async function POST(req: Request) {
       `attachment; filename="${zipFileName}"; filename*=UTF-8''${encodeURIComponent(zipFileName)}`
     );
     headers.set('x-request-id', id);
-    // Prevent caching
+    // Prevent caching and improve browser compatibility
     headers.set('cache-control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
     headers.set('pragma', 'no-cache');
     headers.set('expires', '0');
+    headers.set('access-control-allow-origin', '*');
+    headers.set('access-control-allow-methods', 'GET, POST, OPTIONS');
+    headers.set('access-control-allow-headers', 'Content-Type');
 
     return new Response(stream, { status: 200, headers });
   } catch (error) {
-    const message = error instanceof Error ? error.message : 'Unknown error';
-    return new Response(JSON.stringify({ error: message }), {
-      status: 500,
-      headers: { 'content-type': 'application/json; charset=utf-8' },
-    });
+    return handleApiError(error, 'ZIP creation failed');
   }
 }
 
 export async function GET(req: Request) {
   const { searchParams } = new URL(req.url);
   const id = searchParams.get('id');
+
   if (!id) {
-    return new Response(JSON.stringify({ error: 'Missing id' }), {
-      status: 400,
-      headers: { 'content-type': 'application/json; charset=utf-8' },
-    });
+    return createErrorResponse('Missing id parameter');
   }
+
   const entry = progressStore.get(id);
   if (!entry) {
     // 아직 엔트리가 생성되지 않은 초기 상태: 204 No Content로 응답해 클라이언트에서 대기하도록 유도
@@ -230,8 +192,12 @@ export async function GET(req: Request) {
       headers: { 'cache-control': 'no-store' },
     });
   }
+
   return new Response(JSON.stringify(entry), {
     status: 200,
-    headers: { 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' },
+    headers: {
+      'content-type': 'application/json; charset=utf-8',
+      'cache-control': 'no-store',
+    },
   });
 }
