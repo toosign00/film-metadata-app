@@ -122,6 +122,7 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
       <input
         type='file'
         id='file-input'
+        name='files'
         ref={fileInputRef}
         onChange={handleFileSelect}
         multiple
