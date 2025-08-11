@@ -7,7 +7,7 @@ export const Footer = ({ className }: FooterProps) => {
     >
       <div className='mx-auto max-w-6xl text-center'>
         <p className='text-xs sm:text-base'>
-          이 도구는 이미지 파일의 EXIF 메타데이터를 서버에서 일시적으로 처리합니다.
+          이 도구는 이미지 파일의 EXIF 메타데이터를 서버에서 처리합니다.
           <br />
           <span className='text-xs text-gray-500'>
             업로드된 파일은 처리 완료 즉시 삭제되며 서버에 보관되지 않습니다. 안심하고 이용하세요.
