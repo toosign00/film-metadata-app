@@ -79,7 +79,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#2563eb',
+  themeColor: '#101828',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -102,7 +102,7 @@ export default function RootLayout({
             name: 'Film Metadata Settings App',
             applicationCategory: 'MultimediaApplication',
             operatingSystem: 'Web',
-            url: 'https://film-metadata.vercel.app/',
+            url: 'https://film-metadata.vercel.app',
             description: '필름 사진의 EXIF 메타데이터를 손쉽게 편집·다운로드할 수 있는 웹 도구',
             offers: {
               '@type': 'Offer',
