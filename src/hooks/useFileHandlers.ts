@@ -5,7 +5,7 @@ import type {
   UseFileHandlersOptions,
   UseFileHandlersReturn,
 } from '../types/hooks.type';
-import { processMetadata } from '../utils/metadataUtils';
+import { processMetadata } from '@/services/metadata';
 import { naturalSort } from '../utils/sortUtils';
 
 /**
