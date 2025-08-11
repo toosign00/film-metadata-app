@@ -4,12 +4,10 @@
       "maxDuration": 60
     },
     "src/app/api/upload-chunk/route.ts": {
-      "maxDuration": 300,
-      "memory": 3008
+      "maxDuration": 120
     },
     "src/app/api/merge-chunks/route.ts": {
-      "maxDuration": 300,
-      "memory": 3008
+      "maxDuration": 120
     }
   },
   "routes": [
