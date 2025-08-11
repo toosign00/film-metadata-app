@@ -2,8 +2,8 @@ import { Download, Image } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ImageCard } from '@/components/ui/ImageCard';
 import { ProgressBar } from '@/components/ui/ProgressBar';
+import { createZipFile, downloadFile } from '@/services/download';
 import type { ResultsViewerProps } from '@/types/results-viewer.type';
-import { createZipFile, downloadFile } from '@/utils/downloadUtils';
 
 export const ResultsViewer = ({
   activeStep,
