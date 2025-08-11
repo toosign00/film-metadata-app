@@ -75,6 +75,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+*tsconfig.app.tsbuildinfo
 next-env.d.ts
 
 ### react ###
