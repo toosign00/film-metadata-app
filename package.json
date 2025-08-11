@@ -1,7 +1,7 @@
 {
   "name": "film-metadata-app",
   "private": true,
-  "version": "1.2.1",
+  "version": "1.2.2",
   "type": "module",
   "module": "ES2022",
   "description": "Film Metadata App",
