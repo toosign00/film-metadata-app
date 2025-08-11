@@ -8,13 +8,12 @@
     "baseUrl": ".",
     "paths": {
       "@/*": ["src/*"],
-      "@assets/*": ["src/assets/*"],
+      "@components/*": ["src/components/*"],
       "@config/*": ["src/config/*"],
       "@hooks/*": ["src/hooks/*"],
-      "@utils/*": ["src/utils/*"],
       "@types/*": ["src/types/*"],
-      "@workers/*": ["src/workers/*"],
-      "@components/*": ["src/components/*"]
+      "@utils/*": ["src/utils/*"],
+      "@workers/*": ["src/workers/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"],
