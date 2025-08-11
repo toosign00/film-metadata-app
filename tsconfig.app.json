@@ -13,7 +13,8 @@
       "@hooks/*": ["src/hooks/*"],
       "@types/*": ["src/types/*"],
       "@utils/*": ["src/utils/*"],
-      "@workers/*": ["src/workers/*"]
+      "@workers/*": ["src/workers/*"],
+      "@services/*": ["src/services/*"]
     }
   },
   "include": ["src/**/*.ts", "src/**/*.tsx", "src/**/*.js", "src/**/*.jsx"],
