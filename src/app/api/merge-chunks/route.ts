@@ -56,21 +56,21 @@ export async function POST(req: Request) {
 
     await createZipFile(mergedPath, zipFileName, zipPath);
 
-    // ZIP 파일을 클라이언트로 전송
+        // ZIP 파일을 클라이언트로 전송
     const zipBuffer = await readFile(zipPath);
-
+    
     // 임시 파일들 정리
     try {
       await rm(tempDir, { recursive: true });
     } catch (error) {
       console.warn('Failed to cleanup temp files:', error);
     }
-
+    
     const headers = new Headers();
     headers.set('content-type', 'application/zip');
     headers.set('content-disposition', `attachment; filename="${zipFileName}"`);
-
-    return new Response(zipBuffer, {
+    
+    return new Response(new Uint8Array(zipBuffer), {
       status: 200,
       headers,
     });
