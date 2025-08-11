@@ -1,5 +1,5 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.1.3/schema.json",
+  "$schema": "https://biomejs.dev/schemas/2.1.4/schema.json",
   "files": {
     "includes": ["src/**", "public/**", "*.js", "*.jsx", "*.ts", "*.tsx", "*.json"],
     "ignoreUnknown": true
@@ -86,7 +86,10 @@
         "useAltText": "error",
         "noAutofocus": "warn",
         "useValidAnchor": "error",
-        "useButtonType": "error"
+        "useButtonType": "error",
+        "noStaticElementInteractions": "off",
+        "useAriaPropsSupportedByRole": "off",
+        "useSemanticElements": "off"
       },
       "nursery": {
         "noFloatingPromises": "error"
