@@ -1,7 +1,7 @@
-import { forwardRef } from 'react';
-import DatePicker from 'react-datepicker';
 import { ko } from 'date-fns/locale';
 import { Calendar, Clock4 } from 'lucide-react';
+import { forwardRef } from 'react';
+import DatePicker from 'react-datepicker';
 import type { CustomDatePickerProps, CustomInputProps } from '@/types/customDatePicker.type';
 
 export const CustomDatePicker = ({
@@ -55,7 +55,7 @@ export const CustomDatePicker = ({
     <DatePicker
       selected={selected}
       onChange={onChange}
-      customInput={<CustomInput showTimeSelectOnly={showTimeSelectOnly} />}
+      customInput={<CustomInput showTimeSelectOnly={showTimeSelectOnly} id={id} name={name} />}
       showTimeSelect={showTimeSelect}
       showTimeSelectOnly={showTimeSelectOnly}
       timeFormat={timeFormat}
@@ -66,6 +66,8 @@ export const CustomDatePicker = ({
       disabled={disabled}
       locale={ko}
       popperClassName='react-datepicker-dark'
+      id={id}
+      name={name}
       {...rest}
     />
   );

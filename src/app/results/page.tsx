@@ -2,9 +2,10 @@ export const metadata = {
   title: '결과 다운로드',
   description: '편집된 이미지와 ZIP 파일을 다운로드하세요',
 };
+
 import { MainLayout } from '@/components/layout/MainLayout';
-import { ToasterClient } from '@/components/ui/Toaster';
 import { ResultsClientPage } from '@/components/pages/ResultsClientPage';
+import { ToasterClient } from '@/components/ui/Toaster';
 
 export default function ResultsPage() {
   return (
