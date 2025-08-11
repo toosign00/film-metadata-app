@@ -27,6 +27,26 @@
     "pnpm": "10.14.0"
   },
   "packageManager": "pnpm@10.14.0",
+  "pnpm": {
+    "allowedDeprecatedVersions": {
+      "@tailwindcss/oxide": "*",
+      "sharp": "*"
+    },
+    "peerDependencyRules": {
+      "allowedVersions": {
+        "@tailwindcss/oxide": "*",
+        "sharp": "*"
+      }
+    },
+    "packageExtensions": {
+      "@tailwindcss/oxide": {
+        "allowedDeprecatedVersions": "*"
+      },
+      "sharp": {
+        "allowedDeprecatedVersions": "*"
+      }
+    }
+  },
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
