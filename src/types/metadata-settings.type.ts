@@ -12,7 +12,7 @@ export interface MetadataSettingsProps {
   sortedFiles: File[];
   processing: boolean;
   completed: number;
-  formRef: RefObject<HTMLFormElement>;
+  formRef: RefObject<HTMLFormElement | null>;
   goToStep: (step: number) => void;
   onProcessFiles: (e: FormEvent) => void;
 }

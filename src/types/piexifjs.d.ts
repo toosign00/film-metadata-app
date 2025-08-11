@@ -4,6 +4,7 @@ declare module 'piexifjs' {
     Model: number;
     ImageDescription: number;
     Software: number;
+    Orientation: number;
   };
 
   export const ExifIFD: {
@@ -19,4 +20,6 @@ declare module 'piexifjs' {
   // biome-ignore lint/suspicious/noExplicitAny: external library type definition
   export function dump(exifObj: any): string;
   export function insert(exifStr: string, dataURI: string): string;
+  // biome-ignore lint/suspicious/noExplicitAny: external library type definition
+  export function load(dataURI: string): any;
 }
