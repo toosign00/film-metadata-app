@@ -24,9 +24,9 @@
   ],
   "engines": {
     "node": "22.x",
-    "pnpm": "10.x"
+    "pnpm": "10.14.0"
   },
-  "packageManager": "pnpm@10.x",
+  "packageManager": "pnpm@10.14.0",
   "scripts": {
     "dev": "next dev --turbopack",
     "build": "next build",
