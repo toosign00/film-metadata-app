@@ -4,7 +4,7 @@ import { useEffect, useState } from 'react';
 import { isMobile, isTablet } from 'react-device-detect';
 import type { ImageCardProps } from '@/types/imageCard.type';
 
-export const ImageCard = ({ image, onDownload }: ImageCardProps) => {
+export const ImageCard = ({ image, onDownload, processing = false }: ImageCardProps) => {
   const [isTouch, setIsTouch] = useState(false);
 
   // 컴포넌트 마운트 시 터치 디바이스 여부 확인
@@ -39,7 +39,12 @@ export const ImageCard = ({ image, onDownload }: ImageCardProps) => {
             <button
               type='button'
               onClick={handleDownload}
-              className='mb-4 translate-y-4 transform rounded-lg px-4 py-1.5 text-sm font-medium transition-all duration-300 group-hover:translate-y-0 focus:ring-2 focus:ring-offset-1 focus:outline-none bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
+              disabled={processing}
+              className={`mb-4 translate-y-4 transform rounded-lg px-4 py-1.5 text-sm font-medium transition-all duration-300 group-hover:translate-y-0 focus:ring-2 focus:ring-offset-1 focus:outline-none ${
+                processing
+                  ? 'cursor-not-allowed bg-gray-600 text-gray-400'
+                  : 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
+              }`}
               aria-label={`${image.name} 다운로드`}
               title='다운로드'
             >
@@ -74,7 +79,12 @@ export const ImageCard = ({ image, onDownload }: ImageCardProps) => {
           <button
             type='button'
             onClick={handleDownload}
-            className='flex w-full items-center justify-center rounded py-1.5 text-xs bg-gray-700 text-blue-400 hover:bg-gray-600 hover:text-blue-300'
+            disabled={processing}
+            className={`flex w-full items-center justify-center rounded py-1.5 text-xs ${
+              processing
+                ? 'cursor-not-allowed bg-gray-800 text-gray-500'
+                : 'bg-gray-700 text-blue-400 hover:bg-gray-600 hover:text-blue-300'
+            }`}
             title='다운로드'
           >
             <Download className='mr-1' size={14} />

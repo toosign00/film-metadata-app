@@ -20,12 +20,17 @@ export const ResultsViewer = ({
   }
 
   const handleDownloadAll = async () => {
+    // 낙관적 업데이트: 즉시 UI 상태 변경
+    setProcessing(true);
+    setZipProgress(1); // 즉시 1%로 시작하여 사용자에게 즉각적인 피드백 제공
+
     try {
-      setProcessing(true);
       await createZipFile(resultImages, setZipProgress, setProcessing, setProcessing);
     } catch (error) {
       console.error('ZIP 다운로드 중 오류:', error);
+      // 오류 발생 시 롤백
       setProcessing(false);
+      setZipProgress(0);
     }
   };
 
@@ -58,14 +63,17 @@ export const ResultsViewer = ({
         </div>
 
         {/* 압축 진행 상태 표시 */}
-        {processing && zipProgress > 0 && (
-          <ProgressBar progress={zipProgress} label='ZIP 파일 생성 중' />
-        )}
+        {processing && <ProgressBar progress={zipProgress} label='ZIP 파일 생성 중' />}
 
         {resultImages.length > 0 ? (
           <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4'>
             {resultImages.map((image, idx) => (
-              <ImageCard key={`${image.name}-${idx}`} image={image} onDownload={downloadFile} />
+              <ImageCard
+                key={`${image.name}-${idx}`}
+                image={image}
+                onDownload={downloadFile}
+                processing={processing}
+              />
             ))}
           </div>
         ) : (
@@ -78,7 +86,12 @@ export const ResultsViewer = ({
             <button
               type='button'
               onClick={() => goToStep(2)}
-              className='mt-4 rounded-lg bg-gray-700 px-4 py-2 text-sm font-medium text-gray-300 transition hover:bg-gray-600'
+              disabled={processing}
+              className={`mt-4 rounded-lg px-4 py-2 text-sm font-medium transition ${
+                processing
+                  ? 'cursor-not-allowed bg-gray-800 text-gray-500'
+                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+              }`}
             >
               메타데이터 설정으로 이동
             </button>
@@ -87,7 +100,7 @@ export const ResultsViewer = ({
 
         {/* 이전 단계로 버튼 */}
         <div className='mt-6'>
-          <Button variant='text' onClick={() => goToStep(2)}>
+          <Button variant='text' onClick={() => goToStep(2)} disabled={processing}>
             &larr; 이전 단계로
           </Button>
         </div>

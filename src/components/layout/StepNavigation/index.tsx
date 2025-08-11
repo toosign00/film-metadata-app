@@ -10,6 +10,7 @@ export const StepNavigation = ({
   filesCount,
   resultsCount,
   resetForm,
+  processing = false,
 }: StepNavigationProps) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   return (
@@ -20,10 +21,13 @@ export const StepNavigation = ({
             <button
               type='button'
               onClick={() => goToStep(1)}
+              disabled={processing}
               className={`flex-1 rounded-l-lg px-2 py-2 text-sm font-medium transition-all ${
                 activeStep === 1
                   ? 'bg-blue-600 text-white'
-                  : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                  : processing
+                    ? 'cursor-not-allowed bg-gray-800 text-gray-500'
+                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
             >
               <span className='hidden md:inline'>1. 파일 선택</span>
@@ -38,12 +42,12 @@ export const StepNavigation = ({
             <button
               type='button'
               onClick={() => goToStep(2)}
-              disabled={filesCount === 0}
+              disabled={filesCount === 0 || processing}
               className={`flex-1 px-2 py-2 text-sm font-medium transition-all ${
                 activeStep === 2
                   ? 'bg-blue-600 text-white'
-                  : filesCount === 0
-                    ? 'cursor-not-allowed bg-gray-700 text-gray-500'
+                  : filesCount === 0 || processing
+                    ? 'cursor-not-allowed bg-gray-800 text-gray-500'
                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
             >
@@ -54,12 +58,12 @@ export const StepNavigation = ({
             <button
               type='button'
               onClick={() => goToStep(3)}
-              disabled={resultsCount === 0}
+              disabled={resultsCount === 0 || processing}
               className={`flex-1 rounded-r-lg px-2 py-2 text-sm font-medium transition-all ${
                 activeStep === 3
                   ? 'bg-blue-600 text-white'
-                  : resultsCount === 0
-                    ? 'cursor-not-allowed bg-gray-700 text-gray-500'
+                  : resultsCount === 0 || processing
+                    ? 'cursor-not-allowed bg-gray-800 text-gray-500'
                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
             >
@@ -84,7 +88,12 @@ export const StepNavigation = ({
             trigger={
               <button
                 type='button'
-                className='ml-2 text-sm text-gray-400 transition-colors hover:text-red-400'
+                disabled={processing}
+                className={`ml-2 text-sm transition-colors ${
+                  processing
+                    ? 'cursor-not-allowed text-gray-600'
+                    : 'text-gray-400 hover:text-red-400'
+                }`}
                 title='모두 초기화'
               >
                 <svg
