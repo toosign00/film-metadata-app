@@ -17,26 +17,13 @@ export interface DownloadOptions {
 }
 
 // 업로드 서비스 타입
-export interface UploadedBlobInfo {
-  url: string;
-  pathname: string;
-  size: number;
-  contentType: string | null;
-}
-
-export interface UploadConfig {
-  access?: 'public' | 'private';
-  handleUploadUrl?: string;
-  clientPayload?: string;
-}
+// (제거됨) UploadedBlobInfo, UploadConfig: Vercel Blob 의존성 제거
 
 // ZIP 진행률 폴링 타입
-export interface ProgressPollingHandler {
-  stop: () => void;
-}
+// (제거됨) ProgressPollingHandler: 서버 폴링 제거
 
 // 네이티브 다운로드 타입
-export type NativeDownloadPayload = DownloadFile[];
+// (제거됨) NativeDownloadPayload: iframe 기반 네이티브 다운로드 제거
 
 // 에러 타입
 export interface ServiceError extends Error {
