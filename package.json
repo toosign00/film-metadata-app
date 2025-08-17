@@ -39,7 +39,6 @@
   },
   "dependencies": {
     "@radix-ui/react-alert-dialog": "^1.1.14",
-    "@vercel/blob": "^1.1.1",
     "date-fns": "^4.1.0",
     "fflate": "^0.8.2",
     "file-saver": "^2.0.5",
