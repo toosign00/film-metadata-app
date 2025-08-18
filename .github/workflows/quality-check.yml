@@ -24,32 +24,16 @@ jobs:
         with:
           version: 10.14.0
           
-      - name: Setup pnpm cache
-        uses: actions/cache@v4
-        with:
-          path: ~/.pnpm-store
-          key: ${{ runner.os }}-pnpm-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-
-            
-      - name: Setup Next.js cache
+      - name: Setup cache
         uses: actions/cache@v4
         with:
           path: |
             ~/.npm
             ${{ github.workspace }}/.next/cache
-          key: ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
-          restore-keys: |
-            ${{ runner.os }}-nextjs-${{ hashFiles('**/pnpm-lock.yaml') }}-
-            
-      - name: Setup TypeScript cache
-        uses: actions/cache@v4
-        with:
-          path: |
             .next/cache/.tsbuildinfo
-          key: ${{ runner.os }}-typescript-${{ hashFiles('**/tsconfig*.json', '**/*.ts', '**/*.tsx') }}
+          key: ${{ runner.os }}-build-${{ hashFiles('**/pnpm-lock.yaml') }}-${{ hashFiles('**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx', '**/tsconfig*.json') }}
           restore-keys: |
-            ${{ runner.os }}-typescript-
+            ${{ runner.os }}-build-${{ hashFiles('**/pnpm-lock.yaml') }}-
             
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
