@@ -93,7 +93,7 @@ export async function setMetadata(
         const processedLensInfo = normalizeLensInfo(settings.lensInfo);
         const focalLength = processedLensInfo.match(/^(\d+(\.\d+)?)/);
         if (focalLength) {
-          exif[piexifjs.ExifIFD.FocalLength] = [parseInt(focalLength[1]), 1];
+          exif[piexifjs.ExifIFD.FocalLength] = [parseInt(focalLength[1], 10), 1];
         }
 
         const fNumberMatch = processedLensInfo.match(/f(\d+\.?\d*)/);
@@ -103,7 +103,7 @@ export async function setMetadata(
         }
 
         if (settings.isoValue) {
-          exif[piexifjs.ExifIFD.ISOSpeedRatings] = parseInt(settings.isoValue);
+          exif[piexifjs.ExifIFD.ISOSpeedRatings] = parseInt(settings.isoValue, 10);
         }
 
         const exifObj = { '0th': zeroth, Exif: exif, GPS: gps };

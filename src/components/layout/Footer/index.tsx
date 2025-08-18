@@ -3,14 +3,14 @@ import type { FooterProps } from '@/types/footer.type';
 export const Footer = ({ className }: FooterProps) => {
   return (
     <footer
-      className={`border-t border-gray-700 bg-gray-900 p-4 text-sm text-gray-400 ${className || ''}`}
+      className={`border-t border-gray-700 bg-gray-900 p-6 md:p-8 text-sm text-gray-400 ${className || ''}`}
     >
       <div className='mx-auto max-w-6xl text-center'>
         <p className='text-xs sm:text-base'>
-          이 도구는 이미지 파일의 EXIF 메타데이터를 서버에서 처리합니다.
+          이 도구는 이미지 파일의 EXIF 메타데이터를 브라우저에서 직접 설정합니다.
           <br />
           <span className='text-xs text-gray-500'>
-            업로드된 파일은 처리 완료 즉시 삭제되며 서버에 보관되지 않습니다. 안심하고 이용하세요.
+            파일은 서버로 업로드되지 않으며, 모든 처리는 브라우저에서만 이루어집니다.
           </span>
           <br />
         </p>

@@ -98,7 +98,7 @@ export const StepManager = ({ onComplete }: StepManagerProps) => {
         resetForm={resetForm}
       />
 
-      <main className='flex-1 overflow-auto p-4 md:p-6'>
+      <section className='flex-1 overflow-auto'>
         <div className='mx-auto w-full max-w-6xl'>
           <FileSelection
             activeStep={activeStep}
@@ -140,7 +140,7 @@ export const StepManager = ({ onComplete }: StepManagerProps) => {
 
           {errors.length > 0 && <ErrorDisplay errors={errors} />}
         </div>
-      </main>
+      </section>
 
       <ConfirmDialog
         open={showResetDialog}
