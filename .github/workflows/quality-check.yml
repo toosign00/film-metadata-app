@@ -1,0 +1,40 @@
+name: Code Quality Check
+
+on:
+  push:
+    branches: [develop, main]
+  pull_request:
+    branches: [develop, main]
+
+jobs:
+  quality-check:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+        
+      - name: Type check
+        run: pnpm type-check
+        
+      - name: Lint check
+        run: pnpm exec biome lint --no-errors-on-unmatched
+        
+      - name: Format check
+        run: pnpm exec biome format --no-errors-on-unmatched
+        
+      - name: Build check
+        run: pnpm build
