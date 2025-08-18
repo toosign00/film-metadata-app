@@ -56,7 +56,7 @@ export function ResultsClientPage() {
         resetForm={resetAll}
         processing={processing}
       />
-      <main className='flex-1 overflow-auto p-4 md:p-6'>
+      <section className='flex-1 overflow-auto'>
         <div className='mx-auto w-full max-w-6xl'>
           <ResultsViewer
             activeStep={3}
@@ -73,7 +73,7 @@ export function ResultsClientPage() {
             goToStep={goToStep}
           />
         </div>
-      </main>
+      </section>
     </>
   );
 }

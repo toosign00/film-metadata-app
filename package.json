@@ -33,6 +33,7 @@
     "lint": "biome lint --write",
     "type-check": "tsc --noEmit --project tsconfig.app.json",
     "format": "biome format --write",
+    "tw:sort": "biome lint --write --unsafe",
     "check": "pnpm type-check && pnpm lint && pnpm format",
     "reporter": "biome check --reporter=summary"
   },

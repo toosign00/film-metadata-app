@@ -38,7 +38,7 @@ export const ResultsViewer = ({
     <section ref={resultRef} className='mb-8 transition-all' aria-labelledby='results-section'>
       <div className='rounded-xl border border-gray-700 bg-gray-800 p-5 shadow-md md:p-6'>
         <div className='mb-4 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center sm:gap-0'>
-          <h2 id='results-section' className='flex items-center text-xl font-bold text-gray-200'>
+          <h2 id='results-section' className='flex items-center font-bold text-gray-200 text-xl'>
             <span className='mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-sm text-white'>
               3
             </span>
@@ -80,14 +80,14 @@ export const ResultsViewer = ({
           <div className='rounded-lg border border-gray-700 bg-gray-900 p-8 text-center shadow-md'>
             <Image className='mx-auto mb-3 text-gray-500' size={48} />
             <p className='text-gray-300'>처리된 이미지가 여기에 표시됩니다.</p>
-            <p className='mt-2 text-sm text-gray-500'>
+            <p className='mt-2 text-gray-500 text-sm'>
               메타데이터를 설정하기 위해 2단계로 이동하세요.
             </p>
             <button
               type='button'
               onClick={() => goToStep(2)}
               disabled={processing}
-              className={`mt-4 rounded-lg px-4 py-2 text-sm font-medium transition ${
+              className={`mt-4 rounded-lg px-4 py-2 font-medium text-sm transition ${
                 processing
                   ? 'cursor-not-allowed bg-gray-800 text-gray-500'
                   : 'bg-gray-700 text-gray-300 hover:bg-gray-600'

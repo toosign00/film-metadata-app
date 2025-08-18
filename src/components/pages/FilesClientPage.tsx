@@ -36,7 +36,7 @@ export function FilesClientPage() {
         resultsCount={resultImages.length}
         resetForm={resetAll}
       />
-      <main className='flex-1 overflow-auto p-4 md:p-6'>
+      <section className='flex-1 overflow-auto'>
         <div className='mx-auto w-full max-w-6xl'>
           <FileSelection
             activeStep={1}
@@ -46,7 +46,7 @@ export function FilesClientPage() {
             resetForm={resetAll}
           />
         </div>
-      </main>
+      </section>
     </>
   );
 }

@@ -10,11 +10,11 @@ import { ToasterClient } from '@/components/ui/Toaster';
 export default function MetadataPage() {
   return (
     <MainLayout>
-      <main className='flex-1 overflow-auto p-4 md:p-6'>
+      <section className='flex-1 overflow-auto'>
         <div className='mx-auto w-full max-w-6xl'>
           <MetadataClientPage />
         </div>
-      </main>
+      </section>
       <ToasterClient />
     </MainLayout>
   );

@@ -70,7 +70,7 @@ export const MetadataSettings = ({
       <div className='rounded-xl border border-gray-700 bg-gray-800 p-5 shadow-md md:p-6'>
         <h2
           id='metadata-section'
-          className='mb-4 flex items-center text-xl font-bold text-gray-200'
+          className='mb-4 flex items-center font-bold text-gray-200 text-xl'
         >
           <span
             className='mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-sm text-white'
