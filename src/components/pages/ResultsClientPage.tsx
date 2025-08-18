@@ -62,8 +62,8 @@ export function ResultsClientPage() {
             activeStep={3}
             resultRef={resultRef}
             resultImages={resultImages.map((img) => ({
-              ...img,
-              file: new File([], img.name),
+              url: img.url,
+              name: img.name,
               dateTime: img.dateTime || '',
             }))}
             processing={processing}
