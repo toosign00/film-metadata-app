@@ -14,13 +14,13 @@ export const DateTimeSection = ({
     >
       <h3
         id='date-time-heading'
-        className='mb-3 border-b border-gray-700 pb-2 font-medium text-gray-200'
+        className='mb-3 border-gray-700 border-b pb-2 font-medium text-gray-200'
       >
         촬영 날짜/시간
       </h3>
 
       <div className='relative mb-4'>
-        <label htmlFor='startDate' className='mb-1 block text-sm font-medium text-gray-300'>
+        <label htmlFor='startDate' className='mb-1 block font-medium text-gray-300 text-sm'>
           날짜
         </label>
         <CustomDatePicker
@@ -35,11 +35,11 @@ export const DateTimeSection = ({
           name='startDate'
         />
         <div className='flex flex-wrap items-center justify-between'>
-          <p id='startDate-help' className='mt-1 text-xs text-gray-500'>
+          <p id='startDate-help' className='mt-1 text-gray-500 text-xs'>
             첫 번째 사진의 촬영 날짜 (모든 사진에 동일하게 적용됩니다)
           </p>
           {validationErrors.startDate && (
-            <p id='startDate-error' className='mt-1 text-xs text-red-500' role='alert'>
+            <p id='startDate-error' className='mt-1 text-red-500 text-xs' role='alert'>
               {validationErrors.startDate}
             </p>
           )}
@@ -47,7 +47,7 @@ export const DateTimeSection = ({
       </div>
 
       <div className='relative'>
-        <label htmlFor='startTime' className='mb-1 block text-sm font-medium text-gray-300'>
+        <label htmlFor='startTime' className='mb-1 block font-medium text-gray-300 text-sm'>
           시간
         </label>
         <CustomDatePicker
@@ -66,11 +66,11 @@ export const DateTimeSection = ({
           name='startTime'
         />
         <div className='flex flex-wrap items-center justify-between'>
-          <p id='startTime-help' className='mt-1 text-xs text-gray-500'>
+          <p id='startTime-help' className='mt-1 text-gray-500 text-xs'>
             첫 번째 사진의 촬영 시간 (사진 순서대로 1초 간격으로 설정됩니다)
           </p>
           {validationErrors.startTime && (
-            <p id='startTime-error' className='mt-1 text-xs text-red-500' role='alert'>
+            <p id='startTime-error' className='mt-1 text-red-500 text-xs' role='alert'>
               {validationErrors.startTime}
             </p>
           )}

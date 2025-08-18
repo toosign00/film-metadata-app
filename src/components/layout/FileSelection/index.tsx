@@ -17,14 +17,14 @@ export const FileSelection = ({
   return (
     <section className='mb-8 transition-all' aria-labelledby='file-section'>
       <div className='rounded-xl border border-gray-700 bg-gray-800 p-5 shadow-md md:p-6'>
-        <h2 id='file-section' className='mb-4 flex items-center text-xl font-bold text-gray-200'>
+        <h2 id='file-section' className='mb-4 flex items-center font-bold text-gray-200 text-xl'>
           <span className='mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-sm text-white'>
             1
           </span>
           이미지 파일 선택
         </h2>
 
-        <div className='flex flex-col space-y-4 md:flex-row md:space-y-0 md:space-x-4'>
+        <div className='flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0'>
           <div className='w-full md:w-1/2'>
             <DropZone onFileSelect={onFileSelect} filesCount={sortedFiles.length} />
           </div>

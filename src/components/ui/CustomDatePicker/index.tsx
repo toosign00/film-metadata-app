@@ -10,7 +10,7 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, forwa
   return (
     <button
       type='button'
-      className='relative w-full cursor-pointer rounded-lg border border-gray-700 bg-gray-800 py-2.5 pr-10 pl-4 text-gray-200 shadow-sm focus:ring-2 focus:ring-blue-500 focus:outline-none hover:border-gray-600 transition-colors text-left'
+      className='relative w-full cursor-pointer rounded-lg border border-gray-700 bg-gray-800 py-2.5 pr-10 pl-4 text-left text-gray-200 shadow-sm transition-colors hover:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500'
       onClick={onClick}
       disabled={disabled}
     >
@@ -21,12 +21,12 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, forwa
         disabled={disabled}
         id={id}
         name={name}
-        className='w-full bg-transparent border-none outline-none cursor-pointer'
+        className='w-full cursor-pointer border-none bg-transparent outline-none'
         readOnly={true}
         style={{ caretColor: 'transparent' }}
       />
       {/* 아이콘 */}
-      <div className='absolute inset-y-0 right-0 flex items-center justify-center w-10'>
+      <div className='absolute inset-y-0 right-0 flex w-10 items-center justify-center'>
         {showTimeSelectOnly ? (
           <Clock4 className='text-gray-500' size={20} />
         ) : (

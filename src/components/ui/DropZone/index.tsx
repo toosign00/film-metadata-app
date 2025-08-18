@@ -106,7 +106,7 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
   return (
     <button
       ref={dropAreaRef}
-      className={`flex items-center justify-center rounded-lg border-2 border-dashed w-full ${
+      className={`flex w-full items-center justify-center rounded-lg border-2 border-dashed ${
         isDragging
           ? 'border-blue-500 bg-gray-800'
           : filesCount > 0
@@ -140,26 +140,26 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
 
         {isDragging ? (
           <div>
-            <p className='text-lg font-medium text-blue-400'>파일을 여기에 놓으세요</p>
-            <p className='text-sm text-blue-300'>{supportedExtensionsText} 파일만 지원됩니다</p>
+            <p className='font-medium text-blue-400 text-lg'>파일을 여기에 놓으세요</p>
+            <p className='text-blue-300 text-sm'>{supportedExtensionsText} 파일만 지원됩니다</p>
           </div>
         ) : filesCount > 0 ? (
           <div>
-            <p className='text-lg font-medium text-gray-200'>{filesCount}개의 파일이 선택됨</p>
-            <p className='text-sm text-gray-400'>클릭하여 다른 파일 선택</p>
+            <p className='font-medium text-gray-200 text-lg'>{filesCount}개의 파일이 선택됨</p>
+            <p className='text-gray-400 text-sm'>클릭하여 다른 파일 선택</p>
           </div>
         ) : (
           <div>
-            <p className='text-lg font-medium text-gray-300'>이미지 파일을 선택하세요</p>
-            <p className='text-sm text-gray-400'>또는 여기에 파일을 끌어다 놓으세요</p>
+            <p className='font-medium text-gray-300 text-lg'>이미지 파일을 선택하세요</p>
+            <p className='text-gray-400 text-sm'>또는 여기에 파일을 끌어다 놓으세요</p>
           </div>
         )}
 
         <div>
-          <p id='file-format-info' className='mt-2 text-xs text-gray-500'>
+          <p id='file-format-info' className='mt-2 text-gray-500 text-xs'>
             지원 형식: {supportedExtensionsText} (최대 15MB)
           </p>
-          <p className='mt-2 text-xs text-gray-500'>
+          <p className='mt-2 text-gray-500 text-xs'>
             최대 파일 수: {isMobile ? '40개' : '100개'}
             {isMobile && <span className='ml-1'>(모바일 환경)</span>}
           </p>

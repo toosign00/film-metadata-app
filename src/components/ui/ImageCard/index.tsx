@@ -22,7 +22,7 @@ export const ImageCard = ({ image, onDownload, processing = false }: ImageCardPr
 
   return (
     <div className='group relative overflow-hidden rounded-lg border border-gray-700 bg-gray-800 shadow-md transition-all duration-200 hover:shadow-lg'>
-      <div className='aspect-w-4 aspect-h-3 bg-gray-900'>
+      <div className='aspect-h-3 aspect-w-4 bg-gray-900'>
         <Image
           src={image.url}
           alt={`처리된 이미지: ${image.name}`}
@@ -40,7 +40,7 @@ export const ImageCard = ({ image, onDownload, processing = false }: ImageCardPr
               type='button'
               onClick={handleDownload}
               disabled={processing}
-              className={`mb-4 translate-y-4 transform rounded-lg px-4 py-1.5 text-sm font-medium transition-all duration-300 group-hover:translate-y-0 focus:ring-2 focus:ring-offset-1 focus:outline-none ${
+              className={`mb-4 translate-y-4 transform rounded-lg px-4 py-1.5 font-medium text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-1 group-hover:translate-y-0 ${
                 processing
                   ? 'cursor-not-allowed bg-gray-600 text-gray-400'
                   : 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
@@ -61,11 +61,11 @@ export const ImageCard = ({ image, onDownload, processing = false }: ImageCardPr
       <div className='bg-gray-800 p-3'>
         <div className='flex items-start justify-between'>
           <div className='overflow-hidden'>
-            <p className='truncate text-sm font-medium text-gray-200' title={image.name}>
+            <p className='truncate font-medium text-gray-200 text-sm' title={image.name}>
               {image.name}
             </p>
             {image.dateTime && (
-              <p className='mt-0.5 truncate text-xs text-gray-400' title={image.dateTime}>
+              <p className='mt-0.5 truncate text-gray-400 text-xs' title={image.dateTime}>
                 {image.dateTime}
               </p>
             )}
