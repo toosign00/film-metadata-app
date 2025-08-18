@@ -1,6 +1,7 @@
 'use client';
 
 import { create } from 'zustand';
+import { toDomainMetadataSettings } from '@/components/layout/MetadataSettings/utils/preprocessors';
 import { INITIAL_SETTINGS } from '@/config/constants';
 import { processMetadata } from '@/services/metadata';
 import type { InitialSettings } from '@/types/config.type';
@@ -79,19 +80,11 @@ export const useStepStore = create<StepStoreState>((set, get) => ({
         0
       );
 
+      const domainSettings = toDomainMetadataSettings(effectiveSettings);
       const results = await processMetadata(
         sortedFiles,
         combinedDateTime,
-        {
-          cameraMake: effectiveSettings.cameraMake,
-          cameraModel: effectiveSettings.cameraModel,
-          filmInfo: effectiveSettings.filmInfo,
-          lens: effectiveSettings.lens,
-          lensInfo: effectiveSettings.lensInfo,
-          isoValue: effectiveSettings.isoValue,
-          startDate: effectiveSettings.startDate as Date,
-          startTime: new Date(effectiveSettings.startTime) as Date,
-        },
+        domainSettings,
         (completed: number) => set({ completed })
       );
 
