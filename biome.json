@@ -95,8 +95,14 @@
         "useSemanticElements": "off"
       },
       "nursery": {
-        "noFloatingPromises": "info",
-        "useSortedClasses": "info"
+        "noFloatingPromises": "error",
+        "useSortedClasses": {
+          "level": "info",
+          "options": {
+            "attributes": ["classList", "class"],
+            "functions": ["clsx", "cva", "tw", "cn"]
+          }
+        }
       }
     }
   },
