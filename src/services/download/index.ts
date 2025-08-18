@@ -13,7 +13,12 @@ import { Zip, ZipPassThrough } from 'fflate';
 import { saveAs } from 'file-saver';
 import { toast } from 'sonner';
 import type { Image as AppImage } from '@/types/imageCard.type';
-import type { BooleanUpdater, DownloadFile, ProgressUpdater } from '@/types/service.types';
+import type {
+  BooleanUpdater,
+  DownloadFile,
+  ProgressUpdater,
+  ServiceError as ServiceErrorShape,
+} from '@/types/service.types';
 
 /**
  * HTTP/HTTPS URL인지 검증합니다
@@ -45,7 +50,7 @@ function generateZipFileName(): string {
  * 단일 이미지 파일을 다운로드합니다.
  *
  * @param image - 다운로드할 이미지 정보 (url, name 포함)
- * @throws {ServiceError} 이미지 정보 누락 또는 다운로드 실패 시
+ * @throws {DownloadServiceError} 이미지 정보 누락 또는 다운로드 실패 시
  *
  * @example
  * ```ts
@@ -55,12 +60,14 @@ function generateZipFileName(): string {
 export async function downloadFile(image: AppImage): Promise<void> {
   try {
     if (!image?.url) {
-      throw new ServiceError('다운로드할 이미지 정보가 없습니다', { code: 'MISSING_IMAGE_INFO' });
+      throw new DownloadServiceError('다운로드할 이미지 정보가 없습니다', {
+        code: 'MISSING_IMAGE_INFO',
+      });
     }
 
     const response = await fetch(image.url);
     if (!response.ok) {
-      throw new ServiceError(`파일 다운로드 실패: ${response.status}`, {
+      throw new DownloadServiceError(`파일 다운로드 실패: ${response.status}`, {
         code: 'FETCH_FAILED',
         statusCode: response.status,
       });
@@ -82,13 +89,13 @@ export async function downloadFile(image: AppImage): Promise<void> {
  * @extends Error
  * @implements ServiceError
  */
-class ServiceError extends Error implements ServiceError {
+class DownloadServiceError extends Error implements ServiceErrorShape {
   code?: string;
   statusCode?: number;
 
   constructor(message: string, options?: { code?: string; statusCode?: number }) {
     super(message);
-    this.name = 'ServiceError';
+    this.name = 'DownloadServiceError';
     this.code = options?.code;
     this.statusCode = options?.statusCode;
   }
