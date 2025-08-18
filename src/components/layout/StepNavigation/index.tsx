@@ -14,7 +14,7 @@ export const StepNavigation = ({
 }: StepNavigationProps) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   return (
-    <nav className='sticky top-0 z-10 border-b border-gray-700 bg-gray-800 px-4 py-3 shadow-md'>
+    <nav className='sticky top-0 z-10 bg-gray-800 px-4 py-3  border border-gray-700 shadow-md mb-6'>
       <div className='mx-auto max-w-6xl'>
         <div className='flex items-center justify-between'>
           <div className='flex w-full space-x-1'>
@@ -22,11 +22,11 @@ export const StepNavigation = ({
               type='button'
               onClick={() => goToStep(1)}
               disabled={processing}
-              className={`flex-1 rounded-l-lg px-2 py-2 text-sm font-medium transition-all ${
+              className={`flex-1 rounded-l-lg px-2 py-2 text-sm font-medium transition-all disabled:opacity-100 ${
                 activeStep === 1
                   ? 'bg-blue-600 text-white'
                   : processing
-                    ? 'cursor-not-allowed bg-gray-800 text-gray-500'
+                    ? 'cursor-not-allowed bg-gray-700 text-gray-500'
                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
             >
@@ -43,11 +43,11 @@ export const StepNavigation = ({
               type='button'
               onClick={() => goToStep(2)}
               disabled={filesCount === 0 || processing}
-              className={`flex-1 px-2 py-2 text-sm font-medium transition-all ${
+              className={`flex-1 px-2 py-2 text-sm font-medium transition-all disabled:opacity-100 ${
                 activeStep === 2
                   ? 'bg-blue-600 text-white'
                   : filesCount === 0 || processing
-                    ? 'cursor-not-allowed bg-gray-800 text-gray-500'
+                    ? 'cursor-not-allowed bg-gray-700 text-gray-500'
                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
             >
@@ -59,11 +59,11 @@ export const StepNavigation = ({
               type='button'
               onClick={() => goToStep(3)}
               disabled={resultsCount === 0 || processing}
-              className={`flex-1 rounded-r-lg px-2 py-2 text-sm font-medium transition-all ${
+              className={`flex-1 rounded-r-lg px-2 py-2 text-sm font-medium transition-all disabled:opacity-100 ${
                 activeStep === 3
                   ? 'bg-blue-600 text-white'
                   : resultsCount === 0 || processing
-                    ? 'cursor-not-allowed bg-gray-800 text-gray-500'
+                    ? 'cursor-not-allowed bg-gray-700 text-gray-500'
                     : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
               }`}
             >
