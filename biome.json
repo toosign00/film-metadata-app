@@ -66,17 +66,20 @@
       "correctness": {
         "noUnusedImports": "error",
         "noUnusedVariables": "error",
-        "noUndeclaredDependencies": "error"
+        "noUndeclaredDependencies": "error",
+        "useUniqueElementIds": "off"
       },
       "suspicious": {
         "noVar": "error",
         "noExplicitAny": "warn",
         "noEmptyBlockStatements": "error",
-        "noArrayIndexKey": "error"
+        "noArrayIndexKey": "error",
+        "noUnknownAtRules": "off"
       },
       "complexity": {
         "noVoid": "error",
-        "useLiteralKeys": "error"
+        "useLiteralKeys": "error",
+        "noImportantStyles": "off"
       },
       "performance": {
         "noDelete": "error"
@@ -92,7 +95,8 @@
         "useSemanticElements": "off"
       },
       "nursery": {
-        "noFloatingPromises": "error"
+        "noFloatingPromises": "info",
+        "useSortedClasses": "info"
       }
     }
   },
