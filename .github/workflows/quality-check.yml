@@ -46,21 +46,10 @@ jobs:
         uses: actions/cache@v4
         with:
           path: |
-            **/*.tsbuildinfo
-            node_modules/.cache/typescript
+            .next/cache/.tsbuildinfo
           key: ${{ runner.os }}-typescript-${{ hashFiles('**/tsconfig*.json', '**/*.ts', '**/*.tsx') }}
           restore-keys: |
             ${{ runner.os }}-typescript-
-            
-      - name: Setup Biome cache
-        uses: actions/cache@v4
-        with:
-          path: |
-            node_modules/.cache/@biomejs
-            ~/.cache/@biomejs
-          key: ${{ runner.os }}-biome-${{ hashFiles('**/biome.json', '**/*.js', '**/*.jsx', '**/*.ts', '**/*.tsx') }}
-          restore-keys: |
-            ${{ runner.os }}-biome-
             
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
