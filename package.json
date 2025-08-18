@@ -6,7 +6,6 @@
   "module": "ES2022",
   "description": "Film Metadata App",
   "author": "Hyunsoo Roh",
-  "license": "MIT",
   "homepage": "https://film-metadata.vercel.app",
   "repository": {
     "type": "git",
