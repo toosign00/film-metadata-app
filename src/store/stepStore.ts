@@ -1,28 +1,26 @@
 'use client';
 
 import { create } from 'zustand';
-import { toDomainMetadataSettings } from '@/components/layout/MetadataSettings/utils/preprocessors';
 import { INITIAL_SETTINGS } from '@/config/constants';
 import { processMetadata } from '@/services/metadata';
-import type { InitialSettings } from '@/types/config.type';
-import type { ProcessMetadataResults } from '@/types/metadata.type';
+import type { MetadataSettings, ProcessMetadataResults } from '@/types/metadata.type';
 import { naturalSort } from '@/utils/sortUtils';
 
 interface StepStoreState {
   files: File[];
   sortedFiles: File[];
-  settings: InitialSettings;
+  settings: MetadataSettings;
   resultImages: ProcessMetadataResults['images'];
   errors: { file: string; error: string }[];
   processing: boolean;
   completed: number;
   zipProgress: number;
   setFiles: (files: File[]) => void;
-  setSettings: (updater: (prev: InitialSettings) => InitialSettings) => void;
+  setSettings: (updater: (prev: MetadataSettings) => MetadataSettings) => void;
   setZipProgress: (value: number) => void;
   setProcessing: (value: boolean) => void;
   resetAll: () => void;
-  processFiles: (settingsOverride?: Partial<InitialSettings>) => Promise<ProcessMetadataResults>;
+  processFiles: (settingsOverride?: Partial<MetadataSettings>) => Promise<ProcessMetadataResults>;
 }
 
 export const useStepStore = create<StepStoreState>((set, get) => ({
@@ -70,7 +68,7 @@ export const useStepStore = create<StepStoreState>((set, get) => ({
 
     try {
       // 날짜와 시간을 하나의 Date 객체로 합치기 (원본 로직 유지)
-      const effectiveSettings = { ...settings, ...settingsOverride } as InitialSettings;
+      const effectiveSettings = { ...settings, ...settingsOverride } as MetadataSettings;
       const combinedDateTime = new Date(effectiveSettings.startDate);
       const timeDate = new Date(effectiveSettings.startTime);
       combinedDateTime.setHours(
@@ -80,11 +78,10 @@ export const useStepStore = create<StepStoreState>((set, get) => ({
         0
       );
 
-      const domainSettings = toDomainMetadataSettings(effectiveSettings);
       const results = await processMetadata(
         sortedFiles,
         combinedDateTime,
-        domainSettings,
+        effectiveSettings,
         (completed: number) => set({ completed })
       );
 
