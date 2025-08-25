@@ -51,7 +51,7 @@ export const DateTimeSection = ({
           시간
         </label>
         <CustomDatePicker
-          selected={new Date(settings.startTime)}
+          selected={settings.startTime}
           onChange={handleTimeChange}
           showTimeSelect
           showTimeSelectOnly

@@ -1,4 +1,4 @@
-import type { InitialSettings } from './config.type';
+import type { MetadataSettings } from './metadata.type';
 
 export interface ProcessResult {
   images: Array<{
@@ -21,16 +21,16 @@ export interface UseFileHandlersReturn {
   errors: { file: string; error: string }[];
   resultImages: ProcessResult['images'];
   handleFileSelect: (files: File[]) => void;
-  processFiles: (e: React.FormEvent, settings: InitialSettings) => Promise<void>;
+  processFiles: (e: React.FormEvent, settings: MetadataSettings) => Promise<void>;
   resetFiles: () => void;
   setProcessing: (processing: boolean) => void;
 }
 
 export interface UseMetadataHandlersReturn {
-  settings: InitialSettings;
+  settings: MetadataSettings;
   handleSettingsChange: (
-    name: keyof InitialSettings,
-    value: InitialSettings[keyof InitialSettings]
+    name: keyof MetadataSettings,
+    value: MetadataSettings[keyof MetadataSettings]
   ) => void;
   resetSettings: () => void;
 }

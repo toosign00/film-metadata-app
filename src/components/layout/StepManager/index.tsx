@@ -4,14 +4,14 @@ import { useCallback, useRef, useState } from 'react';
 import { toast } from 'sonner';
 import { ErrorDisplay } from '@/components/layout/ErrorDisplay';
 import { FileSelection } from '@/components/layout/FileSelection';
-import { MetadataSettings } from '@/components/layout/MetadataSettings';
+import { MetadataSettingsForm } from '@/components/layout/MetadataSettings';
 import { ResultsViewer } from '@/components/layout/ResultsViewer';
 import { StepNavigation } from '@/components/layout/StepNavigation';
 import { ConfirmDialog } from '@/components/ui/AlertDialog';
 import { STEPS } from '@/config/constants';
 import { useFileHandlers } from '@/hooks/useFileHandlers';
 import { useMetadataHandlers } from '@/hooks/useMetadataHandlers';
-import type { InitialSettings } from '@/types/config.type';
+import type { MetadataSettings } from '@/types/metadata.type';
 import type { StepManagerProps } from '@/types/step-manager.type';
 
 /**
@@ -74,18 +74,14 @@ export const StepManager = ({ onComplete }: StepManagerProps) => {
 
   const handleProcessFiles = useCallback(
     (e: React.FormEvent) => {
-      const metadataSettings: InitialSettings = {
-        ...settings,
-        startTime: new Date(settings.startTime).getTime(),
-      };
-      processFiles(e, metadataSettings);
+      processFiles(e, settings);
     },
     [processFiles, settings]
   );
 
   const handleSettingsChangeWrapper = useCallback(
     (name: string, value: string | Date) => {
-      handleSettingsChange(name as keyof InitialSettings, value);
+      handleSettingsChange(name as keyof MetadataSettings, value);
     },
     [handleSettingsChange]
   );
@@ -110,12 +106,9 @@ export const StepManager = ({ onComplete }: StepManagerProps) => {
             resetForm={resetForm}
           />
 
-          <MetadataSettings
+          <MetadataSettingsForm
             activeStep={activeStep}
-            settings={{
-              ...settings,
-              startTime: new Date(settings.startTime),
-            }}
+            settings={settings}
             onSettingsChange={handleSettingsChangeWrapper}
             sortedFiles={sortedFiles}
             processing={processing}

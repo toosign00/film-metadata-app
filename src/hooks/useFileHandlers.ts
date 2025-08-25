@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
 import { processMetadata } from '@/services/metadata';
-import type { InitialSettings } from '../types/config.type';
+import type { MetadataSettings } from '@/types/metadata.type';
 import type {
   ProcessResult,
   UseFileHandlersOptions,
@@ -42,7 +42,7 @@ export const useFileHandlers = ({ onComplete }: UseFileHandlersOptions): UseFile
   };
 
   // 메타데이터 처리 시작 함수
-  const processFiles = async (e: React.FormEvent, settings: InitialSettings): Promise<void> => {
+  const processFiles = async (e: React.FormEvent, settings: MetadataSettings): Promise<void> => {
     e.preventDefault();
 
     if (sortedFiles.length === 0) {
@@ -61,15 +61,10 @@ export const useFileHandlers = ({ onComplete }: UseFileHandlersOptions): UseFile
       const timeDate = new Date(settings.startTime);
       combinedDateTime.setHours(timeDate.getHours(), timeDate.getMinutes(), timeDate.getSeconds());
 
-      const metadataSettings = {
-        ...settings,
-        startTime: new Date(settings.startTime),
-      };
-
       const results = await processMetadata(
         sortedFiles,
         combinedDateTime,
-        metadataSettings,
+        settings,
         (completed: number) => setCompleted(completed)
       );
 

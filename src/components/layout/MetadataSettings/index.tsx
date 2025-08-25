@@ -3,13 +3,13 @@
 import { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import type { MetadataSettingsProps, ValidationErrors } from '@/types/metadata-settings.type';
+import { validateForm } from '@/utils/metadataValidation';
 import { CameraSection } from './components/CameraSection';
 import { DateTimeSection } from './components/DateTimeSection';
 import { FilmSection } from './components/FilmSection';
 import { LensSection } from './components/LensSection';
-import { validateForm } from './utils/validation';
 
-export const MetadataSettings = ({
+export const MetadataSettingsForm = ({
   activeStep,
   settings,
   onSettingsChange,
