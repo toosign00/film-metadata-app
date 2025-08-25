@@ -5,7 +5,7 @@
  * 주요 기능:
  * - 단일 파일 다운로드 (fetch + file-saver)
  * - 다중 파일 ZIP 생성 (fflate 기반 스트리밍)
- * - 모바일 환경 자동 분할 저장 (iOS Safari OOM 방지)
+ * - 메모리 효율적인 청크 단위 처리
  * - 진행률 실시간 업데이트 및 에러 처리
  */
 
@@ -13,24 +13,12 @@ import { Zip, ZipPassThrough } from 'fflate';
 import { saveAs } from 'file-saver';
 import { toast } from 'sonner';
 import type { Image as AppImage } from '@/types/imageCard.type';
+import type { MetadataResult } from '@/types/metadata.type';
 import type {
   BooleanUpdater,
-  DownloadFile,
   ProgressUpdater,
   ServiceError as ServiceErrorShape,
 } from '@/types/service.types';
-
-/**
- * HTTP/HTTPS URL인지 검증합니다
- */
-function isHttpUrl(url: string): boolean {
-  try {
-    const urlObj = new URL(url);
-    return urlObj.protocol === 'http:' || urlObj.protocol === 'https:';
-  } catch {
-    return false;
-  }
-}
 
 /**
  * ZIP 파일명을 타임스탬프와 함께 생성합니다
@@ -104,9 +92,8 @@ class DownloadServiceError extends Error implements ServiceErrorShape {
 /**
  * 다중 이미지 파일을 ZIP으로 압축하여 다운로드합니다.
  *
- * 클라이언트에서 fflate를 사용하여 스트리밍 방식으로 ZIP을 생성하고,
- * 모바일 환경에서는 메모리 부족을 방지하기 위해 자동으로 파일을 분할하여
- * 여러 개의 ZIP 파일로 저장합니다.
+ * 클라이언트에서 fflate를 사용하여 메모리 효율적인 방식으로 ZIP을 생성합니다.
+ * 파일을 64KB 청크 단위로 처리하여 메모리 사용량을 최소화합니다.
  *
  * @param validImages - ZIP에 포함할 이미지 목록
  * @param updateZipProgress - 진행률 업데이트 콜백 (0-100)
@@ -114,19 +101,9 @@ class DownloadServiceError extends Error implements ServiceErrorShape {
  * @param updateIsZipCompressing - 압축 상태 업데이트 콜백 (선택사항)
  *
  * @throws {Error} ZIP 생성 실패 시
- *
- * @example
- * ```ts
- * await createZipFile(
- *   resultImages,
- *   setZipProgress,
- *   setProcessing,
- *   setZipCompressing
- * );
- * ```
  */
 export async function createZipFile(
-  validImages: AppImage[],
+  validImages: (AppImage | MetadataResult)[],
   updateZipProgress: ProgressUpdater,
   updateProcessing: BooleanUpdater,
   updateIsZipCompressing?: BooleanUpdater
@@ -141,148 +118,87 @@ export async function createZipFile(
     updateZipProgress(1);
     updateIsZipCompressing?.(true);
 
-    // 파일 목록을 URL 타입별로 분류
-    // - httpFiles: 원격 HTTP/HTTPS URL (CORS 허용 필요)
-    // - localFiles: 로컬 Blob/Object URL (브라우저 메모리 내)
-    const httpFiles: DownloadFile[] = [];
-    const localFiles: DownloadFile[] = [];
-    validImages.forEach((img, idx) => {
-      const name = img.name || `image_${idx + 1}.jpg`;
-      if (isHttpUrl(img.url)) {
-        httpFiles.push({ url: img.url, name });
-      } else {
-        localFiles.push({ url: img.url, name });
+    // 파일 목록 준비 (이미 보유한 File이 있다면 그것을 사용)
+    const allFiles: { file: File; name: string }[] = await Promise.all(
+      validImages.map(async (img, idx) => {
+        const name = (img as AppImage | MetadataResult).name || `image_${idx + 1}.jpg`;
+        const maybeFile: File | undefined = (img as MetadataResult).file;
+        if (maybeFile instanceof File) {
+          return { file: maybeFile, name };
+        }
+        // File이 없고 URL만 있는 경우에는 blob으로 대체 (fallback)
+        try {
+          const res = await fetch((img as AppImage | MetadataResult).url, { cache: 'no-store' });
+          const blob = await res.blob();
+          return {
+            file: new File([blob], name, { type: blob.type || 'application/octet-stream' }),
+            name,
+          };
+        } catch {
+          // 실패 시 더미 빈 파일로 대체하여 구조 유지
+          return { file: new File([new Uint8Array(0)], name), name };
+        }
+      })
+    );
+
+    const totalFiles = allFiles.length;
+    let processedCount = 0;
+
+    // 단일 ZIP 파일로 메모리 효율적 다운로드
+    const zipFileName = generateZipFileName();
+    let writerClosed = false;
+    const zipChunks: BlobPart[] = [];
+
+    const zip = new Zip((err, data, final) => {
+      if (err) throw err;
+      if (data && data.byteLength > 0) {
+        zipChunks.push(new Uint8Array(data));
+      }
+      if (final && !writerClosed) {
+        writerClosed = true;
+        const blob = new Blob(zipChunks, { type: 'application/zip' });
+        saveAs(blob, zipFileName);
       }
     });
 
-    const allFiles: DownloadFile[] = [...localFiles, ...httpFiles];
+    // 파일들을 순차적으로 ZIP에 추가 (메모리 사용량 최소화)
+    for (let index = 0; index < allFiles.length; index += 1) {
+      const { file, name } = allFiles[index];
+      const entry = new ZipPassThrough(name || `file_${index + 1}`);
+      zip.add(entry);
 
-    // 브라우저 환경 탐지: iOS Safari는 메모리 제약으로 인해 분할 처리 필요
-    const isIOS = (() => {
-      if (typeof navigator === 'undefined') return false;
-      const ua = navigator.userAgent || navigator.vendor || '';
-      return /iPad|iPhone|iPod/.test(ua) || (ua.includes('Mac') && 'ontouchend' in document);
-    })();
+      try {
+        // 파일을 작은 청크로 나누어 스트리밍
+        const chunkSize = 64 * 1024; // 64KB씩 처리
+        let offset = 0;
+        while (offset < file.size) {
+          const slice = file.slice(offset, offset + chunkSize);
+          const buf = new Uint8Array(await slice.arrayBuffer());
+          if (buf.byteLength > 0) entry.push(buf);
+          offset += chunkSize;
 
-    // iOS: 최대 30개 파일/ZIP, 데스크톱/안드로이드: 최대 200개 파일/ZIP
-    const maxFilesPerZip = isIOS ? 30 : 200;
-    const totalFiles = allFiles.length;
-
-    // 파일을 청크 단위로 분할 (메모리 부족 환경 대응)
-    const chunks: DownloadFile[][] = [];
-    for (let i = 0; i < allFiles.length; i += maxFilesPerZip) {
-      chunks.push(allFiles.slice(i, i + maxFilesPerZip));
-    }
-
-    let processedCount = 0;
-
-    /**
-     * 파일 청크를 ZIP으로 압축하고 다운로드합니다.
-     *
-     * @param files - 압축할 파일 목록
-     * @param chunkIndex - 청크 인덱스 (파일명 생성용)
-     */
-    const saveChunkAsZip = async (files: DownloadFile[], chunkIndex: number): Promise<void> => {
-      // ZIP 파일명 생성: 기본명 + 분할 시 part 번호
-      const zipFileBaseName = generateZipFileName().replace(/\.zip$/, '');
-      const partSuffix = chunks.length > 1 ? `_part${String(chunkIndex + 1).padStart(2, '0')}` : '';
-      const zipFileName = `${zipFileBaseName}${partSuffix}.zip`;
-
-      // ZIP 스트림 처리 상태 관리
-      let writerClosed = false;
-      const zipChunks: BlobPart[] = [];
-
-      // fflate Zip 인스턴스 생성: 스트리밍 방식으로 ZIP 데이터 처리
-      const zip = new Zip((err, data, final) => {
-        if (err) {
-          throw err;
+          // 메모리 해제를 위한 프레임 양보
+          // eslint-disable-next-line no-await-in-loop
+          await new Promise((r) => setTimeout(r, 0));
         }
-        // ZIP 데이터 청크 수집 (메모리 안전성 검증 포함)
-        if (data && data.byteLength > 0) {
-          try {
-            const source = data as Uint8Array;
-            // ArrayBuffer detached 상태 확인 (메모리 안전성)
-            if (source.buffer.byteLength === 0) return;
-            const safe = new Uint8Array(source);
-            zipChunks.push(safe);
-          } catch {
-            // 청크 복사 실패 시 무시하고 계속 진행
-          }
-        }
-        // ZIP 생성 완료 시 Blob으로 변환하여 다운로드
-        if (final && !writerClosed) {
-          writerClosed = true;
-          const blob = new Blob(zipChunks, { type: 'application/zip' });
-          saveAs(blob, zipFileName);
-          // 메모리 해제를 위해 청크 배열 정리
-          while (zipChunks.length) zipChunks.pop();
-        }
-      });
-
-      // 파일을 순차적으로 ZIP에 추가 (동시성 1로 메모리 사용량 제어)
-      for (let index = 0; index < files.length; index += 1) {
-        const file = files[index];
-        const entry = new ZipPassThrough(file.name || `file_${index + 1}`);
-        zip.add(entry);
-
-        try {
-          // 파일 URL에서 데이터 가져오기 (캐시 비활성화)
-          const response = await fetch(file.url, { cache: 'no-store' });
-          if (!response.ok) {
-            throw new Error(`파일 가져오기 실패: ${response.status}`);
-          }
-
-          if (!response.body) {
-            // Response body가 없는 경우: 전체 Blob으로 대체 (메모리 부담 가능성)
-            const fallbackBlob = await response.blob();
-            const u8 = new Uint8Array(await fallbackBlob.arrayBuffer());
-            entry.push(u8, true);
-          } else {
-            // Response body가 있는 경우: 스트리밍 방식으로 ZIP에 직접 추가
-            const reader = response.body.getReader();
-            try {
-              while (true) {
-                const { value, done } = await reader.read();
-                if (done) break;
-                if (value && value.byteLength > 0) entry.push(value);
-              }
-            } finally {
-              reader.releaseLock();
-            }
-            entry.push(new Uint8Array(0), true); // ZIP 엔트리 완료 신호
-          }
-        } catch (error) {
-          // CORS 제한이나 네트워크 오류로 파일 추가 실패 시
-          // 빈 엔트리로 추가하여 ZIP 구조는 유지하고 다음 파일로 진행
-          console.error('[DownloadService] 파일 추가 실패, 건너뜀:', file.name, error);
-          entry.push(new Uint8Array(0), true);
-        }
-
-        // 진행률 업데이트 (최소 1%, 최대 99%로 제한)
-        processedCount += 1;
-        const percent = Math.max(1, Math.round((processedCount / totalFiles) * 100));
-        updateZipProgress(Math.min(percent, 99));
-
-        // 가비지 컬렉션을 위한 프레임 양보 (메모리 관리)
-        await new Promise((resolve) => setTimeout(resolve, 0));
+        entry.push(new Uint8Array(0), true);
+      } catch (error) {
+        console.error('[DownloadService] 파일 추가 실패:', name, error);
+        entry.push(new Uint8Array(0), true);
       }
 
-      // ZIP 생성 완료 신호 전송
-      zip.end();
-      // ZIP 콜백에서 saveAs가 호출될 때까지 잠시 대기
-      await new Promise((resolve) => setTimeout(resolve, 0));
-    };
+      processedCount += 1;
+      const percent = Math.max(1, Math.round((processedCount / totalFiles) * 100));
+      updateZipProgress(Math.min(percent, 99));
 
-    // 청크별로 순차 처리 (메모리 부족 환경에서 안전한 분할 저장)
-    for (let c = 0; c < chunks.length; c += 1) {
-      // eslint-disable-next-line no-await-in-loop
-      await saveChunkAsZip(chunks[c], c);
-      // 각 청크 완료 후 30ms 대기하여 가비지 컬렉션 기회 제공
-      // eslint-disable-next-line no-await-in-loop
-      await new Promise((resolve) => setTimeout(resolve, 30));
+      // 매 5개 파일마다 메모리 정리 시간 제공
+      if (index % 5 === 0) {
+        // eslint-disable-next-line no-await-in-loop
+        await new Promise((r) => setTimeout(r, 10));
+      }
     }
 
-    // 모든 청크 처리 완료: 진행률 100% 및 상태 정리
+    zip.end();
     updateZipProgress(100);
     updateProcessing(false);
     updateIsZipCompressing?.(false);

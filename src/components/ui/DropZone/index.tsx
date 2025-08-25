@@ -160,8 +160,7 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
             지원 형식: {supportedExtensionsText} (최대 15MB)
           </p>
           <p className='mt-2 text-gray-500 text-xs'>
-            최대 파일 수: {isMobile ? '40개' : '100개'}
-            {isMobile && <span className='ml-1'>(모바일 환경)</span>}
+            최대 파일 수: 100개 (모바일: 40개)
           </p>
         </div>
       </div>
