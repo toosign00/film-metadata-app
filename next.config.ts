@@ -1,9 +1,10 @@
 import type { NextConfig } from 'next';
 
-const nextConfig: NextConfig = {
+const nextConfig = {
   poweredByHeader: false,
   compress: true,
   productionBrowserSourceMaps: false,
+  allowedDevOrigins: ['192.168.0.25', 'localhost', '127.0.0.1'],
   experimental: {
     optimizePackageImports: [
       'lucide-react',
@@ -48,6 +49,6 @@ const nextConfig: NextConfig = {
       },
     ];
   },
-};
+} satisfies NextConfig;
 
 export default nextConfig;
