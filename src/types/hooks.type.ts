@@ -45,7 +45,7 @@ export interface UseFileDropOptions {
 export interface UseFileDropReturn {
   isDragging: boolean;
   fileInputRef: React.RefObject<HTMLInputElement | null>;
-  dropAreaRef: React.RefObject<HTMLDivElement | null>;
+  dropAreaRef: React.RefObject<HTMLDivElement | HTMLButtonElement | null>;
   handleFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   openFileDialog: () => void;
   errors: string[];
