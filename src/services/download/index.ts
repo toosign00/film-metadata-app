@@ -11,7 +11,42 @@
 
 import { Zip, ZipPassThrough } from 'fflate';
 import { saveAs } from 'file-saver';
+import { isChrome, isIOS } from 'react-device-detect';
 import { toast } from 'sonner';
+
+/**
+ * iOS Chrome 여부를 확인합니다.
+ */
+const isIOSChrome = isIOS && isChrome;
+
+/**
+ * iOS Chrome에서 안전하게 파일을 다운로드합니다.
+ * saveAs가 실패하는 경우 새 창에서 열기로 대체합니다.
+ */
+function safeDownload(blob: Blob, filename: string): void {
+  if (isIOSChrome) {
+    // iOS Chrome: <a> 태그 + download 속성 시도
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = filename;
+    link.style.display = 'none';
+
+    // DOM에 추가하여 클릭 이벤트 정상 동작 보장
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+
+    // URL 해제 (메모리 정리)
+    setTimeout(() => {
+      URL.revokeObjectURL(url);
+    }, 5000);
+  } else {
+    // 다른 브라우저: 기본 saveAs 사용
+    saveAs(blob, filename);
+  }
+}
+
 import type { Image as AppImage } from '@/types/imageCard.type';
 import type { MetadataResult } from '@/types/metadata.type';
 import type {
@@ -62,7 +97,7 @@ export async function downloadFile(image: AppImage): Promise<void> {
     }
 
     const blob = await response.blob();
-    saveAs(blob, image.name || 'download');
+    safeDownload(blob, image.name || 'download');
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     console.error('[DownloadService] 파일 다운로드 오류:', error);
@@ -157,7 +192,7 @@ export async function createZipFile(
       if (final && !writerClosed) {
         writerClosed = true;
         const blob = new Blob(zipChunks, { type: 'application/zip' });
-        saveAs(blob, zipFileName);
+        safeDownload(blob, zipFileName);
       }
     });
 
