@@ -4,7 +4,7 @@ export interface MetadataSettings {
   filmInfo: string;
   lens: string;
   lensInfo: string;
-  isoValue?: string;
+  isoValue: string;
   startDate: Date;
   startTime: Date;
 }

@@ -1,20 +1,15 @@
+import type { MetadataSettings } from '@/types/metadata.type';
 /**
  * 초기 메타데이터 설정값
  */
-export interface InitialSettings {
-  startDate: Date;
-  startTime: number;
-  cameraMake: string;
-  cameraModel: string;
-  filmInfo: string;
-  lens: string;
-  lensInfo: string;
-  isoValue: string;
-}
 
-export const INITIAL_SETTINGS: InitialSettings = {
+export const INITIAL_SETTINGS: MetadataSettings = {
   startDate: new Date(),
-  startTime: new Date().setHours(8, 0, 0, 0),
+  startTime: (() => {
+    const t = new Date();
+    t.setHours(8, 0, 0, 0);
+    return t;
+  })(),
   cameraMake: '',
   cameraModel: '',
   filmInfo: '',

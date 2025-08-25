@@ -3,10 +3,10 @@
 import { useRouter } from 'next/navigation';
 import { useEffect, useRef } from 'react';
 import { useShallow } from 'zustand/react/shallow';
-import { MetadataSettings } from '@/components/layout/MetadataSettings';
+import { MetadataSettingsForm } from '@/components/layout/MetadataSettings';
 import { StepNavigation } from '@/components/layout/StepNavigation';
 import { useStepStore } from '@/store/stepStore';
-import type { InitialSettings } from '@/types/config.type';
+import type { MetadataSettings } from '@/types/metadata.type';
 
 export function MetadataClientPage() {
   const router = useRouter();
@@ -58,7 +58,7 @@ export function MetadataClientPage() {
   };
 
   const onSettingsChange = (name: string, value: string | Date) => {
-    setSettings((prev) => ({ ...prev, [name]: value }) as InitialSettings);
+    setSettings((prev) => ({ ...prev, [name]: value }) as MetadataSettings);
   };
 
   const onProcessFiles = async (e: React.FormEvent) => {
@@ -78,9 +78,9 @@ export function MetadataClientPage() {
       />
       <section className='flex-1 overflow-auto'>
         <div className='mx-auto w-full max-w-6xl'>
-          <MetadataSettings
+          <MetadataSettingsForm
             activeStep={2}
-            settings={{ ...settings, startTime: new Date(settings.startTime) }}
+            settings={settings}
             onSettingsChange={onSettingsChange}
             sortedFiles={sortedFiles}
             processing={processing}
