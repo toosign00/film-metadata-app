@@ -1,3 +1,5 @@
+'use client';
+
 import { type ChangeEvent, type FormEvent, useState } from 'react';
 import { Button } from '@/components/ui/Button';
 import type { MetadataSettingsProps, ValidationErrors } from '@/types/metadata-settings.type';

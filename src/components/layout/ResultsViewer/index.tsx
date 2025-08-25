@@ -1,3 +1,5 @@
+'use client';
+
 import { Download, Image } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { ImageCard } from '@/components/ui/ImageCard';
