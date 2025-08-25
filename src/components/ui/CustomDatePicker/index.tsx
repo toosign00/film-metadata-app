@@ -1,3 +1,5 @@
+'use client';
+
 import { ko } from 'date-fns/locale';
 import { Calendar, Clock4 } from 'lucide-react';
 import { forwardRef } from 'react';
