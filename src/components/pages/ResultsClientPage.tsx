@@ -61,11 +61,7 @@ export function ResultsClientPage() {
           <ResultsViewer
             activeStep={3}
             resultRef={resultRef}
-            resultImages={resultImages.map((img) => ({
-              url: img.url,
-              name: img.name,
-              dateTime: img.dateTime || '',
-            }))}
+            resultImages={resultImages}
             processing={processing}
             zipProgress={zipProgress}
             setZipProgress={setZipProgress}
