@@ -1,111 +1,33 @@
+'use client';
+
 import { ImageUp } from 'lucide-react';
-import { useEffect, useMemo, useRef, useState } from 'react';
-import { isMobile } from 'react-device-detect';
+import { useMemo } from 'react';
+import useFileDrop from '@/hooks/useFileDrop';
 import type { DropZoneProps } from '@/types/dropZone.type';
 
 export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
-  const [isDragging, setIsDragging] = useState(false);
-  const fileInputRef = useRef<HTMLInputElement>(null);
-  const dropAreaRef = useRef<HTMLButtonElement>(null);
-
-  // 지원하는 이미지 확장자 배열
-  const SUPPORTED_IMAGE_EXTENSIONS = useMemo(() => ['jpg', 'jpeg'] as const, []);
-
-  // 환경에 따른 최대 파일 수 설정
-  const maxFiles = isMobile ? 40 : 100;
-
-  // 드래그 앤 드롭 이벤트 리스너 설정
-  useEffect(() => {
-    const dropArea = dropAreaRef.current;
-
-    if (!dropArea) return;
-
-    const handleDragOver = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDragging(true);
-    };
-
-    const handleDragEnter = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDragging(true);
-    };
-
-    const handleDragLeave = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDragging(false);
-    };
-
-    const handleDrop = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDragging(false);
-
-      if (!e.dataTransfer) return;
-
-      const droppedFiles = Array.from(e.dataTransfer.files).filter((file) => {
-        const ext = file.name.split('.').pop()?.toLowerCase();
-        return (
-          ext &&
-          SUPPORTED_IMAGE_EXTENSIONS.includes(ext as (typeof SUPPORTED_IMAGE_EXTENSIONS)[number])
-        );
-      });
-
-      if (droppedFiles.length > 0) {
-        // 최대 파일 수 제한 적용
-        const selectedFiles = droppedFiles.slice(0, maxFiles);
-        onFileSelect(selectedFiles);
-      }
-    };
-
-    dropArea.addEventListener('dragover', handleDragOver);
-    dropArea.addEventListener('dragenter', handleDragEnter);
-    dropArea.addEventListener('dragleave', handleDragLeave);
-    dropArea.addEventListener('drop', handleDrop);
-
-    return () => {
-      dropArea.removeEventListener('dragover', handleDragOver);
-      dropArea.removeEventListener('dragenter', handleDragEnter);
-      dropArea.removeEventListener('dragleave', handleDragLeave);
-      dropArea.removeEventListener('drop', handleDrop);
-    };
-  }, [onFileSelect, maxFiles, SUPPORTED_IMAGE_EXTENSIONS]);
-
-  // 파일 선택 핸들러
-  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
-    if (!e.target.files) return;
-
-    const selectedFiles = Array.from(e.target.files).filter((file) => {
-      const ext = file.name.split('.').pop()?.toLowerCase();
-      return (
-        ext &&
-        SUPPORTED_IMAGE_EXTENSIONS.includes(ext as (typeof SUPPORTED_IMAGE_EXTENSIONS)[number])
-      );
+  const { isDragging, fileInputRef, dropAreaRef, handleFileSelect, openFileDialog, isMobile } =
+    useFileDrop(onFileSelect, {
+      allowedExtensions: ['jpg', 'jpeg'],
+      maxFileSize: 15 * 1024 * 1024, // 15MB
+      maxDesktopFiles: 100,
+      maxMobileFiles: 40,
     });
 
-    if (selectedFiles.length > 0) {
-      // 최대 파일 수 제한 적용
-      const limitedFiles = selectedFiles.slice(0, maxFiles);
-      onFileSelect(limitedFiles);
-    }
-  };
-
   // 지원되는 확장자 문자열 생성 (UI에 표시용)
-  const supportedExtensionsText = SUPPORTED_IMAGE_EXTENSIONS.join(', ').toUpperCase();
+  const supportedExtensionsText = useMemo(() => ['jpg', 'jpeg'].join(', ').toUpperCase(), []);
 
   // 키보드 이벤트 핸들러
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
-      fileInputRef.current?.click();
+      openFileDialog();
     }
   };
 
   return (
     <button
-      ref={dropAreaRef}
+      ref={dropAreaRef as React.RefObject<HTMLButtonElement>}
       className={`flex w-full items-center justify-center rounded-lg border-2 border-dashed ${
         isDragging
           ? 'border-blue-500 bg-gray-800'
@@ -113,7 +35,7 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
             ? 'border-gray-600 bg-gray-800'
             : 'border-gray-600 bg-gray-800'
       } cursor-pointer p-4 text-center transition-all hover:border-blue-500`}
-      onClick={() => fileInputRef.current?.click()}
+      onClick={openFileDialog}
       onKeyDown={handleKeyDown}
       aria-label='파일 선택 영역'
       style={{ minHeight: '300px', height: '100%' }}
@@ -126,7 +48,7 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
         ref={fileInputRef}
         onChange={handleFileSelect}
         multiple
-        accept={`.${SUPPORTED_IMAGE_EXTENSIONS.join(',.')}`}
+        accept='.jpg,.jpeg'
         className='hidden'
         aria-describedby='file-format-info'
       />
@@ -159,9 +81,7 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
           <p id='file-format-info' className='mt-2 text-gray-500 text-xs'>
             지원 형식: {supportedExtensionsText} (최대 15MB)
           </p>
-          <p className='mt-2 text-gray-500 text-xs'>
-            최대 파일 수: 100개 (모바일: 40개)
-          </p>
+          <p className='mt-2 text-gray-500 text-xs'>최대 파일 수: {isMobile ? 40 : 100}개</p>
         </div>
       </div>
     </button>

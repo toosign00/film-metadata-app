@@ -23,7 +23,7 @@ const useFileDrop = (
   const [isDragging, setIsDragging] = useState(false);
   const [errors, setErrors] = useState<string[]>([]);
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const dropAreaRef = useRef<HTMLDivElement>(null);
+  const dropAreaRef = useRef<HTMLDivElement | HTMLButtonElement>(null);
   const isMobile = useMemo(() => detectMobile, []);
   const maxFiles = isMobile ? maxMobileFiles : maxDesktopFiles;
 
@@ -52,32 +52,33 @@ const useFileDrop = (
     const dropArea = dropAreaRef.current;
     if (!dropArea) return;
 
-    const handleDragOver = (e: DragEvent): void => {
+    const handleDragOver = (e: Event): void => {
       e.preventDefault();
       e.stopPropagation();
       setIsDragging(true);
     };
 
-    const handleDragEnter = (e: DragEvent): void => {
+    const handleDragEnter = (e: Event): void => {
       e.preventDefault();
       e.stopPropagation();
       setIsDragging(true);
     };
 
-    const handleDragLeave = (e: DragEvent): void => {
+    const handleDragLeave = (e: Event): void => {
       e.preventDefault();
       e.stopPropagation();
       setIsDragging(false);
     };
 
-    const handleDrop = (e: DragEvent): void => {
+    const handleDrop = (e: Event): void => {
       e.preventDefault();
       e.stopPropagation();
       setIsDragging(false);
 
-      if (!e.dataTransfer) return;
+      const dragEvent = e as DragEvent;
+      if (!dragEvent.dataTransfer) return;
 
-      const droppedFiles = Array.from(e.dataTransfer.files);
+      const droppedFiles = Array.from(dragEvent.dataTransfer.files);
       const validFiles: File[] = [];
       const fileErrors: string[] = [];
 
