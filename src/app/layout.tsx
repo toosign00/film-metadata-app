@@ -1,6 +1,8 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import Script from 'next/script';
+import { Footer } from '@/components/layout/Footer';
+import { Header } from '@/components/layout/Header';
 import '@/styles/globals.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import '@/styles/datepicker.css';
@@ -34,14 +36,11 @@ export const metadata: Metadata = {
     'photo',
     '이미지 메타데이터',
     '필름 사진',
-    '이미지 메타데이터',
     '무료 메타데이터 도구',
-    '필름 메타데이터 도구',
     '필름 메타데이터 편집',
     '필름 메타데이터 다운로드',
     '필름 메타데이터 편집기',
     '필름 메타데이터 다운로더',
-    '필름 메타데이터 편집기',
   ],
   alternates: {
     canonical: '/',
@@ -108,7 +107,6 @@ export default function RootLayout({
   return (
     <html lang='ko'>
       <body className={pretendard.variable}>
-        {children}
         {/* Structured Data */}
         <Script id='ld-software' type='application/ld+json' strategy='afterInteractive'>
           {JSON.stringify({
@@ -126,6 +124,13 @@ export default function RootLayout({
             },
           })}
         </Script>
+        <div className='flex min-h-screen w-full flex-col overflow-x-hidden bg-gray-900 text-gray-200'>
+          <Header />
+          <main className='flex-1 overflow-auto p-6 md:p-8'>
+            <div className='mx-auto w-full max-w-6xl'>{children}</div>
+          </main>
+          <Footer />
+        </div>
       </body>
     </html>
   );

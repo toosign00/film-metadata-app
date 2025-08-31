@@ -1,5 +1,4 @@
 import type { Metadata } from 'next';
-import { MainLayout } from '@/components/layout/MainLayout';
 import { FilesClientPage } from '@/components/pages/FilesClientPage';
 import { ToasterClient } from '@/components/ui/Toaster';
 
@@ -11,13 +10,9 @@ export const metadata: Metadata = {
 };
 export default function HomePage() {
   return (
-    <MainLayout>
-      <main className='flex-1 overflow-auto p-6 md:p-8'>
-        <div className='mx-auto w-full max-w-6xl'>
-          <FilesClientPage />
-        </div>
-      </main>
+    <>
+      <FilesClientPage />
       <ToasterClient />
-    </MainLayout>
+    </>
   );
 }
