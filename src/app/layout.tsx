@@ -6,6 +6,7 @@ import { Header } from '@/components/layout/Header';
 import '@/styles/globals.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import '@/styles/datepicker.css';
+import { Analytics } from '@vercel/analytics/next';
 
 const pretendard = localFont({
   src: [{ path: '../../public/fonts/PretendardVariable.woff2', weight: '45 920', style: 'normal' }],
@@ -124,6 +125,7 @@ export default function RootLayout({
             },
           })}
         </Script>
+        <Analytics />
         <div className='flex min-h-screen w-full flex-col overflow-x-hidden bg-gray-900 text-gray-200'>
           <Header />
           <main className='flex-1 overflow-auto p-6 md:p-8'>
