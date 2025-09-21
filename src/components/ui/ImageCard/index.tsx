@@ -4,7 +4,7 @@ import { Download } from 'lucide-react';
 import Image from 'next/image';
 import { useEffect, useState } from 'react';
 import { isMobile, isTablet } from 'react-device-detect';
-import type { ImageCardProps } from '@/types/imageCard.type';
+import type { ImageCardProps } from '@/types/imageCard.types';
 
 export const ImageCard = ({ image, onDownload, processing = false }: ImageCardProps) => {
   const [isTouch, setIsTouch] = useState(false);

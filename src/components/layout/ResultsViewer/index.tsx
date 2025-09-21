@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/Button';
 import { ImageCard } from '@/components/ui/ImageCard';
 import { ProgressBar } from '@/components/ui/ProgressBar';
 import { createZipFile, downloadFile } from '@/services/download';
-import type { ResultsViewerProps } from '@/types/results-viewer.type';
+import type { ResultsViewerProps } from '@/types/resultsViewer.types';
 
 export const ResultsViewer = ({
   activeStep,

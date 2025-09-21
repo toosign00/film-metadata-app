@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { isMobile as detectMobile } from 'react-device-detect';
-import type { UseFileDropOptions, UseFileDropReturn } from '../types/hooks.type';
+import type { UseFileDropOptions, UseFileDropReturn } from '../types/hooks.types';
 
 /**
  * 파일 드래그 앤 드롭을 위한 커스텀 훅

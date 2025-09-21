@@ -4,8 +4,8 @@
  */
 
 import { toast } from 'sonner';
-import type { Image as AppImage } from '@/types/imageCard.type';
-import type { MetadataResult } from '@/types/metadata.type';
+import type { Image as AppImage } from '@/types/imageCard.types';
+import type { MetadataResult } from '@/types/metadata.types';
 import type { BooleanUpdater, ProgressUpdater } from '@/types/service.types';
 import { DownloadServiceError } from './downloadErrors';
 import { type FileSystemFileHandle, hasFileSystemAccess } from './downloadTypes';

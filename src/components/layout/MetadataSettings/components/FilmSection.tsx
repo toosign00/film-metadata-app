@@ -1,4 +1,4 @@
-import type { FilmSectionProps } from '@/types/metadata-settings.type';
+import type { FilmSectionProps } from '@/types/metadataSettings.types';
 
 export const FilmSection = ({ register, errors }: FilmSectionProps) => {
   return (

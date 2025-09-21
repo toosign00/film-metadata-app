@@ -4,7 +4,7 @@ import type {
   MetadataSettings,
   ProcessMetadataResults,
   ProgressCallback,
-} from '@/types/metadata.type';
+} from '@/types/metadata.types';
 import { dataURItoBlob } from '@/utils/convertUtils';
 
 // 렌즈 정보 문자열을 표준화하는 함수

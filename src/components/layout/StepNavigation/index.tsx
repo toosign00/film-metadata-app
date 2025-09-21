@@ -2,7 +2,7 @@
 
 import { useState } from 'react';
 import { ConfirmDialog } from '@/components/ui/AlertDialog';
-import type { StepNavigationProps } from '@/types/step-navigation.type';
+import type { StepNavigationProps } from '@/types/stepNavigation.types';
 
 export const StepNavigation = ({
   activeStep,

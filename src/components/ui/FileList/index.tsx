@@ -1,4 +1,4 @@
-import type { FileListProps } from '@/types/fileList.type';
+import type { FileListProps } from '@/types/fileList.types';
 
 export const FileList = ({ files }: FileListProps) => {
   if (!files || files.length === 0) return null;

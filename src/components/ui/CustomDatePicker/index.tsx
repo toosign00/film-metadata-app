@@ -4,7 +4,7 @@ import { ko } from 'date-fns/locale';
 import { Calendar, Clock4 } from 'lucide-react';
 import { forwardRef } from 'react';
 import DatePicker from 'react-datepicker';
-import type { CustomDatePickerProps, CustomInputProps } from '@/types/customDatePicker.type';
+import type { CustomDatePickerProps, CustomInputProps } from '@/types/customDatePicker.types';
 
 const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, forwardedRef) => {
   const { value, onClick, placeholder, disabled, id, name, showTimeSelectOnly } = props;

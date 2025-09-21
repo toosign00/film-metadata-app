@@ -1,4 +1,4 @@
-import type { CameraSectionProps } from '@/types/metadata-settings.type';
+import type { CameraSectionProps } from '@/types/metadataSettings.types';
 
 export const CameraSection = ({ register, errors }: CameraSectionProps) => {
   return (

@@ -1,4 +1,4 @@
-import type { ProgressBarProps } from '@/types/progressBar.type';
+import type { ProgressBarProps } from '@/types/progressBar.types';
 
 export const ProgressBar = ({ progress, label, className = '' }: ProgressBarProps) => {
   return (

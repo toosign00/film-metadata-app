@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/Button';
 import { DropZone } from '@/components/ui/DropZone';
 import { FileList } from '@/components/ui/FileList';
-import type { FileSelectionProps } from '@/types/file-selection.type';
+import type { FileSelectionProps } from '@/types/fileSelection.types';
 
 export const FileSelection = ({
   activeStep,

@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { processMetadata } from '@/services/metadata';
-import type { MetadataSettings } from '@/types/metadata.type';
+import type { MetadataSettings } from '@/types/metadata.types';
 import type {
   ProcessResult,
   UseFileHandlersOptions,
   UseFileHandlersReturn,
-} from '../types/hooks.type';
+} from '../types/hooks.types';
 import { naturalSort } from '../utils/sortUtils';
 
 /**

@@ -1,4 +1,4 @@
-import type { HeaderProps } from '@/types/header.type';
+import type { HeaderProps } from '@/types/header.types';
 
 export const Header = ({ className }: HeaderProps) => {
   return (

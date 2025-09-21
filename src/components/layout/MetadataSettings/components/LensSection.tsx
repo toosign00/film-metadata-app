@@ -1,4 +1,4 @@
-import type { LensSectionProps } from '@/types/metadata-settings.type';
+import type { LensSectionProps } from '@/types/metadataSettings.types';
 
 export const LensSection = ({ register, errors }: LensSectionProps) => {
   return (

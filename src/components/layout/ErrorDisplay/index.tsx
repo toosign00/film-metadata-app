@@ -1,5 +1,5 @@
 import { TriangleAlert } from 'lucide-react';
-import type { ErrorDisplayProps } from '@/types/error-display.type';
+import type { ErrorDisplayProps } from '@/types/errorDisplay.types';
 
 export const ErrorDisplay = ({ errors }: ErrorDisplayProps) => {
   if (!errors || errors.length === 0) return null;

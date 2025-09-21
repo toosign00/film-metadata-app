@@ -1,6 +1,6 @@
 import { Controller } from 'react-hook-form';
 import { CustomDatePicker } from '@/components/ui/CustomDatePicker';
-import type { DateTimeSectionProps } from '@/types/metadata-settings.type';
+import type { DateTimeSectionProps } from '@/types/metadataSettings.types';
 
 export const DateTimeSection = ({ control, errors }: DateTimeSectionProps) => {
   return (

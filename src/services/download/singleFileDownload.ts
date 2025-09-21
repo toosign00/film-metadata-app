@@ -4,7 +4,7 @@
  */
 
 import { toast } from 'sonner';
-import type { Image as AppImage } from '@/types/imageCard.type';
+import type { Image as AppImage } from '@/types/imageCard.types';
 import { DownloadServiceError } from './downloadErrors';
 
 /**

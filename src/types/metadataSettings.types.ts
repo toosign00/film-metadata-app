@@ -1,6 +1,6 @@
 import type { RefObject } from 'react';
 import type { Control, FieldErrors, UseFormRegister } from 'react-hook-form';
-import type { MetadataSettings as MetadataSettingsType } from './metadata.type';
+import type { MetadataSettings as MetadataSettingsType } from './metadata.types';
 
 // RHF 오류 타입 별칭 (가독성용)
 export type MetadataFieldErrors = FieldErrors<MetadataSettingsType>;

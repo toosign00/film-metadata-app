@@ -1,4 +1,4 @@
-import type { MetadataSettings } from './metadata.type';
+import type { MetadataSettings } from './metadata.types';
 
 export interface ProcessResult {
   images: Array<{

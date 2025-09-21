@@ -3,7 +3,7 @@
 import { create } from 'zustand';
 import { INITIAL_SETTINGS } from '@/config/constants';
 import { processMetadata } from '@/services/metadata';
-import type { MetadataSettings, ProcessMetadataResults } from '@/types/metadata.type';
+import type { MetadataSettings, ProcessMetadataResults } from '@/types/metadata.types';
 import { naturalSort } from '@/utils/sortUtils';
 
 interface StepStoreState {

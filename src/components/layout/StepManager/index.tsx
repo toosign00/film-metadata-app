@@ -11,8 +11,8 @@ import { ConfirmDialog } from '@/components/ui/AlertDialog';
 import { STEPS } from '@/config/constants';
 import { useFileHandlers } from '@/hooks/useFileHandlers';
 import { useMetadataHandlers } from '@/hooks/useMetadataHandlers';
-import type { MetadataSettings } from '@/types/metadata.type';
-import type { StepManagerProps } from '@/types/step-manager.type';
+import type { MetadataSettings } from '@/types/metadata.types';
+import type { StepManagerProps } from '@/types/stepManager.types';
 
 /**
  * 단계 관리 컴포넌트
