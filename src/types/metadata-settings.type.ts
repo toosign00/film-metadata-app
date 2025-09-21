@@ -1,9 +1,9 @@
-import type { ChangeEvent, FormEvent, RefObject } from 'react';
+import type { RefObject } from 'react';
+import type { Control, FieldErrors, UseFormRegister } from 'react-hook-form';
 import type { MetadataSettings as MetadataSettingsType } from './metadata.type';
 
-export interface ValidationErrors {
-  [key: string]: string;
-}
+// RHF 오류 타입 별칭 (가독성용)
+export type MetadataFieldErrors = FieldErrors<MetadataSettingsType>;
 
 export interface MetadataSettingsProps {
   activeStep: number;
@@ -14,31 +14,25 @@ export interface MetadataSettingsProps {
   completed: number;
   formRef: RefObject<HTMLFormElement | null>;
   goToStep: (step: number) => void;
-  onProcessFiles: (e: FormEvent) => void;
+  onProcessFiles: () => void;
 }
 
 export interface DateTimeSectionProps {
-  settings: MetadataSettingsType;
-  validationErrors: ValidationErrors;
-  handleDateChange: (date: Date | null) => void;
-  handleTimeChange: (date: Date | null) => void;
+  control: Control<MetadataSettingsType>;
+  errors: MetadataFieldErrors;
 }
 
 export interface CameraSectionProps {
-  settings: MetadataSettingsType;
-  validationErrors: ValidationErrors;
-  handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  register: UseFormRegister<MetadataSettingsType>;
+  errors: MetadataFieldErrors;
 }
 
 export interface LensSectionProps {
-  settings: MetadataSettingsType;
-  validationErrors: ValidationErrors;
-  handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
-  handleLensInfoChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  register: UseFormRegister<MetadataSettingsType>;
+  errors: MetadataFieldErrors;
 }
 
 export interface FilmSectionProps {
-  settings: MetadataSettingsType;
-  validationErrors: ValidationErrors;
-  handleInputChange: (e: ChangeEvent<HTMLInputElement>) => void;
+  register: UseFormRegister<MetadataSettingsType>;
+  errors: MetadataFieldErrors;
 }
