@@ -1,8 +1,3 @@
-/**
- * @module services/metadata
- * EXIF 메타데이터 편집/일괄처리 도메인 로직을 제공합니다.
- */
-
 import piexifjs from 'piexifjs';
 import type {
   MetadataResult,
@@ -12,11 +7,7 @@ import type {
 } from '@/types/metadata.type';
 import { dataURItoBlob } from '@/utils/convertUtils';
 
-/**
- * 렌즈 정보 문자열을 표준화합니다.
- * @param lensInfo 원본 렌즈 정보
- * @returns 표준화된 문자열
- */
+// 렌즈 정보 문자열을 표준화하는 함수
 export function normalizeLensInfo(lensInfo: string): string {
   if (!lensInfo) return '';
   let processed = lensInfo.toLowerCase();
@@ -24,12 +15,7 @@ export function normalizeLensInfo(lensInfo: string): string {
   return processed;
 }
 
-/**
- * 단일 파일의 EXIF 메타데이터를 설정합니다.
- * @param file 이미지 파일
- * @param dateTime 촬영 시각
- * @param settings 메타데이터 설정값
- */
+// 단일 파일의 EXIF 메타데이터를 설정하는 함수
 export async function setMetadata(
   file: File,
   dateTime: Date,
@@ -125,13 +111,7 @@ export async function setMetadata(
   });
 }
 
-/**
- * 파일 배열에 대해 메타데이터를 일괄 처리
- * @param files 대상 파일 목록
- * @param startDateTime 시작 기준 시각(파일별 1초 간격 적용)
- * @param settings 메타데이터 설정값
- * @param onProgress 진행 콜백(완료 개수)
- */
+// 파일 배열에 대해 메타데이터를 일괄 처리
 export async function processMetadata(
   files: File[],
   startDateTime: Date,
