@@ -1,9 +1,12 @@
 'use client';
 
-import { type ChangeEvent, type FormEvent, useState } from 'react';
+import { zodResolver } from '@hookform/resolvers/zod';
+import { useMemo } from 'react';
+import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/Button';
-import type { MetadataSettingsProps, ValidationErrors } from '@/types/metadata-settings.type';
-import { validateForm } from '@/utils/metadataValidation';
+import type { MetadataSettings } from '@/types/metadata.type';
+import type { MetadataSettingsProps } from '@/types/metadata-settings.type';
+import { metadataSettingsSchema } from '@/utils/metadataSchema';
 import { CameraSection } from './components/CameraSection';
 import { DateTimeSection } from './components/DateTimeSection';
 import { FilmSection } from './components/FilmSection';
@@ -20,52 +23,30 @@ export const MetadataSettingsForm = ({
   goToStep,
   onProcessFiles,
 }: MetadataSettingsProps) => {
-  const [validationErrors, setValidationErrors] = useState<ValidationErrors>({});
+  const defaultValues = useMemo<MetadataSettings>(() => settings, [settings]);
+
+  const {
+    control,
+    register,
+    handleSubmit,
+    formState: { errors },
+    watch,
+  } = useForm<MetadataSettings>({
+    resolver: zodResolver(metadataSettingsSchema),
+    defaultValues,
+    mode: 'onBlur',
+  });
+
+  // store 동기화: 폼 값 변화 시 store에 반영 (현재 onSettingsChange API 유지)
+  watch((value, { name }) => {
+    if (!name) return;
+    const fieldName = name as keyof MetadataSettings;
+    onSettingsChange(fieldName, value[fieldName] as string | Date);
+  });
 
   if (activeStep !== 2) {
     return null;
   }
-
-  const handleSubmit = (e: FormEvent) => {
-    e.preventDefault();
-    const errors = validateForm(settings);
-    setValidationErrors(errors);
-
-    if (Object.keys(errors).length === 0) {
-      onProcessFiles(e);
-    }
-  };
-
-  const handleChange = (name: string, value: string | Date) => {
-    onSettingsChange(name, value);
-    if (validationErrors[name]) {
-      const newErrors = { ...validationErrors };
-      delete newErrors[name];
-      setValidationErrors(newErrors);
-    }
-  };
-
-  const handleDateChange = (date: Date | null) => {
-    if (date) {
-      handleChange('startDate', date);
-    }
-  };
-
-  const handleTimeChange = (date: Date | null) => {
-    if (date) {
-      handleChange('startTime', date);
-    }
-  };
-
-  const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    handleChange(name, value);
-  };
-
-  const handleLensInfoChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const { name, value } = e.target;
-    handleChange(name, value);
-  };
 
   return (
     <section className='mb-8 transition-all' aria-labelledby='metadata-section'>
@@ -85,34 +66,16 @@ export const MetadataSettingsForm = ({
 
         <form
           ref={formRef}
-          onSubmit={handleSubmit}
+          onSubmit={handleSubmit(() => onProcessFiles())}
           className='space-y-6'
           noValidate
           aria-label='메타데이터 설정 폼'
         >
           <div className='grid grid-cols-1 gap-5 md:grid-cols-2'>
-            <DateTimeSection
-              settings={settings}
-              validationErrors={validationErrors}
-              handleDateChange={handleDateChange}
-              handleTimeChange={handleTimeChange}
-            />
-            <CameraSection
-              settings={settings}
-              validationErrors={validationErrors}
-              handleInputChange={handleInputChange}
-            />
-            <LensSection
-              settings={settings}
-              validationErrors={validationErrors}
-              handleInputChange={handleInputChange}
-              handleLensInfoChange={handleLensInfoChange}
-            />
-            <FilmSection
-              settings={settings}
-              validationErrors={validationErrors}
-              handleInputChange={handleInputChange}
-            />
+            <DateTimeSection control={control} errors={errors} />
+            <CameraSection register={register} errors={errors} />
+            <LensSection register={register} errors={errors} />
+            <FilmSection register={register} errors={errors} />
           </div>
 
           <div className='mt-6 flex justify-between'>
@@ -145,7 +108,7 @@ export const MetadataSettingsForm = ({
           </div>
 
           <div className='sr-only' aria-live='polite'>
-            {Object.keys(validationErrors).length > 0
+            {Object.keys(errors).length > 0
               ? '입력 정보에 오류가 있습니다. 각 필드의 오류 메시지를 확인해주세요.'
               : ''}
           </div>
