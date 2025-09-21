@@ -6,7 +6,7 @@ import { useShallow } from 'zustand/react/shallow';
 import { MetadataSettingsForm } from '@/components/layout/MetadataSettings';
 import { StepNavigation } from '@/components/layout/StepNavigation';
 import { useStepStore } from '@/store/stepStore';
-import type { MetadataSettings } from '@/types/metadata.type';
+import type { MetadataSettings } from '@/types/metadata.types';
 
 export function MetadataClientPage() {
   const router = useRouter();
@@ -61,8 +61,7 @@ export function MetadataClientPage() {
     setSettings((prev) => ({ ...prev, [name]: value }) as MetadataSettings);
   };
 
-  const onProcessFiles = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onProcessFiles = async () => {
     const results = await processFiles();
     if (results.images.length > 0) router.push('/results');
   };

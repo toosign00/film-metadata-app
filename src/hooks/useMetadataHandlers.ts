@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { INITIAL_SETTINGS } from '../config/constants';
-import type { UseMetadataHandlersReturn } from '../types/hooks.type';
-import type { MetadataSettings } from '../types/metadata.type';
+import type { UseMetadataHandlersReturn } from '../types/hooks.types';
+import type { MetadataSettings } from '../types/metadata.types';
 
 /**
  * 메타데이터 설정 관련 로직을 관리하는 커스텀 훅

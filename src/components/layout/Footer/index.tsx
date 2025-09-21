@@ -1,4 +1,4 @@
-import type { FooterProps } from '@/types/footer.type';
+import type { FooterProps } from '@/types/footer.types';
 
 export const Footer = ({ className }: FooterProps) => {
   return (

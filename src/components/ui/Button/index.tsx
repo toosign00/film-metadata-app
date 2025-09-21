@@ -1,5 +1,5 @@
 import { LoaderCircle } from 'lucide-react';
-import type { ButtonProps } from '@/types/button.type';
+import type { ButtonProps } from '@/types/button.types';
 
 export const Button = ({
   variant = 'primary',

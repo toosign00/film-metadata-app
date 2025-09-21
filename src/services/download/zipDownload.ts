@@ -1,27 +1,12 @@
-/**
- * @module services/download/zipDownload
- * ZIP 다운로드 메인 로직
- */
-
 import { toast } from 'sonner';
-import type { Image as AppImage } from '@/types/imageCard.type';
-import type { MetadataResult } from '@/types/metadata.type';
+import type { Image as AppImage } from '@/types/imageCard.types';
+import type { MetadataResult } from '@/types/metadata.types';
 import type { BooleanUpdater, ProgressUpdater } from '@/types/service.types';
-import { DownloadServiceError } from './downloadErrors';
-import { type FileSystemFileHandle, hasFileSystemAccess } from './downloadTypes';
-import { generateZipFileName } from './downloadUtils';
+import { type FileSystemFileHandle, hasFileSystemAccess } from '../../types/zipDownload.types';
+import { generateZipFileName } from '../../utils/zipDownloadUtils';
 import { StreamingZipProcessor } from './streamingProcessor';
+import { createZipFileFallback } from './zipDownloadFallback';
 
-/**
- * 다중 이미지 파일을 ZIP으로 압축하여 스트리밍 다운로드
- * 1단계: 사용자가 저장 위치 선택
- * 2단계: ZIP 생성 및 실시간 저장
- *
- * @param validImages - ZIP에 포함할 이미지 목록
- * @param updateZipProgress - 진행률 업데이트 콜백 (0-100)
- * @param updateProcessing - 처리 상태 업데이트 콜백
- * @param updateIsZipCompressing - 압축 상태 업데이트 콜백 (선택사항)
- */
 export async function createZipFile(
   validImages: (AppImage | MetadataResult)[],
   updateZipProgress: ProgressUpdater,
@@ -39,11 +24,14 @@ export async function createZipFile(
     updateProcessing(true);
     updateZipProgress(0);
 
-    // 1단계: 사용자가 저장 위치 선택
+    // 1단계: File System Access API 지원 여부 확인
     if (!hasFileSystemAccess(window)) {
-      throw new DownloadServiceError(
-        'File System Access API를 지원하지 않는 브라우저입니다. Chrome, Edge, Opera 최신 버전을 사용해주세요.',
-        { code: 'UNSUPPORTED_BROWSER' }
+      // 폴백 모드로 전환
+      return createZipFileFallback(
+        validImages,
+        updateZipProgress,
+        updateProcessing,
+        updateIsZipCompressing
       );
     }
 
@@ -73,34 +61,11 @@ export async function createZipFile(
     toast.info('ZIP 파일을 생성하고 있습니다...');
 
     // 파일 목록 준비
-    const filePromises = validImages.map(async (img, idx) => {
+    const allFiles = validImages.map((img, idx) => {
       const name = (img as AppImage | MetadataResult).name || `image_${idx + 1}.jpg`;
-      const maybeFile = (img as MetadataResult).file;
-
-      if (maybeFile instanceof File) {
-        return { file: maybeFile, name };
-      }
-
-      // URL에서 파일 생성
-      try {
-        const res = await fetch((img as AppImage | MetadataResult).url, { cache: 'no-store' });
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-
-        const blob = await res.blob();
-        return {
-          file: new File([blob], name, { type: blob.type || 'application/octet-stream' }),
-          name,
-        };
-      } catch (error) {
-        console.warn('[StreamingZip] 파일 로드 실패:', name, error);
-        return {
-          file: new File([new Uint8Array(0)], name, { type: 'application/octet-stream' }),
-          name,
-        };
-      }
+      const file = (img as MetadataResult).file;
+      return { file, name };
     });
-
-    const allFiles = await Promise.all(filePromises);
     const totalFiles = allFiles.length;
     let processedCount = 0;
 
@@ -121,11 +86,6 @@ export async function createZipFile(
       processedCount += 1;
       const percent = Math.max(5, Math.round((processedCount / totalFiles) * 95));
       updateZipProgress(percent);
-
-      // 백프레셔 처리: 5개마다 약간의 지연
-      if (processedCount % 5 === 0) {
-        await new Promise((resolve) => setTimeout(resolve, 10));
-      }
     }
 
     // ZIP 완료 및 쓰기 대기

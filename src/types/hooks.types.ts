@@ -1,4 +1,4 @@
-import type { MetadataSettings } from './metadata.type';
+import type { MetadataSettings } from './metadata.types';
 
 export interface ProcessResult {
   images: Array<{
@@ -21,7 +21,7 @@ export interface UseFileHandlersReturn {
   errors: { file: string; error: string }[];
   resultImages: ProcessResult['images'];
   handleFileSelect: (files: File[]) => void;
-  processFiles: (e: React.FormEvent, settings: MetadataSettings) => Promise<void>;
+  processFiles: (settings: MetadataSettings) => Promise<void>;
   resetFiles: () => void;
   setProcessing: (processing: boolean) => void;
 }

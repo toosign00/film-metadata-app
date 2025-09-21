@@ -1,10 +1,6 @@
-import type { CameraSectionProps } from '@/types/metadata-settings.type';
+import type { CameraSectionProps } from '@/types/metadataSettings.types';
 
-export const CameraSection = ({
-  settings,
-  validationErrors,
-  handleInputChange,
-}: CameraSectionProps) => {
+export const CameraSection = ({ register, errors }: CameraSectionProps) => {
   return (
     <fieldset
       className='rounded-lg border border-gray-700 bg-gray-900 p-4 shadow-md'
@@ -24,13 +20,11 @@ export const CameraSection = ({
         <input
           type='text'
           id='cameraMake'
-          name='cameraMake'
-          value={settings.cameraMake}
-          onChange={handleInputChange}
+          {...register('cameraMake')}
           className='w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-gray-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500'
           placeholder='예: Nikon'
           aria-describedby='cameraMake-help cameraMake-error'
-          aria-invalid={!!validationErrors.cameraMake}
+          aria-invalid={!!errors.cameraMake}
           autoComplete='off'
           required
         />
@@ -38,9 +32,9 @@ export const CameraSection = ({
           <p id='cameraMake-help' className='mt-1 text-gray-500 text-xs'>
             카메라 제조사를 입력하세요
           </p>
-          {validationErrors.cameraMake && (
+          {errors.cameraMake && (
             <p id='cameraMake-error' className='mt-1 text-red-500 text-xs' role='alert'>
-              {validationErrors.cameraMake}
+              {String(errors.cameraMake.message)}
             </p>
           )}
         </div>
@@ -53,13 +47,11 @@ export const CameraSection = ({
         <input
           type='text'
           id='cameraModel'
-          name='cameraModel'
-          value={settings.cameraModel}
-          onChange={handleInputChange}
+          {...register('cameraModel')}
           className='w-full rounded-lg border border-gray-700 bg-gray-800 px-3 py-2 text-gray-200 focus:border-transparent focus:outline-none focus:ring-2 focus:ring-blue-500'
           placeholder='예: FM2'
           aria-describedby='cameraModel-help cameraModel-error'
-          aria-invalid={!!validationErrors.cameraModel}
+          aria-invalid={!!errors.cameraModel}
           autoComplete='off'
           required
         />
@@ -67,9 +59,9 @@ export const CameraSection = ({
           <p id='cameraModel-help' className='mt-1 text-gray-500 text-xs'>
             카메라 모델명을 입력하세요
           </p>
-          {validationErrors.cameraModel && (
+          {errors.cameraModel && (
             <p id='cameraModel-error' className='mt-1 text-red-500 text-xs' role='alert'>
-              {validationErrors.cameraModel}
+              {String(errors.cameraModel.message)}
             </p>
           )}
         </div>

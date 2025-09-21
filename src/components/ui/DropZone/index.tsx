@@ -3,7 +3,7 @@
 import { ImageUp } from 'lucide-react';
 import { useMemo } from 'react';
 import useFileDrop from '@/hooks/useFileDrop';
-import type { DropZoneProps } from '@/types/dropZone.type';
+import type { DropZoneProps } from '@/types/dropZone.types';
 
 export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
   const { isDragging, fileInputRef, dropAreaRef, handleFileSelect, openFileDialog, isMobile } =

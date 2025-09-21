@@ -1,7 +1,7 @@
 'use client';
 
 import * as AlertDialog from '@radix-ui/react-alert-dialog';
-import type { AlertDialogProps } from '@/types/alert-dialog.type';
+import type { AlertDialogProps } from '@/types/alertDialog.types';
 
 export const ConfirmDialog = ({
   open,

@@ -1,11 +1,6 @@
-import type { LensSectionProps } from '@/types/metadata-settings.type';
+import type { LensSectionProps } from '@/types/metadataSettings.types';
 
-export const LensSection = ({
-  settings,
-  validationErrors,
-  handleInputChange,
-  handleLensInfoChange,
-}: LensSectionProps) => {
+export const LensSection = ({ register, errors }: LensSectionProps) => {
   return (
     <fieldset
       className='rounded-lg border border-gray-700 bg-gray-900 p-4 shadow-md'
@@ -25,22 +20,20 @@ export const LensSection = ({
         <input
           type='text'
           id='lens'
-          name='lens'
-          value={settings.lens}
-          onChange={handleInputChange}
+          {...register('lens')}
           placeholder='예: Canon FD, Nikkor AF 35mm-70mm'
           className='w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
           aria-describedby='lens-help lens-error'
           aria-required='true'
-          aria-invalid={!!validationErrors.lens}
+          aria-invalid={!!errors.lens}
         />
         <div className='flex flex-wrap items-center justify-between'>
           <p id='lens-help' className='mt-1 text-gray-500 text-xs'>
             렌즈 브랜드와 모델명
           </p>
-          {validationErrors.lens && (
+          {errors.lens && (
             <p id='lens-error' className='mt-1 text-red-500 text-xs' role='alert'>
-              {validationErrors.lens}
+              {String(errors.lens.message)}
             </p>
           )}
         </div>
@@ -53,22 +46,20 @@ export const LensSection = ({
         <input
           type='text'
           id='lensInfo'
-          name='lensInfo'
-          value={settings.lensInfo}
-          onChange={handleLensInfoChange}
+          {...register('lensInfo')}
           placeholder='예: 35mm f2.4, 28mm f2.8'
           className='w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
           aria-describedby='lensInfo-help lensInfo-error'
           aria-required='true'
-          aria-invalid={!!validationErrors.lensInfo}
+          aria-invalid={!!errors.lensInfo}
         />
         <div className='flex flex-wrap items-center justify-between'>
           <p id='lensInfo-help' className='mt-1 text-gray-500 text-xs'>
             초점 거리와 조리개 값 (예: 50mm f2.8)
           </p>
-          {validationErrors.lensInfo && (
+          {errors.lensInfo && (
             <p id='lensInfo-error' className='mt-1 text-red-500 text-xs' role='alert'>
-              {validationErrors.lensInfo}
+              {String(errors.lensInfo.message)}
             </p>
           )}
         </div>

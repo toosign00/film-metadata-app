@@ -1,4 +1,4 @@
-import type { MetadataResult } from './metadata.type';
+import type { MetadataResult } from './metadata.types';
 
 export interface ResultsViewerProps {
   activeStep: number;

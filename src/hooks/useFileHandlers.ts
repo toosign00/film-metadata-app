@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import { processMetadata } from '@/services/metadata';
-import type { MetadataSettings } from '@/types/metadata.type';
+import type { MetadataSettings } from '@/types/metadata.types';
 import type {
   ProcessResult,
   UseFileHandlersOptions,
   UseFileHandlersReturn,
-} from '../types/hooks.type';
+} from '../types/hooks.types';
 import { naturalSort } from '../utils/sortUtils';
 
 /**
@@ -42,9 +42,7 @@ export const useFileHandlers = ({ onComplete }: UseFileHandlersOptions): UseFile
   };
 
   // 메타데이터 처리 시작 함수
-  const processFiles = async (e: React.FormEvent, settings: MetadataSettings): Promise<void> => {
-    e.preventDefault();
-
+  const processFiles = async (settings: MetadataSettings): Promise<void> => {
     if (sortedFiles.length === 0) {
       alert('처리할 파일을 선택해주세요.');
       return;

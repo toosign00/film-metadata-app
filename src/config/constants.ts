@@ -1,4 +1,4 @@
-import type { MetadataSettings } from '@/types/metadata.type';
+import type { MetadataSettings } from '@/types/metadata.types';
 /**
  * 초기 메타데이터 설정값
  */

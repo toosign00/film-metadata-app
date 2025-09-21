@@ -33,6 +33,7 @@
     "reporter": "biome check --reporter=summary"
   },
   "dependencies": {
+    "@hookform/resolvers": "^5.2.2",
     "@radix-ui/react-alert-dialog": "^1.1.15",
     "@vercel/analytics": "^1.5.0",
     "date-fns": "^4.1.0",
@@ -45,8 +46,10 @@
     "react-datepicker": "^8.7.0",
     "react-device-detect": "^2.2.3",
     "react-dom": "19.1.1",
+    "react-hook-form": "^7.63.0",
     "sonner": "^2.0.7",
     "tw-animate-css": "^1.3.7",
+    "zod": "^4.1.11",
     "zustand": "^5.0.8"
   },
   "devDependencies": {
