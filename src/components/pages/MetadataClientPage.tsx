@@ -61,8 +61,7 @@ export function MetadataClientPage() {
     setSettings((prev) => ({ ...prev, [name]: value }) as MetadataSettings);
   };
 
-  const onProcessFiles = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const onProcessFiles = async () => {
     const results = await processFiles();
     if (results.images.length > 0) router.push('/results');
   };

@@ -72,12 +72,9 @@ export const StepManager = ({ onComplete }: StepManagerProps) => {
     toast.success('설정이 초기화되었습니다.');
   }, [resetSettings, resetFiles]);
 
-  const handleProcessFiles = useCallback(
-    (e: React.FormEvent) => {
-      processFiles(e, settings);
-    },
-    [processFiles, settings]
-  );
+  const handleProcessFiles = useCallback(() => {
+    processFiles(settings);
+  }, [processFiles, settings]);
 
   const handleSettingsChangeWrapper = useCallback(
     (name: string, value: string | Date) => {
