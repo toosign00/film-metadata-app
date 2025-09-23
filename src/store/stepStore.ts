@@ -46,15 +46,23 @@ export const useStepStore = create<StepStoreState>((set, get) => ({
   setProcessing: (value) => set({ processing: value }),
 
   resetAll: () =>
-    set({
-      files: [],
-      sortedFiles: [],
-      settings: INITIAL_SETTINGS,
-      resultImages: [],
-      errors: [],
-      processing: false,
-      completed: 0,
-      zipProgress: 0,
+    set((state) => {
+      // 생성했던 blob URL 정리
+      state.resultImages.forEach((image) => {
+        if (image.url?.startsWith('blob:')) {
+          URL.revokeObjectURL(image.url);
+        }
+      });
+      return {
+        files: [],
+        sortedFiles: [],
+        settings: INITIAL_SETTINGS,
+        resultImages: [],
+        errors: [],
+        processing: false,
+        completed: 0,
+        zipProgress: 0,
+      };
     }),
 
   processFiles: async (settingsOverride) => {
@@ -67,7 +75,7 @@ export const useStepStore = create<StepStoreState>((set, get) => ({
     set({ processing: true, completed: 0, errors: [], resultImages: [] });
 
     try {
-      // 날짜와 시간을 하나의 Date 객체로 합치기 (원본 로직 유지)
+      // 날짜와 시간을 하나의 Date 객체로 합치기
       const effectiveSettings = { ...settings, ...settingsOverride } as MetadataSettings;
       const combinedDateTime = new Date(effectiveSettings.startDate);
       const timeDate = new Date(effectiveSettings.startTime);
@@ -88,7 +96,7 @@ export const useStepStore = create<StepStoreState>((set, get) => ({
       set({ resultImages: results.images, errors: results.errors });
       return results;
     } catch (error) {
-      console.error('파일 처리 오류:', error);
+      console.error('Processing error:', error);
       return { images: [], errors: [{ file: 'unknown', error: (error as Error).message }] };
     } finally {
       set({ processing: false });
