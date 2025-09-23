@@ -67,7 +67,7 @@ export async function createZipFileFallback(
         }
         entry.push(new Uint8Array(0), true);
       } catch (error) {
-        console.error('[DownloadService] 파일 추가 실패:', name, error);
+        console.error('파일 추가 실패:', name, error);
         entry.push(new Uint8Array(0), true);
       }
 
@@ -84,7 +84,7 @@ export async function createZipFileFallback(
   } catch (error) {
     // 에러 발생 시 상태 롤백 및 사용자에게 알림
     const msg = error instanceof Error ? error.message : String(error);
-    console.error('[DownloadService] 클라이언트 ZIP 생성 오류:', error);
+    console.error('클라이언트 ZIP 생성 오류:', error);
     toast.error(`ZIP 생성 중 오류가 발생했습니다: ${msg}`);
     updateProcessing(false);
     updateIsZipCompressing?.(false);

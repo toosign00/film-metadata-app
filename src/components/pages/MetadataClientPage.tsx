@@ -41,7 +41,7 @@ export function MetadataClientPage() {
     }
   }, [files.length, router]);
 
-  // 2단계에서 작업 중 새로고침 시 진행 중인 설정이 사라질 수 있어 브라우저 확인 창을 띄웁니다.
+  // 2단계에서 새로고침 시 결과/진행 상태가 사라질 수 있어 새로고침이나 탭 닫기 시 브라우저 확인 창을 띄움
   useEffect(() => {
     if (typeof window === 'undefined') return;
     if (files.length === 0) return;

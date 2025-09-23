@@ -88,7 +88,7 @@ export const useStepStore = create<StepStoreState>((set, get) => ({
       set({ resultImages: results.images, errors: results.errors });
       return results;
     } catch (error) {
-      console.error('Processing error:', error);
+      console.error('파일 처리 오류:', error);
       return { images: [], errors: [{ file: 'unknown', error: (error as Error).message }] };
     } finally {
       set({ processing: false });

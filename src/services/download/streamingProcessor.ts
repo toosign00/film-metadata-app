@@ -98,7 +98,7 @@ export class StreamingZipProcessor {
 
       entry.push(new Uint8Array(0), true); // 파일 완료 신호
     } catch (error) {
-      console.error('[StreamingZip] 파일 추가 실패:', name, error);
+      console.error('파일 추가 실패:', name, error);
       entry.push(new Uint8Array(0), true); // 에러 시에도 완료 신호
     } finally {
       reader.releaseLock();

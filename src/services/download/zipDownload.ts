@@ -98,7 +98,7 @@ export async function createZipFile(
     toast.success(`${processedCount}개 파일이 ZIP으로 저장되었습니다.`);
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
-    console.error('[DownloadService] 스트리밍 ZIP 생성 오류:', error);
+    console.error('스트리밍 ZIP 생성 오류:', error);
     toast.error(`ZIP 생성 중 오류가 발생했습니다. ${msg}`);
     updateProcessing(false);
     updateIsZipCompressing?.(false);

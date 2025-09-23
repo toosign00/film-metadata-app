@@ -18,7 +18,7 @@ export function FilesClientPage() {
     }))
   );
 
-  // 1단계에서는 새로고침 안내 다이얼로그를 사용하지 않습니다.
+  // 1단계에서는 새로고침 시 파일 선택 상태가 유지되므로 확인 창을 띄우지 않음
 
   const goToStep = (step: number) => {
     if (step === 2) router.push('/metadata');
