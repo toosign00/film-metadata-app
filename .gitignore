@@ -70,6 +70,9 @@ yarn-error.log*
 # local env files
 .env*.local
 
+# pnpm
+.pnpm-store
+
 # vercel
 .vercel
 
