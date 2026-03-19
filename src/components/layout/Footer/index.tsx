@@ -1,6 +1,7 @@
 import type { FooterProps } from '@/types/footer.types';
 
 export const Footer = ({ className }: FooterProps) => {
+  const year = new Date().getFullYear();
   return (
     <footer
       className={`border-gray-700 border-t bg-gray-900 p-6 text-gray-400 text-sm md:p-8 ${className || ''}`}
@@ -16,7 +17,7 @@ export const Footer = ({ className }: FooterProps) => {
         </p>
         <p className='mt-2 flex flex-row items-center justify-center gap-2'>
           <span className='text-gray-500 text-xs sm:text-sm'>
-            &copy; 2025. Hyunsoo Ro. All rights reserved.
+            &copy; {year}. Hyunsoo Ro. All rights reserved.
           </span>
           <a
             className='text-xs sm:text-sm'
