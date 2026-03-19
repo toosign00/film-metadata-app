@@ -42,7 +42,7 @@ export function WizardClient() {
 
   const handleProcessFiles = async () => {
     const results = await processFiles();
-    if (results.images.length > 0) goToStep(3);
+    if (results.images.length > 0 || results.errors.length > 0) goToStep(3);
   };
 
   return (
@@ -63,7 +63,6 @@ export function WizardClient() {
               onFileSelect={handleFileSelect}
               sortedFiles={state.sortedFiles}
               goToStep={goToStep}
-              resetForm={resetAll}
             />
           )}
           {state.activeStep === 2 && (
@@ -84,6 +83,7 @@ export function WizardClient() {
               activeStep={3}
               resultRef={resultRef}
               resultImages={state.resultImages}
+              errors={state.errors}
               processing={state.processing}
               zipProgress={state.zipProgress}
               setZipProgress={setZipProgress}

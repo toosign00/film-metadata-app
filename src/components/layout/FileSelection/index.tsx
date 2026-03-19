@@ -8,7 +8,6 @@ export const FileSelection = ({
   onFileSelect,
   sortedFiles,
   goToStep,
-  resetForm,
 }: FileSelectionProps) => {
   if (activeStep !== 1) {
     return null;
@@ -45,11 +44,7 @@ export const FileSelection = ({
           </div>
         </div>
 
-        <div className='mt-6 flex justify-between'>
-          <Button variant='text' onClick={resetForm}>
-            초기화
-          </Button>
-
+        <div className='mt-6 flex justify-end'>
           <Button variant='primary' disabled={sortedFiles.length === 0} onClick={() => goToStep(2)}>
             다음 단계 &rarr;
           </Button>
