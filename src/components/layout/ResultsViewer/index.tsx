@@ -70,9 +70,9 @@ export const ResultsViewer = ({
 
         {resultImages.length > 0 ? (
           <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4'>
-            {resultImages.map((image, idx) => (
+            {resultImages.map((image) => (
               <ImageCard
-                key={`${image.name}-${idx}`}
+                key={image.name}
                 image={image}
                 onDownload={downloadFile}
                 processing={processing}
