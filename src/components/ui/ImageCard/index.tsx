@@ -35,7 +35,7 @@ export const ImageCard = ({ image, onDownload, processing = false }: ImageCardPr
         />
 
         {!isTouch && (
-          <div className='absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/80 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
+          <div className='absolute inset-0 flex items-end justify-center from-black/80 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
             <button
               type='button'
               onClick={handleDownload}
