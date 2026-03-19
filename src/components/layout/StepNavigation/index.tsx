@@ -14,7 +14,7 @@ export const StepNavigation = ({
 }: StepNavigationProps) => {
   const [confirmOpen, setConfirmOpen] = useState(false);
   return (
-    <nav className='sticky top-0 z-10 mb-6 border border-gray-700 bg-gray-800 px-4 py-3 shadow-md'>
+    <nav className='sticky top-0 z-10 mb-6 border border-border bg-surface px-4 py-3 shadow-md'>
       <div className='mx-auto max-w-6xl'>
         <div className='flex items-center justify-between'>
           <div className='flex w-full space-x-1'>
@@ -24,10 +24,10 @@ export const StepNavigation = ({
               disabled={processing}
               className={`flex-1 rounded-l-lg px-2 py-2 font-medium text-sm transition-all disabled:opacity-100 ${
                 activeStep === 1
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-primary text-primary-foreground'
                   : processing
-                    ? 'cursor-not-allowed bg-gray-700 text-gray-500'
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    ? 'cursor-not-allowed bg-muted text-foreground-muted'
+                    : 'cursor-pointer bg-muted text-foreground-secondary hover:bg-border-hover'
               }`}
             >
               <span className='hidden md:inline'>1. 파일 선택</span>
@@ -45,10 +45,10 @@ export const StepNavigation = ({
               disabled={filesCount === 0 || processing}
               className={`flex-1 px-2 py-2 font-medium text-sm transition-all disabled:opacity-100 ${
                 activeStep === 2
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-primary text-primary-foreground'
                   : filesCount === 0 || processing
-                    ? 'cursor-not-allowed bg-gray-700 text-gray-500'
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    ? 'cursor-not-allowed bg-muted text-foreground-muted'
+                    : 'cursor-pointer bg-muted text-foreground-secondary hover:bg-border-hover'
               }`}
             >
               <span className='hidden md:inline'>2. 메타데이터 설정</span>
@@ -61,10 +61,10 @@ export const StepNavigation = ({
               disabled={resultsCount === 0 || processing}
               className={`flex-1 rounded-r-lg px-2 py-2 font-medium text-sm transition-all disabled:opacity-100 ${
                 activeStep === 3
-                  ? 'bg-blue-600 text-white'
+                  ? 'bg-primary text-primary-foreground'
                   : resultsCount === 0 || processing
-                    ? 'cursor-not-allowed bg-gray-700 text-gray-500'
-                    : 'bg-gray-700 text-gray-300 hover:bg-gray-600'
+                    ? 'cursor-not-allowed bg-muted text-foreground-muted'
+                    : 'cursor-pointer bg-muted text-foreground-secondary hover:bg-border-hover'
               }`}
             >
               <span className='hidden md:inline'>3. 결과 확인</span>
@@ -91,8 +91,8 @@ export const StepNavigation = ({
                 disabled={processing}
                 className={`ml-2 text-sm transition-colors ${
                   processing
-                    ? 'cursor-not-allowed text-gray-600'
-                    : 'text-gray-400 hover:text-red-400'
+                    ? 'cursor-not-allowed text-foreground-muted'
+                    : 'cursor-pointer text-foreground-muted hover:text-destructive-muted'
                 }`}
                 title='모두 초기화'
               >

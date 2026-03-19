@@ -12,7 +12,8 @@ export const INITIAL_SETTINGS: MetadataSettings = {
   cameraModel: '',
   filmInfo: '',
   lens: '',
-  lensInfo: '',
+  focalLength: '',
+  aperture: '',
   isoValue: '',
 };
 

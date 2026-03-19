@@ -6,14 +6,14 @@ export const ErrorDisplay = ({ errors }: ErrorDisplayProps) => {
 
   return (
     <section className='mb-8' aria-labelledby='errors-section'>
-      <div className='rounded-lg border border-red-800 bg-red-900/20 p-4 shadow-md'>
+      <div className='rounded-lg border border-destructive-border bg-destructive-bg p-4 shadow-md'>
         <div className='mb-3 flex items-center'>
-          <TriangleAlert className='mr-2 text-red-500' size={20} />
-          <h2 id='errors-section' className='font-bold text-lg text-red-500'>
+          <TriangleAlert className='mr-2 text-destructive' size={20} />
+          <h2 id='errors-section' className='font-bold text-destructive text-lg'>
             오류 발생 ({errors.length}개)
           </h2>
         </div>
-        <ul className='list-inside list-disc text-red-400 text-sm'>
+        <ul className='list-inside list-disc text-destructive-muted text-sm'>
           {errors.map((error) => (
             <li key={error.file} className='mb-1'>
               {error.file}: {error.error}

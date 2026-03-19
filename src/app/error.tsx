@@ -16,9 +16,11 @@ export default function ErrorPage({
 
   return (
     <div className='flex min-h-[60vh] items-center justify-center p-6'>
-      <div className='w-full max-w-lg rounded-xl border border-gray-700 bg-gray-800 p-6 shadow-md'>
-        <h2 className='mb-2 font-bold text-xl'>문제가 발생했습니다</h2>
-        <p className='mb-4 text-gray-300'>일시적인 오류일 수 있습니다. 다시 시도해 주세요.</p>
+      <div className='w-full max-w-lg rounded-xl border border-border bg-surface p-6 shadow-md'>
+        <h2 className='mb-2 font-bold text-foreground text-xl'>문제가 발생했습니다</h2>
+        <p className='mb-4 text-foreground-secondary'>
+          일시적인 오류일 수 있습니다. 다시 시도해 주세요.
+        </p>
         <div className='flex justify-end'>
           <Button variant='primary' onClick={reset}>
             다시 시도

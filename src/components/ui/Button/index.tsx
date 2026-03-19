@@ -12,14 +12,13 @@ export const Button = ({
   children,
   ...rest
 }: ButtonProps) => {
-  // 버튼 스타일 변형
   const styles = {
-    base: 'px-3 py-2 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 transition-all',
-    primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500 shadow-md',
-    secondary: 'bg-gray-700 text-white hover:bg-gray-600 focus:ring-gray-500 shadow-md',
+    base: 'cursor-pointer px-3 py-2 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring focus:ring-offset-ring-offset transition-all',
+    primary: 'bg-primary text-primary-foreground hover:bg-primary-hover shadow-md',
+    secondary: 'bg-muted text-foreground hover:bg-border-hover shadow-md',
     outlined:
-      'bg-transparent border border-gray-600 text-gray-300 hover:bg-gray-800 focus:ring-gray-500',
-    text: 'bg-transparent text-gray-300 hover:text-white hover:bg-gray-800 focus:ring-gray-500',
+      'bg-transparent border border-border-hover text-foreground-secondary hover:bg-surface focus:ring-ring',
+    text: 'bg-transparent text-foreground-secondary hover:text-foreground hover:bg-surface focus:ring-ring',
     disabled: 'opacity-50 cursor-not-allowed pointer-events-none',
     loading: 'cursor-wait',
   };

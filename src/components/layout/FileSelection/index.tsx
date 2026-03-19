@@ -8,7 +8,6 @@ export const FileSelection = ({
   onFileSelect,
   sortedFiles,
   goToStep,
-  resetForm,
 }: FileSelectionProps) => {
   if (activeStep !== 1) {
     return null;
@@ -16,9 +15,9 @@ export const FileSelection = ({
 
   return (
     <section className='mb-8 transition-all' aria-labelledby='file-section'>
-      <div className='rounded-xl border border-gray-700 bg-gray-800 p-5 shadow-md md:p-6'>
-        <h2 id='file-section' className='mb-4 flex items-center font-bold text-gray-200 text-xl'>
-          <span className='mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-sm text-white'>
+      <div className='rounded-xl border border-border bg-surface p-5 shadow-md md:p-6'>
+        <h2 id='file-section' className='mb-4 flex items-center font-bold text-foreground text-xl'>
+          <span className='mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-sm text-primary-foreground'>
             1
           </span>
           이미지 파일 선택
@@ -34,10 +33,10 @@ export const FileSelection = ({
               <FileList files={sortedFiles} />
             ) : (
               <div
-                className='flex h-full items-center justify-center rounded-lg border border-gray-700 bg-gray-800 p-6 shadow-md'
+                className='flex h-full items-center justify-center rounded-lg border border-border bg-surface p-6 shadow-md'
                 style={{ minHeight: '300px' }}
               >
-                <p className='text-center text-gray-400'>
+                <p className='text-center text-foreground-muted'>
                   파일을 선택하면 여기에 처리 순서가 표시됩니다
                 </p>
               </div>
@@ -45,11 +44,7 @@ export const FileSelection = ({
           </div>
         </div>
 
-        <div className='mt-6 flex justify-between'>
-          <Button variant='text' onClick={resetForm}>
-            초기화
-          </Button>
-
+        <div className='mt-6 flex justify-end'>
           <Button variant='primary' disabled={sortedFiles.length === 0} onClick={() => goToStep(2)}>
             다음 단계 &rarr;
           </Button>
