@@ -7,14 +7,6 @@ import type {
 } from '@/types/metadata.types';
 import { dataURItoBlob } from '@/utils/convertUtils';
 
-// 렌즈 정보 문자열을 표준화하는 함수
-export function normalizeLensInfo(lensInfo: string): string {
-  if (!lensInfo) return '';
-  let processed = lensInfo.toLowerCase();
-  processed = processed.replace(/f[\s.]+(\d+)/i, 'f$1');
-  return processed;
-}
-
 // 단일 파일의 EXIF 메타데이터를 설정하는 함수
 export async function setMetadata(
   file: File,
@@ -73,18 +65,16 @@ export async function setMetadata(
         exif[piexifjs.ExifIFD.DateTimeOriginal] = dateTimeStr;
         exif[piexifjs.ExifIFD.DateTimeDigitized] = dateTimeStr;
         exif[piexifjs.ExifIFD.LensModel] = settings.lens;
+        const lensSpec = `${settings.focalLength}mm f${settings.aperture}`;
         exif[piexifjs.ExifIFD.UserComment] =
-          `Film: ${settings.filmInfo}, Lens: ${settings.lensInfo}`;
+          `Film: ${settings.filmInfo}, Lens: ${lensSpec}`;
 
-        const processedLensInfo = normalizeLensInfo(settings.lensInfo);
-        const focalLength = processedLensInfo.match(/^(\d+(\.\d+)?)/);
-        if (focalLength) {
-          exif[piexifjs.ExifIFD.FocalLength] = [parseInt(focalLength[1], 10), 1];
+        if (settings.focalLength) {
+          exif[piexifjs.ExifIFD.FocalLength] = [parseInt(settings.focalLength, 10), 1];
         }
 
-        const fNumberMatch = processedLensInfo.match(/f(\d+\.?\d*)/);
-        if (fNumberMatch) {
-          const fNumber = parseFloat(fNumberMatch[1]);
+        if (settings.aperture) {
+          const fNumber = parseFloat(settings.aperture);
           exif[piexifjs.ExifIFD.FNumber] = [fNumber * 10, 10];
         }
 

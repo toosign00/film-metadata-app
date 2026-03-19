@@ -3,7 +3,8 @@ export interface MetadataSettings {
   cameraModel: string;
   filmInfo: string;
   lens: string;
-  lensInfo: string;
+  focalLength: string;
+  aperture: string;
   isoValue: string;
   startDate: Date;
   startTime: Date;
