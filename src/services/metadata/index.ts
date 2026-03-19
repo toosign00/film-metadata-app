@@ -66,8 +66,7 @@ export async function setMetadata(
         exif[piexifjs.ExifIFD.DateTimeDigitized] = dateTimeStr;
         exif[piexifjs.ExifIFD.LensModel] = settings.lens;
         const lensSpec = `${settings.focalLength}mm f${settings.aperture}`;
-        exif[piexifjs.ExifIFD.UserComment] =
-          `Film: ${settings.filmInfo}, Lens: ${lensSpec}`;
+        exif[piexifjs.ExifIFD.UserComment] = `Film: ${settings.filmInfo}, Lens: ${lensSpec}`;
 
         if (settings.focalLength) {
           exif[piexifjs.ExifIFD.FocalLength] = [parseInt(settings.focalLength, 10), 1];
