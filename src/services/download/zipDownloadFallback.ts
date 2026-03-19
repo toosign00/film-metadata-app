@@ -1,13 +1,12 @@
 import { Zip, ZipPassThrough } from 'fflate';
 import { saveAs } from 'file-saver';
 import { toast } from 'sonner';
-import type { Image as AppImage } from '@/types/imageCard.types';
 import type { MetadataResult } from '@/types/metadata.types';
 import type { BooleanUpdater, ProgressUpdater } from '@/types/service.types';
 import { generateZipFileName } from '../../utils/zipDownloadUtils';
 
 export async function createZipFileFallback(
-  validImages: (AppImage | MetadataResult)[],
+  validImages: MetadataResult[],
   updateZipProgress: ProgressUpdater,
   updateProcessing: BooleanUpdater,
   updateIsZipCompressing?: BooleanUpdater
@@ -23,11 +22,10 @@ export async function createZipFileFallback(
     updateIsZipCompressing?.(true);
 
     // 파일 목록 준비
-    const allFiles: { file: File; name: string }[] = validImages.map((img, idx) => {
-      const name = (img as AppImage | MetadataResult).name || `image_${idx + 1}.jpg`;
-      const file = (img as MetadataResult).file;
-      return { file, name };
-    });
+    const allFiles = validImages.map((img, idx) => ({
+      file: img.file,
+      name: img.name || `image_${idx + 1}.jpg`,
+    }));
 
     const totalFiles = allFiles.length;
     let processedCount = 0;
