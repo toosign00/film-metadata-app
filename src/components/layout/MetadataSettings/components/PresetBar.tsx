@@ -11,8 +11,6 @@ import {
 } from '@/services/preset';
 import type { Preset, PresetData } from '@/types/preset.types';
 
-
-
 interface PresetBarProps {
   onLoad: (data: PresetData) => void;
   getCurrentData: () => PresetData;
