@@ -1,16 +1,18 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useEffect, useRef } from 'react';
+import { useCallback, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/Button';
 import type { MetadataSettings } from '@/types/metadata.types';
 import type { MetadataSettingsProps } from '@/types/metadataSettings.types';
+import type { PresetData } from '@/types/preset.types';
 import { metadataSettingsSchema } from '@/utils/metadataSchema';
 import { CameraSection } from './components/CameraSection';
 import { DateTimeSection } from './components/DateTimeSection';
 import { FilmSection } from './components/FilmSection';
 import { LensSection } from './components/LensSection';
+import { PresetBar } from './components/PresetBar';
 
 export const MetadataSettingsForm = ({
   activeStep,
@@ -29,6 +31,8 @@ export const MetadataSettingsForm = ({
     handleSubmit,
     formState: { errors },
     watch,
+    reset,
+    getValues,
   } = useForm<MetadataSettings>({
     resolver: zodResolver(metadataSettingsSchema),
     defaultValues: settings,
@@ -36,6 +40,30 @@ export const MetadataSettingsForm = ({
   });
 
   const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  const handlePresetLoad = useCallback(
+    (data: PresetData) => {
+      const current = getValues();
+      reset({ ...current, ...data });
+      for (const [key, value] of Object.entries(data)) {
+        onSettingsChange(key as keyof MetadataSettings, value);
+      }
+    },
+    [reset, getValues, onSettingsChange]
+  );
+
+  const getCurrentPresetData = useCallback((): PresetData => {
+    const v = getValues();
+    return {
+      cameraMake: v.cameraMake,
+      cameraModel: v.cameraModel,
+      filmInfo: v.filmInfo,
+      lens: v.lens,
+      focalLength: v.focalLength,
+      aperture: v.aperture,
+      isoValue: v.isoValue,
+    };
+  }, [getValues]);
 
   useEffect(() => {
     const subscription = watch((value, { name }) => {
@@ -58,13 +86,13 @@ export const MetadataSettingsForm = ({
 
   return (
     <section className='mb-8 transition-all' aria-labelledby='metadata-section'>
-      <div className='rounded-xl border border-gray-700 bg-gray-800 p-5 shadow-md md:p-6'>
+      <div className='rounded-xl border border-border bg-surface p-5 shadow-md md:p-6'>
         <h2
           id='metadata-section'
-          className='mb-4 flex items-center font-bold text-gray-200 text-xl'
+          className='mb-4 flex items-center font-bold text-foreground text-xl'
         >
           <span
-            className='mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-blue-600 text-sm text-white'
+            className='mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-sm text-primary-foreground'
             aria-hidden='true'
           >
             2
@@ -79,6 +107,8 @@ export const MetadataSettingsForm = ({
           noValidate
           aria-label='메타데이터 설정 폼'
         >
+          <PresetBar onLoad={handlePresetLoad} getCurrentData={getCurrentPresetData} />
+
           <div className='grid grid-cols-1 gap-5 md:grid-cols-2'>
             <DateTimeSection control={control} errors={errors} />
             <CameraSection register={register} errors={errors} />
