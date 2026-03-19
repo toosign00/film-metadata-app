@@ -1,5 +1,4 @@
 import { toast } from 'sonner';
-import type { Image as AppImage } from '@/types/imageCard.types';
 import type { MetadataResult } from '@/types/metadata.types';
 import type { BooleanUpdater, ProgressUpdater } from '@/types/service.types';
 import { type FileSystemFileHandle, hasFileSystemAccess } from '../../types/zipDownload.types';
@@ -8,7 +7,7 @@ import { StreamingZipProcessor } from './streamingProcessor';
 import { createZipFileFallback } from './zipDownloadFallback';
 
 export async function createZipFile(
-  validImages: (AppImage | MetadataResult)[],
+  validImages: MetadataResult[],
   updateZipProgress: ProgressUpdater,
   updateProcessing: BooleanUpdater,
   updateIsZipCompressing?: BooleanUpdater
@@ -61,11 +60,10 @@ export async function createZipFile(
     toast.info('ZIP 파일을 생성하고 있습니다...');
 
     // 파일 목록 준비
-    const allFiles = validImages.map((img, idx) => {
-      const name = (img as AppImage | MetadataResult).name || `image_${idx + 1}.jpg`;
-      const file = (img as MetadataResult).file;
-      return { file, name };
-    });
+    const allFiles = validImages.map((img, idx) => ({
+      file: img.file,
+      name: img.name || `image_${idx + 1}.jpg`,
+    }));
     const totalFiles = allFiles.length;
     let processedCount = 0;
 
@@ -98,7 +96,7 @@ export async function createZipFile(
     toast.success(`${processedCount}개 파일이 ZIP으로 저장되었습니다.`);
   } catch (error) {
     const msg = error instanceof Error ? error.message : String(error);
-    console.error('[DownloadService] 스트리밍 ZIP 생성 오류:', error);
+    console.error('스트리밍 ZIP 생성 오류:', error);
     toast.error(`ZIP 생성 중 오류가 발생했습니다. ${msg}`);
     updateProcessing(false);
     updateIsZipCompressing?.(false);

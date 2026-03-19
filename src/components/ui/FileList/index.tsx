@@ -16,8 +16,8 @@ export const FileList = ({ files }: FileListProps) => {
       </div>
       <div className='flex-1 overflow-y-auto p-3'>
         <ol className='list-inside list-decimal text-gray-300 text-sm'>
-          {files.map((file, idx) => (
-            <li key={`${file.name}-${idx}`} className='mb-1 flex items-center'>
+          {files.map((file) => (
+            <li key={file.name} className='mb-1 flex items-center'>
               <span className='mr-1 truncate'>{file.name}</span>
               <span className='ml-auto whitespace-nowrap text-gray-500 text-xs'>
                 {(file.size / 1024 / 1024).toFixed(1)} MB

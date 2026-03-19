@@ -24,15 +24,15 @@ export const ImageCard = ({ image, onDownload, processing = false }: ImageCardPr
 
   return (
     <div className='group relative overflow-hidden rounded-lg border border-gray-700 bg-gray-800 shadow-md transition-all duration-200 hover:shadow-lg'>
-      <div className='aspect-h-3 aspect-w-4 bg-gray-900'>
+      <div className='relative aspect-4/3 bg-gray-900'>
         <Image
           src={image.url}
           alt={`처리된 이미지: ${image.name}`}
-          className='h-full w-full object-cover transition-transform duration-300 group-hover:scale-105'
+          className='object-cover transition-transform duration-300 group-hover:scale-105'
           loading='lazy'
-          width={0}
-          height={0}
-          sizes='(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw'
+          fill
+          sizes='(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw'
+          unoptimized
         />
 
         {/* 오버레이 및 다운로드 버튼 - 터치 디바이스가 아닌 경우에만 표시 */}

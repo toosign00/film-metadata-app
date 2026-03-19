@@ -1,13 +1,12 @@
 import { Zip, ZipPassThrough } from 'fflate';
 import { saveAs } from 'file-saver';
 import { toast } from 'sonner';
-import type { Image as AppImage } from '@/types/imageCard.types';
 import type { MetadataResult } from '@/types/metadata.types';
 import type { BooleanUpdater, ProgressUpdater } from '@/types/service.types';
 import { generateZipFileName } from '../../utils/zipDownloadUtils';
 
 export async function createZipFileFallback(
-  validImages: (AppImage | MetadataResult)[],
+  validImages: MetadataResult[],
   updateZipProgress: ProgressUpdater,
   updateProcessing: BooleanUpdater,
   updateIsZipCompressing?: BooleanUpdater
@@ -23,11 +22,10 @@ export async function createZipFileFallback(
     updateIsZipCompressing?.(true);
 
     // 파일 목록 준비
-    const allFiles: { file: File; name: string }[] = validImages.map((img, idx) => {
-      const name = (img as AppImage | MetadataResult).name || `image_${idx + 1}.jpg`;
-      const file = (img as MetadataResult).file;
-      return { file, name };
-    });
+    const allFiles = validImages.map((img, idx) => ({
+      file: img.file,
+      name: img.name || `image_${idx + 1}.jpg`,
+    }));
 
     const totalFiles = allFiles.length;
     let processedCount = 0;
@@ -67,7 +65,7 @@ export async function createZipFileFallback(
         }
         entry.push(new Uint8Array(0), true);
       } catch (error) {
-        console.error('[DownloadService] 파일 추가 실패:', name, error);
+        console.error('파일 추가 실패:', name, error);
         entry.push(new Uint8Array(0), true);
       }
 
@@ -84,7 +82,7 @@ export async function createZipFileFallback(
   } catch (error) {
     // 에러 발생 시 상태 롤백 및 사용자에게 알림
     const msg = error instanceof Error ? error.message : String(error);
-    console.error('[DownloadService] 클라이언트 ZIP 생성 오류:', error);
+    console.error('클라이언트 ZIP 생성 오류:', error);
     toast.error(`ZIP 생성 중 오류가 발생했습니다: ${msg}`);
     updateProcessing(false);
     updateIsZipCompressing?.(false);

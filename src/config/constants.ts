@@ -1,8 +1,6 @@
 import type { MetadataSettings } from '@/types/metadata.types';
-/**
- * 초기 메타데이터 설정값
- */
 
+// 초기 메타데이터 설정값
 export const INITIAL_SETTINGS: MetadataSettings = {
   startDate: new Date(),
   startTime: (() => {
@@ -18,9 +16,7 @@ export const INITIAL_SETTINGS: MetadataSettings = {
   isoValue: '',
 };
 
-/**
- * 단계 상수
- */
+// 단계 상수
 export interface Steps {
   FILE_SELECTION: number;
   METADATA_SETTINGS: number;

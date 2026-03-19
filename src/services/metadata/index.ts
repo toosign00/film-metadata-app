@@ -128,7 +128,7 @@ export async function processMetadata(
       results.images.push(result);
       onProgress(i + 1);
     } catch (error) {
-      console.error(`Error processing file ${file.name}:`, error);
+      console.error(`파일 처리 오류: ${file.name}:`, error);
       results.errors.push({ file: file.name, error: (error as Error).message });
     }
   }

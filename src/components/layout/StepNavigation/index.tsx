@@ -33,7 +33,7 @@ export const StepNavigation = ({
               <span className='hidden md:inline'>1. 파일 선택</span>
               <span className='md:hidden'>파일</span>
               {filesCount > 0 && (
-                <span className='ml-1 rounded-full bg-black bg-opacity-30 px-1.5 py-0.5 text-white text-xs md:text-sm'>
+                <span className='ml-1 rounded-full bg-black/30 px-1.5 py-0.5 text-white text-xs md:text-sm'>
                   {filesCount}
                 </span>
               )}
@@ -70,7 +70,7 @@ export const StepNavigation = ({
               <span className='hidden md:inline'>3. 결과 확인</span>
               <span className='md:hidden'>결과</span>
               {resultsCount > 0 && (
-                <span className='ml-1 rounded-full bg-black bg-opacity-30 px-1.5 py-0.5 text-white text-xs md:text-sm'>
+                <span className='ml-1 rounded-full bg-black/30 px-1.5 py-0.5 text-white text-xs md:text-sm'>
                   {resultsCount}
                 </span>
               )}

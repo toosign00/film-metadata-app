@@ -42,7 +42,7 @@ export const Button = ({
     >
       {isLoading ? (
         <div className='flex items-center justify-center'>
-          <LoaderCircle className='-ml-1 mr-2 animate-spin text-current' size={20} />
+          <LoaderCircle className='mr-2 animate-spin text-current' size={20} />
           <span>{typeof children === 'string' ? '처리 중...' : children}</span>
         </div>
       ) : (

@@ -32,7 +32,7 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
         isDragging
           ? 'border-blue-500 bg-gray-800'
           : filesCount > 0
-            ? 'border-gray-600 bg-gray-800'
+            ? 'border-blue-500/50 bg-gray-800'
             : 'border-gray-600 bg-gray-800'
       } cursor-pointer p-4 text-center transition-all hover:border-blue-500`}
       onClick={openFileDialog}
