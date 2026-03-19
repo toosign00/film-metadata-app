@@ -9,7 +9,6 @@ import type { ImageCardProps } from '@/types/imageCard.types';
 export const ImageCard = ({ image, onDownload, processing = false }: ImageCardProps) => {
   const [isTouch, setIsTouch] = useState(false);
 
-  // 컴포넌트 마운트 시 터치 디바이스 여부 확인
   useEffect(() => {
     setIsTouch(isMobile || isTablet);
   }, []);
@@ -23,8 +22,8 @@ export const ImageCard = ({ image, onDownload, processing = false }: ImageCardPr
   };
 
   return (
-    <div className='group relative overflow-hidden rounded-lg border border-gray-700 bg-gray-800 shadow-md transition-all duration-200 hover:shadow-lg'>
-      <div className='relative aspect-4/3 bg-gray-900'>
+    <div className='group relative overflow-hidden rounded-lg border border-border bg-surface shadow-md transition-all duration-200 hover:shadow-lg'>
+      <div className='relative aspect-4/3 bg-surface-alt'>
         <Image
           src={image.url}
           alt={`처리된 이미지: ${image.name}`}
@@ -35,7 +34,6 @@ export const ImageCard = ({ image, onDownload, processing = false }: ImageCardPr
           unoptimized
         />
 
-        {/* 오버레이 및 다운로드 버튼 - 터치 디바이스가 아닌 경우에만 표시 */}
         {!isTouch && (
           <div className='absolute inset-0 flex items-end justify-center bg-gradient-to-t from-black/80 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
             <button
@@ -44,8 +42,8 @@ export const ImageCard = ({ image, onDownload, processing = false }: ImageCardPr
               disabled={processing}
               className={`mb-4 translate-y-4 transform rounded-lg px-4 py-1.5 font-medium text-sm transition-all duration-300 focus:outline-none focus:ring-2 focus:ring-offset-1 group-hover:translate-y-0 ${
                 processing
-                  ? 'cursor-not-allowed bg-gray-600 text-gray-400'
-                  : 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500'
+                  ? 'cursor-not-allowed bg-muted text-foreground-muted'
+                  : 'bg-primary text-primary-foreground hover:bg-primary-hover focus:ring-ring'
               }`}
               aria-label={`${image.name} 다운로드`}
               title='다운로드'
@@ -59,15 +57,14 @@ export const ImageCard = ({ image, onDownload, processing = false }: ImageCardPr
         )}
       </div>
 
-      {/* 이미지 정보 */}
-      <div className='bg-gray-800 p-3'>
+      <div className='bg-surface p-3'>
         <div className='flex items-start justify-between'>
           <div className='overflow-hidden'>
-            <p className='truncate font-medium text-gray-200 text-sm' title={image.name}>
+            <p className='truncate font-medium text-foreground text-sm' title={image.name}>
               {image.name}
             </p>
             {image.dateTime && (
-              <p className='mt-0.5 truncate text-gray-400 text-xs' title={image.dateTime}>
+              <p className='mt-0.5 truncate text-foreground-muted text-xs' title={image.dateTime}>
                 {image.dateTime}
               </p>
             )}
@@ -75,7 +72,6 @@ export const ImageCard = ({ image, onDownload, processing = false }: ImageCardPr
         </div>
       </div>
 
-      {/* 모바일 다운로드 버튼 - 터치 디바이스일 경우에만 표시 */}
       {isTouch && (
         <div className='mt-0 px-3 pt-0 pb-3'>
           <button
@@ -84,8 +80,8 @@ export const ImageCard = ({ image, onDownload, processing = false }: ImageCardPr
             disabled={processing}
             className={`flex w-full items-center justify-center rounded py-1.5 text-xs ${
               processing
-                ? 'cursor-not-allowed bg-gray-800 text-gray-500'
-                : 'bg-gray-700 text-blue-400 hover:bg-gray-600 hover:text-blue-300'
+                ? 'cursor-not-allowed bg-surface text-foreground-muted'
+                : 'bg-muted text-primary-muted hover:bg-border-hover hover:text-primary'
             }`}
             title='다운로드'
           >

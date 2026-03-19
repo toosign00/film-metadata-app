@@ -9,15 +9,13 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
   const { isDragging, fileInputRef, dropAreaRef, handleFileSelect, openFileDialog, isMobile } =
     useFileDrop(onFileSelect, {
       allowedExtensions: ['jpg', 'jpeg'],
-      maxFileSize: 15 * 1024 * 1024, // 15MB
+      maxFileSize: 15 * 1024 * 1024,
       maxDesktopFiles: 100,
       maxMobileFiles: 40,
     });
 
-  // 지원되는 확장자 문자열 생성 (UI에 표시용)
   const supportedExtensionsText = useMemo(() => ['jpg', 'jpeg'].join(', ').toUpperCase(), []);
 
-  // 키보드 이벤트 핸들러
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === 'Enter' || e.key === ' ') {
       e.preventDefault();
@@ -30,11 +28,11 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
       ref={dropAreaRef as React.RefObject<HTMLButtonElement>}
       className={`flex w-full items-center justify-center rounded-lg border-2 border-dashed ${
         isDragging
-          ? 'border-blue-500 bg-gray-800'
+          ? 'border-primary bg-surface'
           : filesCount > 0
-            ? 'border-blue-500/50 bg-gray-800'
-            : 'border-gray-600 bg-gray-800'
-      } cursor-pointer p-4 text-center transition-all hover:border-blue-500`}
+            ? 'border-primary/50 bg-surface'
+            : 'border-border-hover bg-surface'
+      } cursor-pointer p-4 text-center transition-all hover:border-primary`}
       onClick={openFileDialog}
       onKeyDown={handleKeyDown}
       aria-label='파일 선택 영역'
@@ -55,33 +53,39 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
 
       <div className='flex flex-col items-center justify-center py-5'>
         <ImageUp
-          className={`mb-2 h-12 w-12 ${isDragging ? 'text-blue-500' : filesCount > 0 ? 'text-blue-500' : 'text-gray-500'}`}
+          className={`mb-2 h-12 w-12 ${isDragging ? 'text-primary' : filesCount > 0 ? 'text-primary' : 'text-foreground-muted'}`}
           aria-hidden='true'
           role='img'
         />
 
         {isDragging ? (
           <div>
-            <p className='font-medium text-blue-400 text-lg'>파일을 여기에 놓으세요</p>
-            <p className='text-blue-300 text-sm'>{supportedExtensionsText} 파일만 지원됩니다</p>
+            <p className='font-medium text-primary-muted text-lg'>파일을 여기에 놓으세요</p>
+            <p className='text-primary-muted text-sm'>
+              {supportedExtensionsText} 파일만 지원됩니다
+            </p>
           </div>
         ) : filesCount > 0 ? (
           <div>
-            <p className='font-medium text-gray-200 text-lg'>{filesCount}개의 파일이 선택됨</p>
-            <p className='text-gray-400 text-sm'>클릭하여 다른 파일 선택</p>
+            <p className='font-medium text-foreground text-lg'>{filesCount}개의 파일이 선택됨</p>
+            <p className='text-foreground-muted text-sm'>클릭하여 다른 파일 선택</p>
           </div>
         ) : (
           <div>
-            <p className='font-medium text-gray-300 text-lg'>이미지 파일을 선택하세요</p>
-            <p className='text-gray-400 text-sm'>또는 여기에 파일을 끌어다 놓으세요</p>
+            <p className='font-medium text-foreground-secondary text-lg'>
+              이미지 파일을 선택하세요
+            </p>
+            <p className='text-foreground-secondary text-sm'>또는 여기에 파일을 끌어다 놓으세요</p>
           </div>
         )}
 
         <div>
-          <p id='file-format-info' className='mt-2 text-gray-500 text-xs'>
+          <p id='file-format-info' className='mt-2 text-foreground-muted text-xs'>
             지원 형식: {supportedExtensionsText} (최대 15MB)
           </p>
-          <p className='mt-2 text-gray-500 text-xs'>최대 파일 수: {isMobile ? 40 : 100}개</p>
+          <p className='mt-2 text-foreground-muted text-xs'>
+            최대 파일 수: {isMobile ? 40 : 100}개
+          </p>
         </div>
       </div>
     </button>

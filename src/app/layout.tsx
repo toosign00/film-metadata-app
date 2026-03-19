@@ -1,6 +1,7 @@
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import Script from 'next/script';
+import { ThemeProvider } from 'next-themes';
 import { Footer } from '@/components/layout/Footer';
 import { Header } from '@/components/layout/Header';
 import '@/styles/globals.css';
@@ -106,9 +107,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang='ko'>
+    <html lang='ko' suppressHydrationWarning>
       <body className={pretendard.variable}>
-        {/* Structured Data */}
+        <ThemeProvider
+          attribute='data-theme'
+          defaultTheme='dark'
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className='flex min-h-screen w-full flex-col overflow-x-hidden bg-background text-foreground'>
+            <Header />
+            <main className='flex-1 overflow-auto p-6 md:p-8'>
+              <div className='mx-auto w-full max-w-6xl'>{children}</div>
+            </main>
+            <Footer />
+          </div>
+        </ThemeProvider>
+        <Analytics />
         <Script id='ld-software' type='application/ld+json' strategy='afterInteractive'>
           {JSON.stringify({
             '@context': 'https://schema.org',
@@ -125,14 +140,6 @@ export default function RootLayout({
             },
           })}
         </Script>
-        <Analytics />
-        <div className='flex min-h-screen w-full flex-col overflow-x-hidden bg-gray-900 text-gray-200'>
-          <Header />
-          <main className='flex-1 overflow-auto p-6 md:p-8'>
-            <div className='mx-auto w-full max-w-6xl'>{children}</div>
-          </main>
-          <Footer />
-        </div>
       </body>
     </html>
   );

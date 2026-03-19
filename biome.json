@@ -9,7 +9,7 @@
     "includes": ["src/**", "*.js", "*.jsx", "*.ts", "*.tsx"],
     "actions": {
       "source": {
-        "organizeImports": "on",
+        "organizeImports": "off",
         "useSortedKeys": "off"
       }
     }
@@ -40,6 +40,10 @@
     }
   },
   "css": {
+    "parser": {
+      "cssModules": false,
+      "tailwindDirectives": true
+    },
     "formatter": {
       "enabled": true,
       "indentStyle": "space",

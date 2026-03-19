@@ -1,80 +1,56 @@
 'use client';
 
-import { ko } from 'date-fns/locale';
-import { Calendar, Clock4 } from 'lucide-react';
+import { Calendar } from 'lucide-react';
 import { forwardRef } from 'react';
-import DatePicker from 'react-datepicker';
-import type { CustomDatePickerProps, CustomInputProps } from '@/types/customDatePicker.types';
+import DatePicker, { type DatePickerProps } from 'react-datepicker';
+
+interface CustomInputProps {
+  value?: string;
+  onClick?: () => void;
+  disabled?: boolean;
+}
 
 const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, forwardedRef) => {
-  const { value, onClick, placeholder, disabled, id, name, showTimeSelectOnly } = props;
+  const { value, onClick, disabled, ...rest } = props;
   return (
     <div
       role='button'
       tabIndex={0}
-      className={`ue-500 relative w-full cursor-pointer rounded-lg border border-gray-700 bg-gray-800 py-2.5 pr-10 pl-4 text-left text-gray-200 shadow-sm transition-colors hover:border-gray-600 ${disabled ? 'pointer-events-none opacity-50' : ''}`}
+      className={`relative w-full cursor-pointer rounded-lg border border-border bg-input py-2.5 pr-10 pl-4 text-left text-foreground shadow-sm transition-colors hover:border-border-hover focus-within:ring-2 focus-within:ring-ring ${disabled ? 'pointer-events-none opacity-50' : ''}`}
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
           e.preventDefault();
-          onClick?.(e as unknown as React.MouseEvent<HTMLElement>);
+          onClick?.();
         }
       }}
     >
       <input
         ref={forwardedRef}
-        value={value || ''}
-        placeholder={placeholder}
-        disabled={disabled}
-        id={id}
-        name={name}
-        className='w-full cursor-pointer border-none bg-transparent outline-none'
+        type='text'
         readOnly
+        value={value}
+        className='w-full cursor-pointer border-none bg-transparent p-0 text-foreground outline-none focus:ring-0'
         tabIndex={-1}
-        style={{ caretColor: 'transparent' }}
+        disabled={disabled}
+        {...rest}
       />
-      <div className='absolute inset-y-0 right-0 flex w-10 items-center justify-center'>
-        {showTimeSelectOnly ? (
-          <Clock4 className='text-gray-500' size={20} />
-        ) : (
-          <Calendar className='text-gray-500' size={20} />
-        )}
-      </div>
+      <span className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2'>
+        <Calendar size={16} className='text-foreground-muted' />
+      </span>
     </div>
   );
 });
 
-export const CustomDatePicker = ({
-  selected,
-  onChange,
-  showTimeSelect = false,
-  showTimeSelectOnly = false,
-  timeFormat = 'HH:mm',
-  dateFormat = 'yyyy-MM-dd',
-  placeholderText,
-  disabled = false,
-  id,
-  name,
-  ...rest
-}: CustomDatePickerProps) => {
+CustomInput.displayName = 'CustomInput';
+
+export const CustomDatePicker = (props: DatePickerProps) => {
   return (
     <DatePicker
-      selected={selected}
-      onChange={onChange}
-      customInput={<CustomInput showTimeSelectOnly={showTimeSelectOnly} id={id} name={name} />}
-      showTimeSelect={showTimeSelect}
-      showTimeSelectOnly={showTimeSelectOnly}
-      timeFormat={timeFormat}
-      timeIntervals={15}
-      timeCaption='시간'
-      dateFormat={dateFormat}
-      placeholderText={placeholderText}
-      disabled={disabled}
-      locale={ko}
+      {...props}
+      customInput={<CustomInput />}
       popperClassName='react-datepicker-dark'
-      id={id}
-      name={name}
-      {...rest}
+      showPopperArrow={false}
     />
   );
 };

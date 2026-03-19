@@ -1,6 +1,68 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
+@theme {
+  --color-background: #09090b;
+  --color-surface: #1f1f23;
+  --color-surface-alt: #14141a;
+  --color-input: #1f1f23;
+  --color-muted: #3b3a3e;
+  --color-overlay: rgba(0, 0, 0, 0.5);
+
+  --color-foreground: #e6e5e8;
+  --color-foreground-secondary: #d1d0d4;
+  --color-foreground-muted: #8a8990;
+
+  --color-border: #3b3a3e;
+  --color-border-hover: #504f54;
+
+  --color-primary: #f59e0b;
+  --color-primary-hover: #d97706;
+  --color-primary-foreground: #1c1917;
+  --color-primary-muted: #fbbf24;
+
+  --color-destructive: #ef4444;
+  --color-destructive-hover: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-destructive-bg: rgba(127, 29, 29, 0.2);
+  --color-destructive-border: #991b1b;
+  --color-destructive-muted: #f87171;
+
+  --color-ring: #f59e0b;
+  --color-ring-offset: #09090b;
+}
+
+[data-theme="light"] {
+  --color-background: #fcfcfb;
+  --color-surface: #f5f5f3;
+  --color-surface-alt: #ebebea;
+  --color-input: #ffffff;
+  --color-muted: #e0e0de;
+  --color-overlay: rgba(0, 0, 0, 0.3);
+
+  --color-foreground: #161615;
+  --color-foreground-secondary: #4d4d4a;
+  --color-foreground-muted: #686865;
+
+  --color-border: #e0e0de;
+  --color-border-hover: #cbcbc8;
+
+  --color-primary: #f59e0b;
+  --color-primary-hover: #d97706;
+  --color-primary-foreground: #1c1917;
+  --color-primary-muted: #fbbf24;
+
+  --color-destructive: #ef4444;
+  --color-destructive-hover: #dc2626;
+  --color-destructive-foreground: #ffffff;
+  --color-destructive-bg: rgba(254, 226, 226, 0.5);
+  --color-destructive-border: #fca5a5;
+  --color-destructive-muted: #dc2626;
+
+  --color-ring: #f59e0b;
+  --color-ring-offset: #fcfcfb;
+}
+
 @layer base {
   :root {
     font-family:
@@ -23,10 +85,6 @@
     font-size: 14px;
     font-weight: 400;
 
-    color-scheme: light dark;
-    color: rgba(255, 255, 255, 0.87);
-    background-color: #242424;
-
     font-synthesis: none;
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
@@ -45,52 +103,7 @@
     margin: 0;
     min-height: 100vh;
     overflow-x: hidden;
-    background: #101828;
-  }
-
-  a {
-    font-weight: 500;
-    color: #646cff;
-    text-decoration: inherit;
-  }
-  a:hover {
-    color: #535bf2;
-  }
-
-  h1 {
-    font-size: 3.2em;
-    line-height: 1.1;
-  }
-
-  button {
-    border-radius: 8px;
-    border: 1px solid transparent;
-    padding: 0.6em 1.2em;
-    font-size: 1em;
-    font-weight: 500;
-    font-family: inherit;
-    background-color: #1a1a1a;
-    cursor: pointer;
-    transition: border-color 0.25s;
-  }
-  button:hover {
-    border-color: #646cff;
-  }
-  button:focus,
-  button:focus-visible {
-    outline: 4px auto -webkit-focus-ring-color;
-  }
-
-  @media (prefers-color-scheme: light) {
-    :root {
-      color: #213547;
-      background-color: #ffffff;
-    }
-    a:hover {
-      color: #747bff;
-    }
-    button {
-      background-color: #f9f9f9;
-    }
+    background-color: var(--color-background);
+    color: var(--color-foreground);
   }
 }
