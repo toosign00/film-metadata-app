@@ -1,7 +1,7 @@
 'use client';
 
 import { zodResolver } from '@hookform/resolvers/zod';
-import { useMemo } from 'react';
+import { useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
 import { Button } from '@/components/ui/Button';
 import type { MetadataSettings } from '@/types/metadata.types';
@@ -23,8 +23,6 @@ export const MetadataSettingsForm = ({
   goToStep,
   onProcessFiles,
 }: MetadataSettingsProps) => {
-  const defaultValues = useMemo<MetadataSettings>(() => settings, [settings]);
-
   const {
     control,
     register,
@@ -33,16 +31,26 @@ export const MetadataSettingsForm = ({
     watch,
   } = useForm<MetadataSettings>({
     resolver: zodResolver(metadataSettingsSchema),
-    defaultValues,
+    defaultValues: settings,
     mode: 'onBlur',
   });
 
-  // store 동기화: 폼 값 변화 시 store에 반영 (현재 onSettingsChange API 유지)
-  watch((value, { name }) => {
-    if (!name) return;
-    const fieldName = name as keyof MetadataSettings;
-    onSettingsChange(fieldName, value[fieldName] as string | Date);
-  });
+  const debounceRef = useRef<ReturnType<typeof setTimeout>>(null);
+
+  useEffect(() => {
+    const subscription = watch((value, { name }) => {
+      if (!name) return;
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+      debounceRef.current = setTimeout(() => {
+        const fieldName = name as keyof MetadataSettings;
+        onSettingsChange(fieldName, value[fieldName] as string | Date);
+      }, 300);
+    });
+    return () => {
+      subscription.unsubscribe();
+      if (debounceRef.current) clearTimeout(debounceRef.current);
+    };
+  }, [watch, onSettingsChange]);
 
   if (activeStep !== 2) {
     return null;
