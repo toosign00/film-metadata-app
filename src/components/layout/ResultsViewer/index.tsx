@@ -1,6 +1,7 @@
 'use client';
 
 import { Download, Image } from 'lucide-react';
+import { ErrorDisplay } from '@/components/layout/ErrorDisplay';
 import { Button } from '@/components/ui/Button';
 import { ImageCard } from '@/components/ui/ImageCard';
 import { ProgressBar } from '@/components/ui/ProgressBar';
@@ -12,6 +13,7 @@ export const ResultsViewer = ({
   activeStep,
   resultRef,
   resultImages,
+  errors,
   processing,
   zipProgress,
   setZipProgress,
@@ -67,6 +69,8 @@ export const ResultsViewer = ({
 
         {/* 압축 진행 상태 표시 */}
         {processing && <ProgressBar progress={zipProgress} label='ZIP 파일 생성 중' />}
+
+        <ErrorDisplay errors={errors} />
 
         {resultImages.length > 0 ? (
           <div className='grid grid-cols-2 gap-3 sm:grid-cols-3 md:gap-4 lg:grid-cols-4'>
