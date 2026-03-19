@@ -21,7 +21,7 @@ export const FilmSection = ({ register, errors }: FilmSectionProps) => {
           type='text'
           id='filmInfo'
           {...register('filmInfo')}
-          placeholder='예: Kodak Portra 400, Fuji Superia 200'
+          placeholder='예: Kodak Portra 400'
           className='w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
           aria-describedby='filmInfo-help filmInfo-error'
           aria-required='true'
@@ -47,7 +47,7 @@ export const FilmSection = ({ register, errors }: FilmSectionProps) => {
           type='text'
           id='isoValue'
           {...register('isoValue')}
-          placeholder='예: 100, 200, 400, 800'
+          placeholder='예: 400'
           className='w-full rounded-lg border border-gray-700 bg-gray-800 px-4 py-2.5 text-gray-200 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500'
           aria-describedby='isoValue-help isoValue-error'
           aria-required='true'

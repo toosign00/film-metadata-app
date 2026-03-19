@@ -12,7 +12,7 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, forwa
     <div
       role='button'
       tabIndex={0}
-      className={`ue-500 relative w-full cursor-pointer rounded-lg border border-gray-700 bg-gray-800 py-2.5 pr-10 pl-4 text-left text-gray-200 shadow-sm transition-colors transition-colors hover:border-gray-600 hover:border-gray-600 ${disabled ? 'pointer-events-none opacity-50' : ''}`}
+      className={`ue-500 relative w-full cursor-pointer rounded-lg border border-gray-700 bg-gray-800 py-2.5 pr-10 pl-4 text-left text-gray-200 shadow-sm transition-colors hover:border-gray-600 ${disabled ? 'pointer-events-none opacity-50' : ''}`}
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {

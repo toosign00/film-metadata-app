@@ -2,9 +2,7 @@ import type { HeaderProps } from '@/types/header.types';
 
 export const Header = ({ className }: HeaderProps) => {
   return (
-    <header
-      className={`border-gray-700 border-b bg-gradient-to-r from-gray-800 to-gray-900 p-6 text-white md:p-8 ${className || ''}`}
-    >
+    <header className={`border-gray-700 border-b p-6 text-white md:p-8 ${className || ''}`}>
       <div className='mx-auto max-w-6xl'>
         <h1 className='mb-2 font-bold text-2xl md:text-3xl'>필름 사진 메타데이터 설정 도구</h1>
         <p className='text-gray-300 md:text-lg'>
