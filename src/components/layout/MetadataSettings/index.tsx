@@ -86,17 +86,11 @@ export const MetadataSettingsForm = ({
 
   return (
     <section className='mb-8 transition-all' aria-labelledby='metadata-section'>
-      <div className='rounded-xl border border-border bg-surface p-5 shadow-md md:p-6'>
+      <div className='rounded-xl border border-border bg-surface px-6 py-5 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)]'>
         <h2
           id='metadata-section'
-          className='mb-4 flex items-center font-bold text-foreground text-xl'
+          className='mb-5 text-xs font-semibold uppercase tracking-[0.06em] text-foreground-secondary'
         >
-          <span
-            className='mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-sm text-primary-foreground'
-            aria-hidden='true'
-          >
-            2
-          </span>
           메타데이터 설정
         </h2>
 
