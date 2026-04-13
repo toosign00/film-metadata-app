@@ -95,7 +95,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#101828',
+  themeColor: '#f8f9fa',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -111,7 +111,7 @@ export default function RootLayout({
       <body className={pretendard.variable}>
         <ThemeProvider
           attribute='data-theme'
-          defaultTheme='dark'
+          defaultTheme='light'
           enableSystem
           disableTransitionOnChange
         >
