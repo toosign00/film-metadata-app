@@ -62,11 +62,11 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
   }, []);
 
   return (
-    <div className='flex flex-wrap items-center gap-2.5 border-border border-b pb-4'>
-      <span className='group/info relative mr-1 inline-flex items-center gap-1 text-foreground-muted text-sm'>
+    <div className='flex flex-wrap items-center gap-2 border-b border-border pb-4'>
+      <span className='group/info relative mr-1 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.04em] text-foreground-muted'>
         프리셋
         <Info size={14} className='cursor-help' />
-        <span className='pointer-events-none absolute top-full left-0 z-20 mt-2 w-64 rounded-lg border border-border bg-surface p-3 text-foreground-secondary text-sm leading-relaxed opacity-0 shadow-lg transition-opacity group-hover/info:opacity-100'>
+        <span className='pointer-events-none absolute top-full left-0 z-20 mt-2 w-64 rounded-lg border border-border bg-surface p-3 text-sm leading-relaxed text-foreground-secondary opacity-0 shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-opacity group-hover/info:opacity-100'>
           자주 쓰는 카메라·렌즈·필름 설정을 프리셋으로 저장해두면 다음에 바로 불러올 수 있습니다.
           JSON 파일로 내보내거나 가져올 수도 있습니다.
         </span>
@@ -77,7 +77,7 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
           <button
             type='button'
             onClick={() => handleLoad(preset)}
-            className='cursor-pointer rounded-full border border-border bg-surface-alt px-3.5 py-1.5 text-foreground-secondary text-sm transition-colors hover:border-primary hover:text-primary'
+            className='cursor-pointer rounded-full border border-border bg-surface-alt px-3 py-1 text-xs text-foreground-secondary transition-colors hover:border-primary hover:text-primary'
             title={`${preset.name} 불러오기`}
           >
             {preset.name}
@@ -94,7 +94,7 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
       ))}
 
       {saving ? (
-        <div className='inline-flex items-center gap-2 rounded-full border border-primary/40 bg-surface-alt py-1.5 pr-2 pl-3.5'>
+        <div className='inline-flex items-center gap-2 rounded-full border border-primary/30 bg-surface-alt py-1 pr-2 pl-3'>
           <input
             ref={inputRef}
             type='text'
@@ -114,7 +114,7 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
             type='button'
             onClick={handleSave}
             disabled={!presetName.trim()}
-            className='cursor-pointer rounded-full bg-primary px-3 py-1 font-medium text-primary-foreground text-xs transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-50'
+            className='cursor-pointer rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40'
           >
             저장
           </button>
@@ -137,7 +137,7 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
             setSaving(true);
             setTimeout(() => inputRef.current?.focus(), 0);
           }}
-          className='inline-flex cursor-pointer items-center gap-1 rounded-full border border-dashed border-border-hover px-3.5 py-1.5 text-foreground-muted text-sm transition-colors hover:border-primary hover:text-primary'
+          className='inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-dashed border-border-hover px-3 py-1 text-xs text-foreground-muted transition-colors hover:border-primary hover:text-primary'
           title='현재 설정을 프리셋으로 저장'
         >
           <Plus size={14} />새 프리셋
@@ -157,7 +157,7 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
       <button
         type='button'
         onClick={() => fileInputRef.current?.click()}
-        className='cursor-pointer text-foreground-muted text-sm transition-colors hover:text-foreground'
+        className='cursor-pointer text-xs text-foreground-muted transition-colors hover:text-foreground'
       >
         가져오기
       </button>
@@ -165,7 +165,7 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
         type='button'
         onClick={exportPresets}
         disabled={presets.length === 0}
-        className='cursor-pointer text-foreground-muted text-sm transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40'
+        className='cursor-pointer text-xs text-foreground-muted transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40'
       >
         내보내기
       </button>
