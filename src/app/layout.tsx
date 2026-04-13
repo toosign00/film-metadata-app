@@ -3,7 +3,6 @@ import localFont from 'next/font/local';
 import Script from 'next/script';
 import { ThemeProvider } from 'next-themes';
 import { Footer } from '@/components/layout/Footer';
-import { Header } from '@/components/layout/Header';
 import '@/styles/globals.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import '@/styles/datepicker.css';
@@ -116,10 +115,7 @@ export default function RootLayout({
           disableTransitionOnChange
         >
           <div className='flex min-h-screen w-full flex-col overflow-x-hidden bg-background text-foreground'>
-            <Header />
-            <main className='flex-1 overflow-auto p-6 md:p-8'>
-              <div className='mx-auto w-full max-w-6xl'>{children}</div>
-            </main>
+            {children}
             <Footer />
           </div>
         </ThemeProvider>

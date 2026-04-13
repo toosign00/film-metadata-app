@@ -1,0 +1,97 @@
+<h2>어떤 디자인 방향이 맞나요?</h2>
+<p class="subtitle">필름 사진 메타데이터 툴 — 전체 비주얼 스타일 방향 선택</p>
+
+<div class="cards">
+
+  <div class="card" data-choice="editorial" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#0a0a0a; padding:20px; font-family:'Georgia',serif; min-height:180px;">
+      <div style="border-bottom:1px solid #333; padding-bottom:10px; margin-bottom:14px;">
+        <span style="color:#c8b89a; font-size:11px; letter-spacing:0.15em; text-transform:uppercase;">Film Metadata Tool</span>
+      </div>
+      <div style="color:#f0ede8; font-size:22px; font-weight:300; letter-spacing:-0.5px; line-height:1.2; margin-bottom:8px;">필름 사진<br>메타데이터 설정</div>
+      <div style="display:flex; gap:8px; margin-top:16px;">
+        <div style="width:60px; height:40px; background:#1a1a1a; border:1px solid #2a2a2a; border-radius:3px;"></div>
+        <div style="width:60px; height:40px; background:#1a1a1a; border:1px solid #2a2a2a; border-radius:3px;"></div>
+        <div style="flex:1; height:40px; background:#c8b89a; border-radius:3px;"></div>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Editorial / Dark Luxury</h3>
+      <p>오프화이트 & 웜 베이지 액센트. 세리프 혼용, 넓은 여백. 고급 사진 잡지 감성. 앰버 대신 크림/세피아 톤.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="minimal" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#f7f6f4; padding:20px; font-family:system-ui,sans-serif; min-height:180px;">
+      <div style="margin-bottom:16px;">
+        <span style="color:#6b6860; font-size:11px; letter-spacing:0.12em; text-transform:uppercase; font-weight:500;">Film Metadata</span>
+      </div>
+      <div style="color:#1a1917; font-size:20px; font-weight:500; letter-spacing:-0.3px; margin-bottom:12px;">메타데이터 설정</div>
+      <div style="background:#fff; border:1px solid #e5e3df; border-radius:6px; padding:10px 12px; margin-bottom:8px;">
+        <div style="color:#a0998e; font-size:10px; margin-bottom:3px;">카메라 제조사</div>
+        <div style="color:#1a1917; font-size:13px;">Nikon FM2</div>
+      </div>
+      <div style="background:#1a1917; border-radius:6px; padding:8px 12px; display:inline-block;">
+        <span style="color:#fff; font-size:12px; font-weight:500;">설정 완료 →</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Minimal / Clean Light</h3>
+      <p>화이트 베이스, 웜 그레이 서페이스. 다크 모드도 지원. Notion/Linear 감성. 군더더기 없이 기능 중심.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="darkroom" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#111318; padding:20px; font-family:system-ui,sans-serif; min-height:180px;">
+      <div style="display:flex; align-items:center; gap:8px; margin-bottom:16px;">
+        <div style="width:6px; height:6px; border-radius:50%; background:#4ade80;"></div>
+        <span style="color:#6b7280; font-size:11px; letter-spacing:0.08em;">FILM METADATA TOOL</span>
+      </div>
+      <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:12px;">
+        <div style="background:#1c2028; border:1px solid #2d3340; border-radius:6px; padding:8px;">
+          <div style="color:#6b7280; font-size:10px; margin-bottom:2px;">CAMERA</div>
+          <div style="color:#e2e8f0; font-size:12px;">Nikon FM2</div>
+        </div>
+        <div style="background:#1c2028; border:1px solid #2d3340; border-radius:6px; padding:8px;">
+          <div style="color:#6b7280; font-size:10px; margin-bottom:2px;">FILM</div>
+          <div style="color:#e2e8f0; font-size:12px;">Kodak 400</div>
+        </div>
+      </div>
+      <div style="background:#4ade80; border-radius:5px; padding:7px 12px; display:inline-block;">
+        <span style="color:#0a0f0a; font-size:12px; font-weight:600;">Process Files</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Developer Tool / Dark Pro</h3>
+      <p>딥 네이비/차콜 배경. 그린 액센트. 개발자 도구 같은 밀도감. Vercel/Linear 다크모드 감성.</p>
+    </div>
+  </div>
+
+  <div class="card" data-choice="analog" onclick="toggleSelect(this)">
+    <div class="card-image" style="background:#1c1814; padding:20px; font-family:system-ui,sans-serif; min-height:180px;">
+      <div style="border-bottom:1px solid #2e2820; padding-bottom:10px; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;">
+        <span style="color:#a89070; font-size:12px; font-weight:600; letter-spacing:0.05em;">FILM META</span>
+        <div style="width:24px; height:24px; border-radius:50%; border:1.5px solid #a89070; display:flex; align-items:center; justify-content:center;">
+          <div style="width:8px; height:8px; border-radius:50%; background:#a89070;"></div>
+        </div>
+      </div>
+      <div style="color:#e8ddd0; font-size:16px; font-weight:500; margin-bottom:12px;">메타데이터 설정</div>
+      <div style="background:#251f1a; border:1px solid #3d3328; border-radius:8px; padding:10px; margin-bottom:10px;">
+        <div style="color:#8a7a68; font-size:10px; margin-bottom:4px;">FILM STOCK</div>
+        <div style="color:#e8ddd0; font-size:13px;">Kodak Portra 400</div>
+      </div>
+      <div style="background:linear-gradient(135deg,#b8924a,#a07840); border-radius:6px; padding:7px 12px; display:inline-block;">
+        <span style="color:#1c1814; font-size:12px; font-weight:600;">처리하기</span>
+      </div>
+    </div>
+    <div class="card-body">
+      <h3>Analog Warm / Film Tones</h3>
+      <p>다크 브라운 & 앰버 골드. 현재 방향과 유사하지만 훨씬 세련되게. 필름 카메라 감성을 살리되 고급스럽게.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="section" style="margin-top:24px; padding:16px; background:rgba(255,255,255,0.04); border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
+  <p style="margin:0; font-size:13px; opacity:0.7;">💡 현재 디자인은 <strong>Analog Warm</strong>에 가깝지만 — 구현이 너무 평범하고 AI스럽다는 문제가 있어요. 어느 방향으로 바꾸고 싶으신가요?</p>
+</div>

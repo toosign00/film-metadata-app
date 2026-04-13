@@ -1,41 +1,145 @@
 'use client';
 
-import { Moon, Sun } from 'lucide-react';
+import { Check, Moon, RotateCcw, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import type { HeaderProps } from '@/types/header.types';
 
-export const Header = ({ className }: HeaderProps) => {
+const steps = [
+  { number: 1, label: '파일 선택' },
+  { number: 2, label: '메타데이터 설정' },
+  { number: 3, label: '결과 확인' },
+];
+
+export const Header = ({
+  className,
+  activeStep,
+  filesCount = 0,
+  resultsCount = 0,
+  processing = false,
+  goToStep,
+  resetForm,
+}: HeaderProps) => {
   const [mounted, setMounted] = useState(false);
+  const [confirmReset, setConfirmReset] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  const isStepEnabled = (stepNumber: number) => {
+    if (processing) return false;
+    if (stepNumber === 1) return true;
+    if (stepNumber === 2) return filesCount > 0;
+    if (stepNumber === 3) return resultsCount > 0;
+    return false;
+  };
+
+  const isStepCompleted = (stepNumber: number) => {
+    if (activeStep === undefined) return false;
+    return stepNumber < activeStep;
+  };
+
+  const handleResetClick = () => {
+    if (confirmReset) {
+      resetForm?.();
+      setConfirmReset(false);
+    } else {
+      setConfirmReset(true);
+      setTimeout(() => setConfirmReset(false), 3000);
+    }
+  };
+
+  const showStepper = activeStep !== undefined && goToStep !== undefined;
+
   return (
-    <header className={`border-border border-b p-6 md:p-8 ${className || ''}`}>
-      <div className='mx-auto flex max-w-6xl items-start justify-between'>
-        <div>
-          <h1 className='mb-2 font-bold text-2xl text-foreground md:text-3xl'>
-            필름 사진 메타데이터 설정 도구
-          </h1>
-          <p className='text-foreground-secondary md:text-lg'>
-            스캔된 필름 사진에 날짜 및 시간, 카메라, 렌즈, 필름 정보 등의 메타데이터를 일괄
-            설정합니다.
-          </p>
+    <header className={`border-b border-border bg-surface ${className || ''}`}>
+      <div className='mx-auto max-w-6xl px-6 py-6 md:px-8'>
+        <div className='flex items-start justify-between'>
+          <div>
+            <h1 className='text-[22px] font-bold tracking-[-0.6px] text-foreground leading-tight'>
+              필름 사진 메타데이터 설정 도구
+            </h1>
+            <p className='mt-1 text-sm text-foreground-muted'>
+              스캔된 필름 사진에 EXIF 메타데이터를 일괄 설정합니다
+            </p>
+          </div>
+          <div className='ml-4 flex shrink-0 items-center gap-2 mt-1'>
+            {showStepper && resetForm && (
+              <button
+                type='button'
+                onClick={handleResetClick}
+                disabled={processing || filesCount === 0}
+                className='cursor-pointer rounded-md p-1.5 text-foreground-muted transition-colors hover:bg-surface-alt hover:text-destructive disabled:cursor-not-allowed disabled:opacity-40'
+                aria-label={confirmReset ? '한 번 더 클릭하면 초기화됩니다' : '모두 초기화'}
+                title={confirmReset ? '한 번 더 클릭하면 초기화됩니다' : '모두 초기화'}
+              >
+                <RotateCcw size={16} className={confirmReset ? 'text-destructive' : ''} />
+              </button>
+            )}
+            {mounted ? (
+              <button
+                type='button'
+                onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
+                className='cursor-pointer rounded-md border border-border p-1.5 text-foreground-muted transition-colors hover:bg-surface-alt hover:text-foreground'
+                aria-label={resolvedTheme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
+              >
+                {resolvedTheme === 'dark' ? <Sun size={16} /> : <Moon size={16} />}
+              </button>
+            ) : (
+              <div className='h-7.5 w-7.5 shrink-0' />
+            )}
+          </div>
         </div>
-        {mounted ? (
-          <button
-            type='button'
-            onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-            className='ml-4 shrink-0 rounded-lg p-2 text-foreground-muted transition-colors hover:bg-surface hover:text-foreground cursor-pointer'
-            aria-label={resolvedTheme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
-          >
-            {resolvedTheme === 'dark' ? <Sun size={20} /> : <Moon size={20} />}
-          </button>
-        ) : (
-          <div className='ml-4 h-9 w-9 shrink-0' />
+
+        {showStepper && (
+          <div className='mt-6 flex items-center'>
+            {steps.map((step, index) => {
+              const enabled = isStepEnabled(step.number);
+              const completed = isStepCompleted(step.number);
+              const active = activeStep === step.number;
+
+              return (
+                <div key={step.number} className='flex items-center'>
+                  <button
+                    type='button'
+                    onClick={() => enabled && goToStep(step.number)}
+                    disabled={!enabled}
+                    className={`flex items-center gap-2 ${enabled ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+                    aria-current={active ? 'step' : undefined}
+                  >
+                    <div
+                      className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-bold transition-colors ${
+                        completed
+                          ? 'bg-primary text-primary-foreground'
+                          : active
+                            ? 'bg-foreground text-surface'
+                            : 'border border-border-hover text-foreground-muted'
+                      }`}
+                    >
+                      {completed ? <Check size={12} strokeWidth={3} /> : step.number}
+                    </div>
+                    <span
+                      className={`hidden text-sm md:block ${
+                        active
+                          ? 'font-semibold text-foreground'
+                          : completed
+                            ? 'text-foreground-secondary'
+                            : 'text-foreground-muted'
+                      }`}
+                    >
+                      {step.label}
+                    </span>
+                  </button>
+
+                  {index < steps.length - 1 && (
+                    <div className='mx-3 h-px w-10 bg-border md:w-16' />
+                  )}
+                </div>
+              );
+            })}
+          </div>
         )}
       </div>
     </header>

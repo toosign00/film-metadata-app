@@ -1,0 +1,34 @@
+<h2>다크모드를 어떻게 할까요?</h2>
+<p class="subtitle">현재 앱은 다크모드가 기본입니다 — 리디자인 후 어떤 방식으로 운영할지 결정</p>
+
+<div class="options">
+
+  <div class="option" data-choice="light-primary" onclick="toggleSelect(this)">
+    <div class="letter">A</div>
+    <div class="content">
+      <h3>라이트 모드 기본 + 다크모드 지원 유지</h3>
+      <p>Cool Clean 라이트가 메인. 다크모드는 system preference 따라 자동 전환 + 수동 토글 모두 지원. 현재 토글 버튼 유지.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="light-only" onclick="toggleSelect(this)">
+    <div class="letter">B</div>
+    <div class="content">
+      <h3>라이트 모드만</h3>
+      <p>다크모드 완전 제거. 심플하게 한 가지만 완성도 있게. 헤더의 테마 토글 버튼도 제거. 구현 범위 절반으로 줄어듦.</p>
+    </div>
+  </div>
+
+  <div class="option" data-choice="dark-primary" onclick="toggleSelect(this)">
+    <div class="letter">C</div>
+    <div class="content">
+      <h3>다크모드 기본 유지 + 라이트모드 개선</h3>
+      <p>현재처럼 다크가 기본. 라이트도 Cool Clean으로 개선. 필름 현상실 감성이 다크와 더 잘 어울린다는 의견도 있음.</p>
+    </div>
+  </div>
+
+</div>
+
+<div class="section" style="margin-top:20px; padding:14px; background:rgba(255,255,255,0.04); border-radius:8px; border:1px solid rgba(255,255,255,0.08);">
+  <p style="margin:0; font-size:12px; opacity:0.65;">💡 Minimal/Clean Light 방향이면 A가 자연스럽습니다. 다만 현재 다크모드 코드가 잘 구현되어 있어서 버리기엔 아깝기도 해요.</p>
+</div>

@@ -1,33 +1,97 @@
-import type { Metadata } from 'next';
-import { WizardClient } from '@/components/pages/WizardClient';
-import { ToasterClient } from '@/components/ui/Toaster';
+'use client';
 
-export const metadata: Metadata = {
-  description: '필름 사진의 EXIF 메타데이터를 손쉽게 편집, 다운로드할 수 있는 웹 도구',
-  keywords: [
-    'EXIF 메타데이터 설정',
-    '카메라 정보 입력',
-    '렌즈 정보 편집',
-    '필름 종류 설정',
-    '촬영 정보 추가',
-    '메타데이터 일괄 편집',
-    '날짜 시간 설정',
-    'ISO 값 입력',
-    '메타데이터 적용 완료',
-    '필름 사진 다운로드',
-    'EXIF 포함 이미지',
-    'ZIP 일괄 다운로드',
-  ],
-  alternates: {
-    canonical: '/',
-  },
-};
+import { useEffect, useRef } from 'react';
+import { Header } from '@/components/layout/Header';
+import { FileSelection } from '@/components/layout/FileSelection';
+import { MetadataSettingsForm } from '@/components/layout/MetadataSettings';
+import { ResultsViewer } from '@/components/layout/ResultsViewer';
+import { useAppReducer } from '@/hooks/useAppReducer';
+import type { MetadataSettings } from '@/types/metadata.types';
 
-export default function HomePage() {
+export default function Home() {
+  const {
+    state,
+    setFiles,
+    setSettings,
+    goToStep,
+    setZipProgress,
+    setProcessing,
+    resetAll,
+    processFiles,
+  } = useAppReducer();
+
+  const formRef = useRef<HTMLFormElement>(null);
+  const resultRef = useRef<HTMLElement>(null);
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    if (state.files.length === 0) return;
+    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
+      e.preventDefault();
+    };
+    window.addEventListener('beforeunload', handleBeforeUnload);
+    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+  }, [state.files.length]);
+
+  const handleFileSelect = (files: File[]) => setFiles(files);
+
+  const handleSettingsChange = (name: string, value: string | Date) => {
+    setSettings((prev) => ({ ...prev, [name]: value }) as MetadataSettings);
+  };
+
+  const handleProcessFiles = async () => {
+    const results = await processFiles();
+    if (results.images.length > 0 || results.errors.length > 0) goToStep(3);
+  };
+
   return (
     <>
-      <WizardClient />
-      <ToasterClient />
+      <Header
+        activeStep={state.activeStep}
+        filesCount={state.files.length}
+        resultsCount={state.resultImages.length}
+        processing={state.processing}
+        goToStep={goToStep}
+        resetForm={resetAll}
+      />
+      <main className='flex-1 overflow-auto p-6 md:p-8'>
+        <div className='mx-auto w-full max-w-6xl'>
+          {state.activeStep === 1 && (
+            <FileSelection
+              activeStep={1}
+              onFileSelect={handleFileSelect}
+              sortedFiles={state.sortedFiles}
+              goToStep={goToStep}
+            />
+          )}
+          {state.activeStep === 2 && (
+            <MetadataSettingsForm
+              activeStep={2}
+              settings={state.settings}
+              onSettingsChange={handleSettingsChange}
+              sortedFiles={state.sortedFiles}
+              processing={state.processing}
+              completed={state.completed}
+              formRef={formRef}
+              goToStep={goToStep}
+              onProcessFiles={handleProcessFiles}
+            />
+          )}
+          {state.activeStep === 3 && (
+            <ResultsViewer
+              activeStep={3}
+              resultRef={resultRef}
+              resultImages={state.resultImages}
+              errors={state.errors}
+              processing={state.processing}
+              zipProgress={state.zipProgress}
+              setZipProgress={setZipProgress}
+              setProcessing={setProcessing}
+              goToStep={goToStep}
+            />
+          )}
+        </div>
+      </main>
     </>
   );
 }
