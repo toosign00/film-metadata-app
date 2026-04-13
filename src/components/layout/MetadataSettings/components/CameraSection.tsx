@@ -8,7 +8,7 @@ export const CameraSection = ({ register, errors }: CameraSectionProps) => {
     >
       <h3
         id='camera-heading'
-        className='mb-4 text-[11px] font-semibold uppercase tracking-[0.06em] text-foreground-muted'
+        className='mb-4 text-sm font-semibold text-foreground'
       >
         카메라 정보
       </h3>
@@ -24,7 +24,7 @@ export const CameraSection = ({ register, errors }: CameraSectionProps) => {
           type='text'
           id='cameraMake'
           {...register('cameraMake')}
-          className='w-full bg-transparent py-1.5 text-sm text-foreground placeholder:text-foreground-muted focus:outline-none'
+          className='w-full rounded-md border border-border bg-surface-alt px-3 py-2 text-sm text-foreground placeholder:text-foreground-muted transition-colors focus:border-primary focus:outline-none'
           placeholder='예: Nikon'
           aria-describedby='cameraMake-help cameraMake-error'
           aria-invalid={!!errors.cameraMake}
@@ -53,7 +53,7 @@ export const CameraSection = ({ register, errors }: CameraSectionProps) => {
           type='text'
           id='cameraModel'
           {...register('cameraModel')}
-          className='w-full bg-transparent py-1.5 text-sm text-foreground placeholder:text-foreground-muted focus:outline-none'
+          className='w-full rounded-md border border-border bg-surface-alt px-3 py-2 text-sm text-foreground placeholder:text-foreground-muted transition-colors focus:border-primary focus:outline-none'
           placeholder='예: FM2'
           aria-describedby='cameraModel-help cameraModel-error'
           aria-invalid={!!errors.cameraModel}

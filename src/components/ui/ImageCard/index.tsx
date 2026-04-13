@@ -43,7 +43,7 @@ export const ImageCard = ({ image, onDownload, processing = false }: ImageCardPr
               className={`mb-4 translate-y-2 transform rounded-lg px-4 py-1.5 text-sm font-semibold transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:translate-y-0 ${
                 processing
                   ? 'cursor-not-allowed bg-surface/60 text-foreground-muted'
-                  : 'cursor-pointer bg-white text-foreground hover:bg-surface'
+                  : 'cursor-pointer bg-surface text-foreground hover:bg-surface-alt'
               }`}
               aria-label={`${image.name} 다운로드`}
             >

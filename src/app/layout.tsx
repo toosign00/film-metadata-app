@@ -3,6 +3,7 @@ import localFont from 'next/font/local';
 import Script from 'next/script';
 import { ThemeProvider } from 'next-themes';
 import { Footer } from '@/components/layout/Footer';
+import { ToasterClient } from '@/components/ui/Toaster';
 import '@/styles/globals.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import '@/styles/datepicker.css';
@@ -110,13 +111,14 @@ export default function RootLayout({
       <body className={pretendard.variable}>
         <ThemeProvider
           attribute='data-theme'
-          defaultTheme='light'
+          defaultTheme='system'
           enableSystem
           disableTransitionOnChange
         >
           <div className='flex min-h-screen w-full flex-col overflow-x-hidden bg-background text-foreground'>
             {children}
             <Footer />
+            <ToasterClient />
           </div>
         </ThemeProvider>
         <Analytics />

@@ -1,6 +1,6 @@
 'use client';
 
-import { Check, Moon, RotateCcw, Sun } from 'lucide-react';
+import { Check, Moon, Sun } from 'lucide-react';
 import { useTheme } from 'next-themes';
 import { useEffect, useState } from 'react';
 import type { HeaderProps } from '@/types/header.types';
@@ -18,10 +18,8 @@ export const Header = ({
   resultsCount = 0,
   processing = false,
   goToStep,
-  resetForm,
 }: HeaderProps) => {
   const [mounted, setMounted] = useState(false);
-  const [confirmReset, setConfirmReset] = useState(false);
   const { resolvedTheme, setTheme } = useTheme();
 
   useEffect(() => {
@@ -41,16 +39,6 @@ export const Header = ({
     return stepNumber < activeStep;
   };
 
-  const handleResetClick = () => {
-    if (confirmReset) {
-      resetForm?.();
-      setConfirmReset(false);
-    } else {
-      setConfirmReset(true);
-      setTimeout(() => setConfirmReset(false), 3000);
-    }
-  };
-
   const showStepper = activeStep !== undefined && goToStep !== undefined;
 
   return (
@@ -66,18 +54,6 @@ export const Header = ({
             </p>
           </div>
           <div className='ml-4 flex shrink-0 items-center gap-2 mt-1'>
-            {showStepper && resetForm && (
-              <button
-                type='button'
-                onClick={handleResetClick}
-                disabled={processing || filesCount === 0}
-                className='cursor-pointer rounded-md p-1.5 text-foreground-muted transition-colors hover:bg-surface-alt hover:text-destructive disabled:cursor-not-allowed disabled:opacity-40'
-                aria-label={confirmReset ? '한 번 더 클릭하면 초기화됩니다' : '모두 초기화'}
-                title={confirmReset ? '한 번 더 클릭하면 초기화됩니다' : '모두 초기화'}
-              >
-                <RotateCcw size={16} className={confirmReset ? 'text-destructive' : ''} />
-              </button>
-            )}
             {mounted ? (
               <button
                 type='button'
@@ -101,12 +77,12 @@ export const Header = ({
               const active = activeStep === step.number;
 
               return (
-                <div key={step.number} className='flex items-center'>
+                <div key={step.number} className={`flex items-center ${index < steps.length - 1 ? 'flex-1' : ''}`}>
                   <button
                     type='button'
                     onClick={() => enabled && goToStep(step.number)}
                     disabled={!enabled}
-                    className={`flex items-center gap-2 ${enabled ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+                    className={`flex shrink-0 items-center gap-2 ${enabled ? 'cursor-pointer' : 'cursor-not-allowed'}`}
                     aria-current={active ? 'step' : undefined}
                   >
                     <div
@@ -134,7 +110,7 @@ export const Header = ({
                   </button>
 
                   {index < steps.length - 1 && (
-                    <div className='mx-3 h-px w-10 bg-border md:w-16' />
+                    <div className='mx-4 h-px flex-1 bg-border' />
                   )}
                 </div>
               );

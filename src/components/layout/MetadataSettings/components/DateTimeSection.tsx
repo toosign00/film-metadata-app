@@ -10,7 +10,7 @@ export const DateTimeSection = ({ control, errors }: DateTimeSectionProps) => {
     >
       <h3
         id='date-time-heading'
-        className='mb-4 text-[11px] font-semibold uppercase tracking-[0.06em] text-foreground-muted'
+        className='mb-4 text-sm font-semibold text-foreground'
       >
         촬영 날짜/시간
       </h3>

@@ -8,7 +8,7 @@ export const FilmSection = ({ register, errors }: FilmSectionProps) => {
     >
       <h3
         id='film-heading'
-        className='mb-4 text-[11px] font-semibold uppercase tracking-[0.06em] text-foreground-muted'
+        className='mb-4 text-sm font-semibold text-foreground'
       >
         필름 정보
       </h3>
@@ -25,7 +25,7 @@ export const FilmSection = ({ register, errors }: FilmSectionProps) => {
           id='filmInfo'
           {...register('filmInfo')}
           placeholder='예: Kodak Portra 400'
-          className='w-full bg-transparent py-1.5 text-sm text-foreground placeholder:text-foreground-muted focus:outline-none'
+          className='w-full rounded-md border border-border bg-surface-alt px-3 py-2 text-sm text-foreground placeholder:text-foreground-muted transition-colors focus:border-primary focus:outline-none'
           aria-describedby='filmInfo-help filmInfo-error'
           aria-invalid={!!errors.filmInfo}
         />
@@ -53,7 +53,7 @@ export const FilmSection = ({ register, errors }: FilmSectionProps) => {
           id='isoValue'
           {...register('isoValue')}
           placeholder='예: 400'
-          className='w-full bg-transparent py-1.5 text-sm text-foreground placeholder:text-foreground-muted focus:outline-none'
+          className='w-full rounded-md border border-border bg-surface-alt px-3 py-2 text-sm text-foreground placeholder:text-foreground-muted transition-colors focus:border-primary focus:outline-none'
           aria-describedby='isoValue-help isoValue-error'
           aria-invalid={!!errors.isoValue}
         />

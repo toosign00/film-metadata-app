@@ -5,5 +5,4 @@ export interface HeaderProps {
   resultsCount?: number;
   processing?: boolean;
   goToStep?: (step: number) => void;
-  resetForm?: () => void;
 }

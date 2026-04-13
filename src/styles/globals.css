@@ -64,19 +64,19 @@
 }
 
 [data-theme="dark"] {
-  --background: #111827;
-  --surface: #1f2937;
-  --surface-alt: #111827;
-  --input: #1f2937;
-  --muted: #374151;
-  --overlay: rgba(0, 0, 0, 0.6);
+  --background: #0d1117;
+  --surface: #161b22;
+  --surface-alt: #21262d;
+  --input: #161b22;
+  --muted: #21262d;
+  --overlay: rgba(0, 0, 0, 0.7);
 
-  --foreground: #f9fafb;
-  --foreground-secondary: #e5e7eb;
-  --foreground-muted: #9ca3af;
+  --foreground: #f0f6fc;
+  --foreground-secondary: #c9d1d9;
+  --foreground-muted: #8b949e;
 
-  --border: #374151;
-  --border-hover: #4b5563;
+  --border: #30363d;
+  --border-hover: #484f58;
 
   --primary: #2563eb;
   --primary-hover: #1d4ed8;

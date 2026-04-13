@@ -8,7 +8,7 @@ export const LensSection = ({ register, errors }: LensSectionProps) => {
     >
       <h3
         id='lens-info-heading'
-        className='mb-4 text-[11px] font-semibold uppercase tracking-[0.06em] text-foreground-muted'
+        className='mb-4 text-sm font-semibold text-foreground'
       >
         렌즈 정보
       </h3>
@@ -25,7 +25,7 @@ export const LensSection = ({ register, errors }: LensSectionProps) => {
           id='lens'
           {...register('lens')}
           placeholder='예: Canon FD'
-          className='w-full bg-transparent py-1.5 text-sm text-foreground placeholder:text-foreground-muted focus:outline-none'
+          className='w-full rounded-md border border-border bg-surface-alt px-3 py-2 text-sm text-foreground placeholder:text-foreground-muted transition-colors focus:border-primary focus:outline-none'
           aria-describedby='lens-help lens-error'
           aria-invalid={!!errors.lens}
         />
@@ -56,7 +56,7 @@ export const LensSection = ({ register, errors }: LensSectionProps) => {
               id='focalLength'
               {...register('focalLength')}
               placeholder='예: 50'
-              className='w-full bg-transparent py-1.5 pr-8 text-sm text-foreground placeholder:text-foreground-muted focus:outline-none'
+              className='w-full rounded-md border border-border bg-surface-alt px-3 py-2 pr-8 text-sm text-foreground placeholder:text-foreground-muted transition-colors focus:border-primary focus:outline-none'
               aria-describedby='focalLength-help focalLength-error'
               aria-invalid={!!errors.focalLength}
             />
@@ -79,7 +79,7 @@ export const LensSection = ({ register, errors }: LensSectionProps) => {
             조리개
           </label>
           <div className='relative'>
-            <span className='pointer-events-none absolute top-1/2 left-0 -translate-y-1/2 text-xs text-foreground-muted'>
+            <span className='pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-xs text-foreground-muted'>
               f/
             </span>
             <input
@@ -88,7 +88,7 @@ export const LensSection = ({ register, errors }: LensSectionProps) => {
               id='aperture'
               {...register('aperture')}
               placeholder='예: 1.8'
-              className='w-full bg-transparent py-1.5 pl-5 text-sm text-foreground placeholder:text-foreground-muted focus:outline-none'
+              className='w-full rounded-md border border-border bg-surface-alt px-3 py-2 pl-7 text-sm text-foreground placeholder:text-foreground-muted transition-colors focus:border-primary focus:outline-none'
               aria-describedby='aperture-help aperture-error'
               aria-invalid={!!errors.aperture}
             />

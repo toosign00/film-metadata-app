@@ -52,7 +52,6 @@ export default function Home() {
         resultsCount={state.resultImages.length}
         processing={state.processing}
         goToStep={goToStep}
-        resetForm={resetAll}
       />
       <main className='flex-1 overflow-auto p-6 md:p-8'>
         <div className='mx-auto w-full max-w-6xl'>
