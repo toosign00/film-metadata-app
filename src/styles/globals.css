@@ -33,19 +33,19 @@
 }
 
 :root {
-  --background: #f8f9fa;
+  --background: #fafafa;
   --surface: #ffffff;
-  --surface-alt: #f3f4f6;
+  --surface-alt: #f0f0f0;
   --input: #ffffff;
-  --muted: #f3f4f6;
-  --overlay: rgba(0, 0, 0, 0.4);
+  --muted: #f0f0f0;
+  --overlay: rgba(16, 16, 16, 0.48);
 
-  --foreground: #111827;
-  --foreground-secondary: #374151;
-  --foreground-muted: #6b7280;
+  --foreground: #101010;
+  --foreground-secondary: #4a4a4a;
+  --foreground-muted: #7a7a7a;
 
-  --border: #e5e7eb;
-  --border-hover: #d1d5db;
+  --border: #e5e5e5;
+  --border-hover: #cccccc;
 
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
@@ -55,43 +55,43 @@
   --destructive: #dc2626;
   --destructive-hover: #b91c1c;
   --destructive-foreground: #ffffff;
-  --destructive-bg: rgba(220, 38, 38, 0.08);
-  --destructive-border: #fca5a5;
+  --destructive-bg: rgba(220, 38, 38, 0.09);
+  --destructive-border: #f87171;
   --destructive-muted: #ef4444;
 
   --ring: #2563eb;
-  --ring-offset: #f8f9fa;
+  --ring-offset: #fafafa;
 }
 
 [data-theme="dark"] {
-  --background: #0d1117;
-  --surface: #161b22;
-  --surface-alt: #21262d;
-  --input: #161b22;
-  --muted: #21262d;
-  --overlay: rgba(0, 0, 0, 0.7);
+  --background: #101010;
+  --surface: #181818;
+  --surface-alt: #242424;
+  --input: #181818;
+  --muted: #1c1c1c;
+  --overlay: rgba(16, 16, 16, 0.78);
 
-  --foreground: #f0f6fc;
-  --foreground-secondary: #c9d1d9;
-  --foreground-muted: #8b949e;
+  --foreground: #f5f5f5;
+  --foreground-secondary: #d6d6d6;
+  --foreground-muted: #a8a8a8;
 
-  --border: #30363d;
-  --border-hover: #484f58;
+  --border: #2e2e2e;
+  --border-hover: #454545;
 
   --primary: #2563eb;
   --primary-hover: #1d4ed8;
   --primary-foreground: #ffffff;
   --primary-muted: #93c5fd;
 
-  --destructive: #dc2626;
-  --destructive-hover: #b91c1c;
+  --destructive: #ef4444;
+  --destructive-hover: #dc2626;
   --destructive-foreground: #ffffff;
-  --destructive-bg: rgba(220, 38, 38, 0.15);
+  --destructive-bg: rgba(239, 68, 68, 0.12);
   --destructive-border: #7f1d1d;
-  --destructive-muted: #f87171;
+  --destructive-muted: #fca5a5;
 
   --ring: #2563eb;
-  --ring-offset: #111827;
+  --ring-offset: #101010;
 }
 
 @layer base {

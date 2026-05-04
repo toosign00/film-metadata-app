@@ -42,7 +42,7 @@ export const Header = ({
   const showStepper = activeStep !== undefined && goToStep !== undefined;
 
   return (
-    <header className={`border-b border-border bg-surface ${className || ''}`}>
+    <header className={`border-b border-border bg-background ${className || ''}`}>
       <div className='mx-auto max-w-6xl px-6 py-6 md:px-8'>
         <div className='flex items-start justify-between'>
           <div>
@@ -77,7 +77,10 @@ export const Header = ({
               const active = activeStep === step.number;
 
               return (
-                <div key={step.number} className={`flex items-center ${index < steps.length - 1 ? 'flex-1' : ''}`}>
+                <div
+                  key={step.number}
+                  className={`flex items-center ${index < steps.length - 1 ? 'flex-1' : ''}`}
+                >
                   <button
                     type='button'
                     onClick={() => enabled && goToStep(step.number)}
@@ -109,9 +112,7 @@ export const Header = ({
                     </span>
                   </button>
 
-                  {index < steps.length - 1 && (
-                    <div className='mx-4 h-px flex-1 bg-border' />
-                  )}
+                  {index < steps.length - 1 && <div className='mx-4 h-px flex-1 bg-border' />}
                 </div>
               );
             })}
