@@ -3,7 +3,7 @@ import localFont from 'next/font/local';
 import Script from 'next/script';
 import { ThemeProvider } from 'next-themes';
 import { Footer } from '@/components/layout/Footer';
-import { Header } from '@/components/layout/Header';
+import { ToasterClient } from '@/components/ui/Toaster';
 import '@/styles/globals.css';
 import 'react-datepicker/dist/react-datepicker.css';
 import '@/styles/datepicker.css';
@@ -95,7 +95,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#101828',
+  themeColor: '#f8f9fa',
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -111,16 +111,14 @@ export default function RootLayout({
       <body className={pretendard.variable}>
         <ThemeProvider
           attribute='data-theme'
-          defaultTheme='dark'
+          defaultTheme='system'
           enableSystem
           disableTransitionOnChange
         >
           <div className='flex min-h-screen w-full flex-col overflow-x-hidden bg-background text-foreground'>
-            <Header />
-            <main className='flex-1 overflow-auto p-6 md:p-8'>
-              <div className='mx-auto w-full max-w-6xl'>{children}</div>
-            </main>
+            {children}
             <Footer />
+            <ToasterClient />
           </div>
         </ThemeProvider>
         <Analytics />

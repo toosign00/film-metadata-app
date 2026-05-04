@@ -13,23 +13,23 @@ export const Button = ({
   ...rest
 }: ButtonProps) => {
   const styles = {
-    base: 'cursor-pointer px-3 py-2 rounded-lg font-medium focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-ring focus:ring-offset-ring-offset transition-all',
-    primary: 'bg-primary text-primary-foreground hover:bg-primary-hover shadow-md',
-    secondary: 'bg-muted text-foreground hover:bg-border-hover shadow-md',
-    outlined:
-      'bg-transparent border border-border-hover text-foreground-secondary hover:bg-surface focus:ring-ring',
-    text: 'bg-transparent text-foreground-secondary hover:text-foreground hover:bg-surface focus:ring-ring',
-    disabled: 'opacity-50 cursor-not-allowed pointer-events-none',
+    base: 'inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset',
+    primary: 'bg-foreground text-surface hover:bg-foreground/90',
+    secondary: 'border border-border bg-surface text-foreground-secondary hover:bg-surface-alt',
+    outlined: 'border border-border bg-transparent text-foreground-secondary hover:bg-surface-alt',
+    text: 'bg-transparent text-foreground-secondary hover:bg-surface-alt hover:text-foreground',
+    disabled: 'opacity-40 cursor-not-allowed pointer-events-none',
     loading: 'cursor-wait',
   };
 
   const buttonClasses = `
     ${styles.base}
+    px-4 py-2.5 text-sm
     ${styles[variant]}
     ${disabled ? styles.disabled : ''}
     ${isLoading ? styles.loading : ''}
     ${className}
-  `;
+  `.trim();
 
   return (
     <button

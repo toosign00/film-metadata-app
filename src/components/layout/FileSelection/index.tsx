@@ -14,16 +14,16 @@ export const FileSelection = ({
   }
 
   return (
-    <section className='mb-8 transition-all' aria-labelledby='file-section'>
-      <div className='rounded-xl border border-border bg-surface p-5 shadow-md md:p-6'>
-        <h2 id='file-section' className='mb-4 flex items-center font-bold text-foreground text-xl'>
-          <span className='mr-2 flex h-6 w-6 items-center justify-center rounded-full bg-primary text-sm text-primary-foreground'>
-            1
-          </span>
+    <section className='py-6' aria-labelledby='file-section'>
+      <div className='rounded-xl border border-border bg-surface px-6 py-5 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)]'>
+        <h2
+          id='file-section'
+          className='mb-5 text-xs font-semibold uppercase tracking-[0.06em] text-foreground-secondary'
+        >
           이미지 파일 선택
         </h2>
 
-        <div className='flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0'>
+        <div className='flex flex-col gap-4 md:flex-row'>
           <div className='w-full md:w-1/2'>
             <DropZone onFileSelect={onFileSelect} filesCount={sortedFiles.length} />
           </div>
@@ -33,10 +33,10 @@ export const FileSelection = ({
               <FileList files={sortedFiles} />
             ) : (
               <div
-                className='flex h-full items-center justify-center rounded-lg border border-border bg-surface p-6 shadow-md'
+                className='flex h-full items-center justify-center rounded-xl border border-border bg-surface-alt p-6'
                 style={{ minHeight: '300px' }}
               >
-                <p className='text-center text-foreground-muted'>
+                <p className='text-center text-sm text-foreground-muted'>
                   파일을 선택하면 여기에 처리 순서가 표시됩니다
                 </p>
               </div>
@@ -44,7 +44,7 @@ export const FileSelection = ({
           </div>
         </div>
 
-        <div className='mt-6 flex justify-end'>
+        <div className='mt-5 flex justify-end'>
           <Button variant='primary' disabled={sortedFiles.length === 0} onClick={() => goToStep(2)}>
             다음 단계 &rarr;
           </Button>

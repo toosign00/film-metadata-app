@@ -45,7 +45,7 @@ export const ConfirmDialog = ({
               <button
                 type='button'
                 onClick={handleCancel}
-                className='rounded-md border border-border-hover bg-muted px-4 py-3 font-medium text-foreground-secondary text-sm transition-all hover:bg-border-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset sm:order-1 sm:py-2'
+                className='cursor-pointer rounded-md border border-border-hover bg-muted px-4 py-3 font-medium text-foreground-secondary text-sm transition-all hover:bg-border-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset sm:order-1 sm:py-2'
               >
                 {cancelText}
               </button>
@@ -54,7 +54,7 @@ export const ConfirmDialog = ({
               <button
                 type='button'
                 onClick={handleConfirm}
-                className='rounded-md border border-destructive bg-destructive px-4 py-3 font-medium text-destructive-foreground text-sm transition-all hover:bg-destructive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive-muted focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset sm:order-2 sm:py-2'
+                className='cursor-pointer rounded-md border border-destructive bg-destructive px-4 py-3 font-medium text-destructive-foreground text-sm transition-all hover:bg-destructive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive-muted focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset sm:order-2 sm:py-2'
               >
                 {confirmText}
               </button>

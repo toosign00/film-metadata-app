@@ -1,66 +1,97 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 
-@theme {
-  --color-background: #09090b;
-  --color-surface: #1f1f23;
-  --color-surface-alt: #14141a;
-  --color-input: #1f1f23;
-  --color-muted: #3b3a3e;
-  --color-overlay: rgba(0, 0, 0, 0.5);
+@theme inline {
+  --color-background: var(--background);
+  --color-surface: var(--surface);
+  --color-surface-alt: var(--surface-alt);
+  --color-input: var(--input);
+  --color-muted: var(--muted);
+  --color-overlay: var(--overlay);
 
-  --color-foreground: #e6e5e8;
-  --color-foreground-secondary: #d1d0d4;
-  --color-foreground-muted: #8a8990;
+  --color-foreground: var(--foreground);
+  --color-foreground-secondary: var(--foreground-secondary);
+  --color-foreground-muted: var(--foreground-muted);
 
-  --color-border: #3b3a3e;
-  --color-border-hover: #504f54;
+  --color-border: var(--border);
+  --color-border-hover: var(--border-hover);
 
-  --color-primary: #f59e0b;
-  --color-primary-hover: #d97706;
-  --color-primary-foreground: #1c1917;
-  --color-primary-muted: #fbbf24;
+  --color-primary: var(--primary);
+  --color-primary-hover: var(--primary-hover);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-primary-muted: var(--primary-muted);
 
-  --color-destructive: #ef4444;
-  --color-destructive-hover: #dc2626;
-  --color-destructive-foreground: #ffffff;
-  --color-destructive-bg: rgba(127, 29, 29, 0.2);
-  --color-destructive-border: #991b1b;
-  --color-destructive-muted: #f87171;
+  --color-destructive: var(--destructive);
+  --color-destructive-hover: var(--destructive-hover);
+  --color-destructive-foreground: var(--destructive-foreground);
+  --color-destructive-bg: var(--destructive-bg);
+  --color-destructive-border: var(--destructive-border);
+  --color-destructive-muted: var(--destructive-muted);
 
-  --color-ring: #f59e0b;
-  --color-ring-offset: #09090b;
+  --color-ring: var(--ring);
+  --color-ring-offset: var(--ring-offset);
 }
 
-[data-theme="light"] {
-  --color-background: #fcfcfb;
-  --color-surface: #f5f5f3;
-  --color-surface-alt: #ebebea;
-  --color-input: #ffffff;
-  --color-muted: #e0e0de;
-  --color-overlay: rgba(0, 0, 0, 0.3);
+:root {
+  --background: #fafafa;
+  --surface: #ffffff;
+  --surface-alt: #f0f0f0;
+  --input: #ffffff;
+  --muted: #f0f0f0;
+  --overlay: rgba(16, 16, 16, 0.48);
 
-  --color-foreground: #161615;
-  --color-foreground-secondary: #4d4d4a;
-  --color-foreground-muted: #686865;
+  --foreground: #101010;
+  --foreground-secondary: #4a4a4a;
+  --foreground-muted: #7a7a7a;
 
-  --color-border: #e0e0de;
-  --color-border-hover: #cbcbc8;
+  --border: #e5e5e5;
+  --border-hover: #cccccc;
 
-  --color-primary: #f59e0b;
-  --color-primary-hover: #d97706;
-  --color-primary-foreground: #1c1917;
-  --color-primary-muted: #fbbf24;
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-foreground: #ffffff;
+  --primary-muted: #93c5fd;
 
-  --color-destructive: #ef4444;
-  --color-destructive-hover: #dc2626;
-  --color-destructive-foreground: #ffffff;
-  --color-destructive-bg: rgba(254, 226, 226, 0.5);
-  --color-destructive-border: #fca5a5;
-  --color-destructive-muted: #dc2626;
+  --destructive: #dc2626;
+  --destructive-hover: #b91c1c;
+  --destructive-foreground: #ffffff;
+  --destructive-bg: rgba(220, 38, 38, 0.09);
+  --destructive-border: #f87171;
+  --destructive-muted: #ef4444;
 
-  --color-ring: #f59e0b;
-  --color-ring-offset: #fcfcfb;
+  --ring: #2563eb;
+  --ring-offset: #fafafa;
+}
+
+[data-theme="dark"] {
+  --background: #101010;
+  --surface: #181818;
+  --surface-alt: #242424;
+  --input: #181818;
+  --muted: #1c1c1c;
+  --overlay: rgba(16, 16, 16, 0.78);
+
+  --foreground: #f5f5f5;
+  --foreground-secondary: #d6d6d6;
+  --foreground-muted: #a8a8a8;
+
+  --border: #2e2e2e;
+  --border-hover: #454545;
+
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --primary-foreground: #ffffff;
+  --primary-muted: #93c5fd;
+
+  --destructive: #ef4444;
+  --destructive-hover: #dc2626;
+  --destructive-foreground: #ffffff;
+  --destructive-bg: rgba(239, 68, 68, 0.12);
+  --destructive-border: #7f1d1d;
+  --destructive-muted: #fca5a5;
+
+  --ring: #2563eb;
+  --ring-offset: #101010;
 }
 
 @layer base {

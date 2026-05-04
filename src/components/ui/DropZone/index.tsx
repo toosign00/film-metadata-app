@@ -26,13 +26,13 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
   return (
     <button
       ref={dropAreaRef as React.RefObject<HTMLButtonElement>}
-      className={`flex w-full items-center justify-center rounded-lg border-2 border-dashed ${
+      className={`flex w-full items-center justify-center rounded-xl border-[1.5px] border-dashed ${
         isDragging
-          ? 'border-primary bg-surface'
+          ? 'border-primary bg-primary/5'
           : filesCount > 0
-            ? 'border-primary/50 bg-surface'
-            : 'border-border-hover bg-surface'
-      } cursor-pointer p-4 text-center transition-all hover:border-primary`}
+            ? 'border-primary/40 bg-surface'
+            : 'border-border-hover bg-surface hover:border-primary/60'
+      } cursor-pointer p-4 text-center transition-all`}
       onClick={openFileDialog}
       onKeyDown={handleKeyDown}
       aria-label='파일 선택 영역'
@@ -53,37 +53,39 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
 
       <div className='flex flex-col items-center justify-center py-5'>
         <ImageUp
-          className={`mb-2 h-12 w-12 ${isDragging ? 'text-primary' : filesCount > 0 ? 'text-primary' : 'text-foreground-muted'}`}
+          className={`mb-3 h-9 w-9 ${isDragging ? 'text-primary' : filesCount > 0 ? 'text-primary/70' : 'text-foreground-muted'}`}
           aria-hidden='true'
           role='img'
         />
 
         {isDragging ? (
           <div>
-            <p className='font-medium text-primary-muted text-lg'>파일을 여기에 놓으세요</p>
-            <p className='text-primary-muted text-sm'>
+            <p className='font-semibold text-primary text-base'>파일을 여기에 놓으세요</p>
+            <p className='mt-1 text-primary/70 text-sm'>
               {supportedExtensionsText} 파일만 지원됩니다
             </p>
           </div>
         ) : filesCount > 0 ? (
           <div>
-            <p className='font-medium text-foreground text-lg'>{filesCount}개의 파일이 선택됨</p>
-            <p className='text-foreground-muted text-sm'>클릭하여 다른 파일 선택</p>
+            <p className='font-semibold text-foreground text-base'>
+              {filesCount}개의 파일이 선택됨
+            </p>
+            <p className='mt-1 text-foreground-muted text-sm'>클릭하여 다른 파일 선택</p>
           </div>
         ) : (
           <div>
-            <p className='font-medium text-foreground-secondary text-lg'>
+            <p className='font-semibold text-foreground-secondary text-base'>
               이미지 파일을 선택하세요
             </p>
-            <p className='text-foreground-secondary text-sm'>또는 여기에 파일을 끌어다 놓으세요</p>
+            <p className='mt-1 text-foreground-muted text-sm'>또는 여기에 파일을 끌어다 놓으세요</p>
           </div>
         )}
 
-        <div>
-          <p id='file-format-info' className='mt-2 text-foreground-muted text-xs'>
-            지원 형식: {supportedExtensionsText} (최대 15MB)
+        <div className='mt-3'>
+          <p id='file-format-info' className='text-foreground-muted text-xs'>
+            지원 형식: {supportedExtensionsText} &middot; 최대 15MB
           </p>
-          <p className='mt-2 text-foreground-muted text-xs'>
+          <p className='mt-1 text-foreground-muted text-xs'>
             최대 파일 수: {isMobile ? 40 : 100}개
           </p>
         </div>

@@ -3,18 +3,18 @@ import type { LensSectionProps } from '@/types/metadataSettings.types';
 export const LensSection = ({ register, errors }: LensSectionProps) => {
   return (
     <fieldset
-      className='rounded-lg border border-border bg-surface-alt p-4 shadow-md'
+      className='rounded-xl border border-border bg-surface px-5 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)]'
       aria-labelledby='lens-info-heading'
     >
-      <h3
-        id='lens-info-heading'
-        className='mb-3 border-border border-b pb-2 font-medium text-foreground'
-      >
+      <h3 id='lens-info-heading' className='mb-4 text-sm font-semibold text-foreground'>
         렌즈 정보
       </h3>
 
-      <div className='relative mb-4'>
-        <label htmlFor='lens' className='mb-1 block font-medium text-foreground-secondary text-sm'>
+      <div className='border-b border-border pb-4'>
+        <label
+          htmlFor='lens'
+          className='mb-1.5 block text-[11px] font-medium uppercase tracking-[0.04em] text-foreground-muted'
+        >
           렌즈
         </label>
         <input
@@ -22,28 +22,27 @@ export const LensSection = ({ register, errors }: LensSectionProps) => {
           id='lens'
           {...register('lens')}
           placeholder='예: Canon FD'
-          className='w-full rounded-lg border border-border bg-input px-4 py-2.5 text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring'
+          className='w-full rounded-md border border-border bg-surface-alt px-3 py-2 text-sm text-foreground placeholder:text-foreground-muted transition-colors focus:border-primary focus:outline-none'
           aria-describedby='lens-help lens-error'
-          aria-required='true'
           aria-invalid={!!errors.lens}
         />
         <div className='flex flex-wrap items-center justify-between'>
-          <p id='lens-help' className='mt-1 text-foreground-muted text-xs'>
+          <p id='lens-help' className='mt-1 text-xs text-foreground-muted'>
             렌즈 브랜드와 모델명
           </p>
           {errors.lens && (
-            <p id='lens-error' className='mt-1 text-destructive text-xs' role='alert'>
+            <p id='lens-error' className='mt-1 text-xs text-destructive' role='alert'>
               {String(errors.lens.message)}
             </p>
           )}
         </div>
       </div>
 
-      <div className='grid grid-cols-2 gap-3'>
-        <div className='relative'>
+      <div className='grid grid-cols-2 gap-x-4 pt-4'>
+        <div>
           <label
             htmlFor='focalLength'
-            className='mb-1 block font-medium text-foreground-secondary text-sm'
+            className='mb-1.5 block text-[11px] font-medium uppercase tracking-[0.04em] text-foreground-muted'
           >
             초점 거리
           </label>
@@ -54,60 +53,48 @@ export const LensSection = ({ register, errors }: LensSectionProps) => {
               id='focalLength'
               {...register('focalLength')}
               placeholder='예: 50'
-              className='w-full rounded-lg border border-border bg-input py-2.5 pr-12 pl-4 text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring'
+              className='w-full rounded-md border border-border bg-surface-alt px-3 py-2 pr-8 text-sm text-foreground placeholder:text-foreground-muted transition-colors focus:border-primary focus:outline-none'
               aria-describedby='focalLength-help focalLength-error'
-              aria-required='true'
               aria-invalid={!!errors.focalLength}
             />
-            <span className='pointer-events-none absolute top-1/2 right-4 -translate-y-1/2 text-foreground-muted text-sm'>
+            <span className='pointer-events-none absolute top-1/2 right-1 -translate-y-1/2 text-xs text-foreground-muted'>
               mm
             </span>
           </div>
-          <div className='flex flex-wrap items-center justify-between'>
-            <p id='focalLength-help' className='mt-1 text-foreground-muted text-xs'>
-              숫자만 입력
+          {errors.focalLength && (
+            <p id='focalLength-error' className='mt-1 text-xs text-destructive' role='alert'>
+              {String(errors.focalLength.message)}
             </p>
-            {errors.focalLength && (
-              <p id='focalLength-error' className='mt-1 text-destructive text-xs' role='alert'>
-                {String(errors.focalLength.message)}
-              </p>
-            )}
-          </div>
+          )}
         </div>
 
-        <div className='relative'>
+        <div>
           <label
             htmlFor='aperture'
-            className='mb-1 block font-medium text-foreground-secondary text-sm'
+            className='mb-1.5 block text-[11px] font-medium uppercase tracking-[0.04em] text-foreground-muted'
           >
             조리개
           </label>
           <div className='relative'>
+            <span className='pointer-events-none absolute top-1/2 left-3 -translate-y-1/2 text-xs text-foreground-muted'>
+              f/
+            </span>
             <input
               type='text'
               inputMode='decimal'
               id='aperture'
               {...register('aperture')}
               placeholder='예: 1.8'
-              className='w-full rounded-lg border border-border bg-input py-2.5 pr-4 pl-9 text-foreground shadow-sm focus:outline-none focus:ring-2 focus:ring-ring'
+              className='w-full rounded-md border border-border bg-surface-alt px-3 py-2 pl-7 text-sm text-foreground placeholder:text-foreground-muted transition-colors focus:border-primary focus:outline-none'
               aria-describedby='aperture-help aperture-error'
-              aria-required='true'
               aria-invalid={!!errors.aperture}
             />
-            <span className='pointer-events-none absolute left-4 top-1/2 -translate-y-1/2 text-foreground-muted text-sm'>
-              f/
-            </span>
           </div>
-          <div className='flex flex-wrap items-center justify-between'>
-            <p id='aperture-help' className='mt-1 text-foreground-muted text-xs'>
-              숫자만 입력
+          {errors.aperture && (
+            <p id='aperture-error' className='mt-1 text-xs text-destructive' role='alert'>
+              {String(errors.aperture.message)}
             </p>
-            {errors.aperture && (
-              <p id='aperture-error' className='mt-1 text-destructive text-xs' role='alert'>
-                {String(errors.aperture.message)}
-              </p>
-            )}
-          </div>
+          )}
         </div>
       </div>
     </fieldset>
