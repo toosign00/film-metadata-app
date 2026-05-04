@@ -6,10 +6,7 @@ export const LensSection = ({ register, errors }: LensSectionProps) => {
       className='rounded-xl border border-border bg-surface px-5 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)]'
       aria-labelledby='lens-info-heading'
     >
-      <h3
-        id='lens-info-heading'
-        className='mb-4 text-sm font-semibold text-foreground'
-      >
+      <h3 id='lens-info-heading' className='mb-4 text-sm font-semibold text-foreground'>
         렌즈 정보
       </h3>
 

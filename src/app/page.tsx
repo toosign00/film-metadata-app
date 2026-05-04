@@ -9,16 +9,8 @@ import { useAppReducer } from '@/hooks/useAppReducer';
 import type { MetadataSettings } from '@/types/metadata.types';
 
 export default function Home() {
-  const {
-    state,
-    setFiles,
-    setSettings,
-    goToStep,
-    setZipProgress,
-    setProcessing,
-    resetAll,
-    processFiles,
-  } = useAppReducer();
+  const { state, setFiles, setSettings, goToStep, setZipProgress, setProcessing, processFiles } =
+    useAppReducer();
 
   const formRef = useRef<HTMLFormElement>(null);
   const resultRef = useRef<HTMLElement>(null);

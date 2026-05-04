@@ -41,7 +41,10 @@ export const ResultsViewer = ({
     <section ref={resultRef} className='mb-8 transition-all' aria-labelledby='results-section'>
       <div className='rounded-xl border border-border bg-surface px-6 py-5 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)]'>
         <div className='mb-4 flex flex-col items-start justify-between gap-2 sm:flex-row sm:items-center sm:gap-0'>
-          <h2 id='results-section' className='text-xs font-semibold uppercase tracking-[0.06em] text-foreground-secondary'>
+          <h2
+            id='results-section'
+            className='text-xs font-semibold uppercase tracking-[0.06em] text-foreground-secondary'
+          >
             {resultImages.length > 0 ? `처리 결과 (${resultImages.length}개 파일)` : '처리 결과'}
           </h2>
           {resultImages.length > 0 && (

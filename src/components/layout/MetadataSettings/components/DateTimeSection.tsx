@@ -8,10 +8,7 @@ export const DateTimeSection = ({ control, errors }: DateTimeSectionProps) => {
       className='rounded-xl border border-border bg-surface px-5 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)]'
       aria-labelledby='date-time-heading'
     >
-      <h3
-        id='date-time-heading'
-        className='mb-4 text-sm font-semibold text-foreground'
-      >
+      <h3 id='date-time-heading' className='mb-4 text-sm font-semibold text-foreground'>
         촬영 날짜/시간
       </h3>
 

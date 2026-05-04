@@ -61,16 +61,22 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
         {isDragging ? (
           <div>
             <p className='font-semibold text-primary text-base'>파일을 여기에 놓으세요</p>
-            <p className='mt-1 text-primary/70 text-sm'>{supportedExtensionsText} 파일만 지원됩니다</p>
+            <p className='mt-1 text-primary/70 text-sm'>
+              {supportedExtensionsText} 파일만 지원됩니다
+            </p>
           </div>
         ) : filesCount > 0 ? (
           <div>
-            <p className='font-semibold text-foreground text-base'>{filesCount}개의 파일이 선택됨</p>
+            <p className='font-semibold text-foreground text-base'>
+              {filesCount}개의 파일이 선택됨
+            </p>
             <p className='mt-1 text-foreground-muted text-sm'>클릭하여 다른 파일 선택</p>
           </div>
         ) : (
           <div>
-            <p className='font-semibold text-foreground-secondary text-base'>이미지 파일을 선택하세요</p>
+            <p className='font-semibold text-foreground-secondary text-base'>
+              이미지 파일을 선택하세요
+            </p>
             <p className='mt-1 text-foreground-muted text-sm'>또는 여기에 파일을 끌어다 놓으세요</p>
           </div>
         )}
