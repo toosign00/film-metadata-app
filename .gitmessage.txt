@@ -1,39 +1,41 @@
 ################
-# <타입>: <제목> 의 형식으로 제목을 아래 공백줄에 작성
-# 제목은 50자 이내 / 변경사항이 "무엇"인지 명확히 작성 / 끝에 마침표 금지
-# 예) ✨ feat: 로그인 기능 추가
+# Write the title below in the format: <type>: <subject>
+# Title should be 50 chars or less / clearly state "what" changed / no period at the end
+# e.g. feat: add login feature
 
 ################
-# 본문(구체적인 내용)을 아랫줄에 작성
-# 여러 줄의 메시지를 작성할 땐 "-"로 구분 (한 줄은 72자 이내)
+# Write the body (details) below
+# Use "-" to separate multiple lines (each line within 72 chars)
 ################
 
-# 꼬릿말(footer)을 아랫줄에 작성 (현재 커밋과 관련된 이슈 번호 추가 등)
-# 예) Close #7, Ref #7
+# Write the footer below (e.g. related issue numbers)
+# e.g. Close #7, Ref #7
 
 ################
-# [개발]
-# ✨ feat: 새로운 기능 추가
-# 🐛 bugfix: 버그 수정
-# 🔧 fix: 단순 수정
-# 🧪 test: 테스트 코드 추가, 수정, 삭제 (비즈니스 로직 변경 없음)
-# 🐳 chore: 빌드, 의존성, 설정 파일 수정
-# 🔄 revert: 커밋 되돌리기
-# 💫 merge: Pull 과정 중 자동 병합 발생 시
-# 
+# [Development]
+# feat: add a new feature
+# bugfix: fix a bug
+# fix: minor fix
+# perf: performance improvements (no functional change)
+# test: add, modify, or delete test code (no business logic change)
+# chore: build, dependency, or config file changes
+# revert: revert a commit
+# merge: auto merge during pull
+# i18n: internationalization related work
+#
 # [UI/UX]
-# 💄 style: CSS 스타일 변경 (UI 변경)
-# ♿ ally: 웹 접근성 개선 (WCAG 가이드라인 준수)
-# 
-# [코드 품질]
-# ♻️ refactor: 코드 리팩토링 (기능 변경 없음)
-# 🏷️ type: TypeScript 타입 정의 변경
-# 💬 comment: 필요한 주석 추가 및 변경
-# 
-# [파일 관리]
-# 🎉 init: 프로젝트 초기 생성
-# 🎞 src: 이미지, 아이콘 등 소스파일 추가 및 수정
-# 🛠 rename: 파일 혹은 폴더명 수정 또는 이동
-# 🔥 remove: 파일을 삭제하는 작업만 수행
-# 📝 docs: 문서 추가/수정
+# style: CSS style changes (UI change)
+# ally: web accessibility improvements (WCAG compliance)
+#
+# [Code Quality]
+# refactor: code refactoring (no functional change)
+# type: TypeScript type definition changes
+# comment: add or update necessary comments
+#
+# [File Management]
+# init: initial project setup
+# src: add or modify image, icon, or other source files
+# rename: rename or move files or folders
+# remove: delete files only
+# docs: add or update documentation
 ################
