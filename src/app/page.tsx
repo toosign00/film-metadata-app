@@ -1,8 +1,8 @@
 'use client';
 
 import { useEffect, useRef } from 'react';
-import { Header } from '@/components/layout/Header';
 import { FileSelection } from '@/components/layout/FileSelection';
+import { Header } from '@/components/layout/Header';
 import { MetadataSettingsForm } from '@/components/layout/MetadataSettings';
 import { ResultsViewer } from '@/components/layout/ResultsViewer';
 import { useAppReducer } from '@/hooks/useAppReducer';

@@ -13,7 +13,7 @@ export const ImageCard = ({ image, onDownload, processing = false }: ImageCardPr
     setIsTouch(isMobile || isTablet);
   }, []);
 
-  if (!image || !image.url) return null;
+  if (!image?.url) return null;
 
   const handleDownload = (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();

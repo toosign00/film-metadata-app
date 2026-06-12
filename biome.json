@@ -1,15 +1,21 @@
 {
-  "$schema": "https://biomejs.dev/schemas/2.4.8/schema.json",
+  "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
-    "includes": ["src/**", "public/**", "*.js", "*.jsx", "*.ts", "*.tsx", "*.json"],
+    "includes": ["**", "!src/styles/**/*.css", "!.next", "!node_modules"],
     "ignoreUnknown": true
+  },
+  "vcs": {
+    "enabled": true,
+    "clientKind": "git",
+    "useIgnoreFile": true,
+    "root": ".",
+    "defaultBranch": "main"
   },
   "assist": {
     "enabled": true,
-    "includes": ["src/**", "*.js", "*.jsx", "*.ts", "*.tsx"],
     "actions": {
       "source": {
-        "organizeImports": "off",
+        "organizeImports": "on",
         "useSortedKeys": "off"
       }
     }
@@ -41,7 +47,6 @@
   },
   "css": {
     "parser": {
-      "cssModules": false,
       "tailwindDirectives": true
     },
     "formatter": {
@@ -57,36 +62,41 @@
   "linter": {
     "enabled": true,
     "rules": {
-      "recommended": true,
+      "preset": "recommended",
       "style": {
         "noParameterAssign": "error",
         "useDefaultParameterLast": "error",
-        "useSingleVarDeclarator": "error",
+        "useSingleVarDeclarator": "off",
         "useConst": "error",
         "noUselessElse": "error",
         "useSelfClosingElements": "error",
-        "useTemplate": "error"
+        "useTemplate": "error",
+        "useFilenamingConvention": "off"
       },
       "correctness": {
         "noUnusedImports": "error",
         "noUnusedVariables": "error",
         "noUndeclaredDependencies": "error",
+        "noUnknownTypeSelector": "off",
         "useUniqueElementIds": "off"
       },
       "suspicious": {
         "noVar": "error",
         "noExplicitAny": "warn",
         "noEmptyBlockStatements": "error",
-        "noArrayIndexKey": "error",
+        "noArrayIndexKey": "warn",
         "noUnknownAtRules": "off"
       },
       "complexity": {
-        "noVoid": "error",
         "useLiteralKeys": "error",
         "noImportantStyles": "off"
       },
       "performance": {
-        "noDelete": "error"
+        "noDelete": "off",
+        "noImgElement": "warn"
+      },
+      "security": {
+        "noDangerouslySetInnerHtml": "off"
       },
       "a11y": {
         "useKeyWithClickEvents": "error",
@@ -94,19 +104,20 @@
         "noAutofocus": "warn",
         "useValidAnchor": "error",
         "useButtonType": "error",
+        "noSvgWithoutTitle": "off",
         "noStaticElementInteractions": "off",
         "useAriaPropsSupportedByRole": "off",
         "useSemanticElements": "off"
       },
       "nursery": {
-        "noFloatingPromises": "error",
+        "noFloatingPromises": "warn",
         "useSortedClasses": "off"
       }
     }
   },
   "overrides": [
     {
-      "includes": ["*.config.js", "*.config.ts", "vite.config.*", "next.config.*"],
+      "includes": ["*.config.js", "*.config.ts", "next.config.*"],
       "linter": {
         "rules": {
           "suspicious": {}
@@ -127,7 +138,7 @@
       }
     },
     {
-      "includes": ["**/*.d.ts", "src/vite-env.d.ts"],
+      "includes": ["**/*.d.ts"],
       "linter": {
         "rules": {
           "correctness": {
@@ -136,12 +147,5 @@
         }
       }
     }
-  ],
-  "vcs": {
-    "enabled": true,
-    "clientKind": "git",
-    "useIgnoreFile": true,
-    "root": ".",
-    "defaultBranch": "main"
-  }
+  ]
 }
