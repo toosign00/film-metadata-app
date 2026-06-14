@@ -4,7 +4,7 @@ export const ProgressBar = ({ progress, label, className = '' }: ProgressBarProp
   return (
     <div className={`mb-6 border-y border-border py-4 ${className}`} aria-live='polite'>
       <div className='mb-2 flex items-center justify-between text-xs'>
-        <span className='font-medium text-foreground'>{label}</span>
+        <span className='font-medium text-foreground-secondary'>{label}</span>
         <span className='text-foreground-muted'>{progress}%</span>
       </div>
       <div className='h-1.5 w-full overflow-hidden rounded-full bg-muted'>
