@@ -14,16 +14,12 @@ export const ConfirmDialog = ({
   onCancel,
   trigger,
 }: AlertDialogProps) => {
-  const handleConfirm = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.currentTarget.blur();
+  const handleConfirm = () => {
     onConfirm();
-    onOpenChange(false);
   };
 
-  const handleCancel = (event: React.MouseEvent<HTMLButtonElement>) => {
-    event.currentTarget.blur();
+  const handleCancel = () => {
     onCancel?.();
-    onOpenChange(false);
   };
 
   return (
