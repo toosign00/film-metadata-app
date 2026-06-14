@@ -13,18 +13,19 @@ export const Button = ({
   ...rest
 }: ButtonProps) => {
   const styles = {
-    base: 'inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg font-semibold transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset',
-    primary: 'bg-foreground text-surface hover:bg-foreground/90',
-    secondary: 'border border-border bg-surface text-foreground-secondary hover:bg-surface-alt',
-    outlined: 'border border-border bg-transparent text-foreground-secondary hover:bg-surface-alt',
-    text: 'bg-transparent text-foreground-secondary hover:bg-surface-alt hover:text-foreground',
-    disabled: 'opacity-40 cursor-not-allowed pointer-events-none',
+    base: 'inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 px-5 text-sm font-semibold transition-colors duration-150 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset',
+    primary: 'rounded-full bg-primary text-primary-foreground hover:bg-primary-hover',
+    secondary:
+      'rounded-[10px] border border-border bg-surface text-foreground-secondary hover:bg-surface-alt hover:text-foreground',
+    text: 'rounded-[10px] px-3 text-foreground-muted hover:bg-surface-alt hover:text-foreground',
+    destructive:
+      'rounded-[10px] bg-destructive text-destructive-foreground hover:bg-destructive-hover',
+    disabled: 'pointer-events-none cursor-not-allowed opacity-40',
     loading: 'cursor-wait',
   };
 
   const buttonClasses = `
     ${styles.base}
-    px-4 py-2.5 text-sm
     ${styles[variant]}
     ${disabled ? styles.disabled : ''}
     ${isLoading ? styles.loading : ''}
@@ -40,15 +41,15 @@ export const Button = ({
       {...rest}
     >
       {isLoading ? (
-        <div className='flex items-center justify-center'>
-          <LoaderCircle className='mr-2 animate-spin text-current' size={20} />
-          <span>{typeof children === 'string' ? '처리 중...' : children}</span>
-        </div>
+        <>
+          <LoaderCircle aria-hidden='true' className='animate-spin' size={20} />
+          {typeof children === 'string' ? '처리하고 있어요...' : children}
+        </>
       ) : (
-        <div className='flex items-center justify-center'>
-          {icon && <span className='mr-2'>{icon}</span>}
+        <>
+          {icon}
           {children}
-        </div>
+        </>
       )}
     </button>
   );

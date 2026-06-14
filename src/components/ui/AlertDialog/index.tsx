@@ -30,22 +30,22 @@ export const ConfirmDialog = ({
     <AlertDialog.Root open={open} onOpenChange={onOpenChange}>
       {trigger && <AlertDialog.Trigger asChild>{trigger}</AlertDialog.Trigger>}
       <AlertDialog.Portal>
-        <AlertDialog.Overlay className='data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-overlay backdrop-blur-sm data-[state=closed]:animate-out data-[state=open]:animate-in' />
-        <AlertDialog.Content className='data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-[50%] left-[50%] z-50 grid w-[calc(100%-2rem)] max-w-lg translate-x-[-50%] translate-y-[-50%] gap-4 rounded-lg border border-border bg-surface p-4 shadow-lg duration-200 data-[state=closed]:animate-out data-[state=open]:animate-in sm:p-6'>
+        <AlertDialog.Overlay className='data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-overlay data-[state=closed]:animate-out data-[state=open]:animate-in' />
+        <AlertDialog.Content className='data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 grid w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 gap-5 rounded-2xl border border-border bg-surface p-5 data-[state=closed]:animate-out data-[state=open]:animate-in sm:p-6'>
           <div className='space-y-2'>
             <AlertDialog.Title className='font-semibold text-foreground text-lg'>
               {title}
             </AlertDialog.Title>
-            <AlertDialog.Description className='text-foreground-secondary text-sm leading-relaxed'>
+            <AlertDialog.Description className='text-foreground-muted text-sm leading-6'>
               {description}
             </AlertDialog.Description>
           </div>
-          <div className='flex flex-col gap-2 pt-4 sm:flex-row sm:justify-end'>
+          <div className='flex flex-col-reverse gap-2 sm:flex-row sm:justify-end'>
             <AlertDialog.Cancel asChild>
               <button
                 type='button'
                 onClick={handleCancel}
-                className='cursor-pointer rounded-md border border-border-hover bg-muted px-4 py-3 font-medium text-foreground-secondary text-sm transition-all hover:bg-border-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset sm:order-1 sm:py-2'
+                className='min-h-11 cursor-pointer rounded-[10px] border border-border bg-surface px-5 text-sm font-semibold text-foreground-secondary transition-colors duration-150 hover:bg-surface-alt hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset'
               >
                 {cancelText}
               </button>
@@ -54,7 +54,7 @@ export const ConfirmDialog = ({
               <button
                 type='button'
                 onClick={handleConfirm}
-                className='cursor-pointer rounded-md border border-destructive bg-destructive px-4 py-3 font-medium text-destructive-foreground text-sm transition-all hover:bg-destructive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-destructive-muted focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset sm:order-2 sm:py-2'
+                className='min-h-11 cursor-pointer rounded-[10px] bg-destructive px-5 text-sm font-semibold text-destructive-foreground transition-colors duration-150 hover:bg-destructive-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset'
               >
                 {confirmText}
               </button>

@@ -15,8 +15,9 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, forwa
   return (
     <div
       role='button'
-      tabIndex={0}
-      className={`relative w-full cursor-pointer rounded-md border border-border bg-surface-alt py-2 pr-10 pl-3 text-left text-foreground transition-colors hover:border-border-hover focus-within:border-primary ${disabled ? 'pointer-events-none opacity-50' : ''}`}
+      tabIndex={disabled ? -1 : 0}
+      aria-disabled={disabled}
+      className={`relative min-h-11 w-full cursor-pointer rounded-[10px] border border-border bg-input px-3 pr-10 text-left text-foreground transition-colors hover:border-border-hover focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset focus-within:ring-2 focus-within:ring-ring focus-within:ring-offset-2 focus-within:ring-offset-ring-offset ${disabled ? 'pointer-events-none opacity-50' : ''}`}
       onClick={onClick}
       onKeyDown={(e) => {
         if (e.key === 'Enter' || e.key === ' ') {
@@ -30,13 +31,13 @@ const CustomInput = forwardRef<HTMLInputElement, CustomInputProps>((props, forwa
         type='text'
         readOnly
         value={value}
-        className='w-full cursor-pointer border-none bg-transparent p-0 text-sm text-foreground outline-none focus:ring-0'
+        className='min-h-11 w-full cursor-pointer border-none bg-transparent p-0 text-sm text-foreground outline-none focus:ring-0'
         tabIndex={-1}
         disabled={disabled}
         {...rest}
       />
       <span className='pointer-events-none absolute right-3 top-1/2 -translate-y-1/2'>
-        <Calendar size={16} className='text-foreground-muted' />
+        <Calendar aria-hidden='true' size={16} className='text-foreground-muted' />
       </span>
     </div>
   );
