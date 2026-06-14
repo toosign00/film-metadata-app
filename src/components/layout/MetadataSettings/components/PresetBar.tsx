@@ -113,7 +113,7 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
             <p className='text-xs text-foreground-muted'>저장된 프리셋이 없어요.</p>
           )}
           {presets.map((preset, index) => (
-            <span key={preset.id} className='inline-flex items-center md:group md:relative'>
+            <span key={preset.id} className='group inline-flex items-center md:relative'>
               <button
                 ref={(node) => {
                   if (node) {
