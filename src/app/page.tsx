@@ -5,6 +5,7 @@ import { FileSelection } from '@/components/layout/FileSelection';
 import { Header } from '@/components/layout/Header';
 import { MetadataSettingsForm } from '@/components/layout/MetadataSettings';
 import { ResultsViewer } from '@/components/layout/ResultsViewer';
+import { StepNavigation } from '@/components/layout/StepNavigation';
 import { useAppReducer } from '@/hooks/useAppReducer';
 import type { MetadataSettings } from '@/types/metadata.types';
 
@@ -38,49 +39,52 @@ export default function Home() {
 
   return (
     <>
-      <Header
+      <Header />
+      <StepNavigation
         activeStep={state.activeStep}
         filesCount={state.files.length}
         resultsCount={state.resultImages.length}
         processing={state.processing}
         goToStep={goToStep}
       />
-      <main className='flex-1 overflow-auto p-6 md:p-8'>
-        <div className='mx-auto w-full max-w-6xl'>
-          {state.activeStep === 1 && (
-            <FileSelection
-              activeStep={1}
-              onFileSelect={handleFileSelect}
-              sortedFiles={state.sortedFiles}
-              goToStep={goToStep}
-            />
-          )}
-          {state.activeStep === 2 && (
-            <MetadataSettingsForm
-              activeStep={2}
-              settings={state.settings}
-              onSettingsChange={handleSettingsChange}
-              sortedFiles={state.sortedFiles}
-              processing={state.processing}
-              completed={state.completed}
-              formRef={formRef}
-              goToStep={goToStep}
-              onProcessFiles={handleProcessFiles}
-            />
-          )}
-          {state.activeStep === 3 && (
-            <ResultsViewer
-              activeStep={3}
-              resultRef={resultRef}
-              resultImages={state.resultImages}
-              errors={state.errors}
-              processing={state.processing}
-              zipProgress={state.zipProgress}
-              setZipProgress={setZipProgress}
-              setProcessing={setProcessing}
-              goToStep={goToStep}
-            />
-          )}
+      <main className='flex-1'>
+        <div className='mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 md:py-14'>
+          <div key={state.activeStep} className='step-enter'>
+            {state.activeStep === 1 && (
+              <FileSelection
+                activeStep={1}
+                onFileSelect={handleFileSelect}
+                sortedFiles={state.sortedFiles}
+                goToStep={goToStep}
+              />
+            )}
+            {state.activeStep === 2 && (
+              <MetadataSettingsForm
+                activeStep={2}
+                settings={state.settings}
+                onSettingsChange={handleSettingsChange}
+                sortedFiles={state.sortedFiles}
+                processing={state.processing}
+                completed={state.completed}
+                formRef={formRef}
+                goToStep={goToStep}
+                onProcessFiles={handleProcessFiles}
+              />
+            )}
+            {state.activeStep === 3 && (
+              <ResultsViewer
+                activeStep={3}
+                resultRef={resultRef}
+                resultImages={state.resultImages}
+                errors={state.errors}
+                processing={state.processing}
+                zipProgress={state.zipProgress}
+                setZipProgress={setZipProgress}
+                setProcessing={setProcessing}
+                goToStep={goToStep}
+              />
+            )}
+          </div>
         </div>
       </main>
     </>
