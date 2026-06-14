@@ -21,7 +21,7 @@ export const FileSelection = ({
         eyebrow='01 / SELECT'
         title='이미지를 선택하세요'
         titleId='file-section'
-        description={<p>JPG 또는 JPEG 파일을 선택하면 촬영 순서대로 정렬해요.</p>}
+        description={<p>JPG 또는 JPEG 파일을 선택하면 이름 순서대로 정렬해요.</p>}
       />
       <div className='grid gap-4 md:grid-cols-2'>
         <DropZone onFileSelect={onFileSelect} filesCount={sortedFiles.length} />

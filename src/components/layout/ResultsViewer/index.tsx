@@ -48,7 +48,9 @@ export const ResultsViewer = ({
       />
 
       <div className='mb-6 flex flex-col gap-3 border-y border-border py-4 sm:flex-row sm:items-center sm:justify-between'>
-        <p className='text-sm text-foreground-secondary'>{resultImages.length} images ready</p>
+        <p className='text-sm text-foreground-secondary'>
+          {resultImages.length}장의 이미지가 준비됐어요
+        </p>
         {resultImages.length > 0 && (
           <Button
             onClick={handleDownloadAll}
