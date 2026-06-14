@@ -23,7 +23,7 @@ export const FileSelection = ({
         titleId='file-section'
         description={<p>JPG 또는 JPEG 파일을 선택하면 촬영 순서대로 정렬해요.</p>}
       />
-      <div className='grid gap-4 md:grid-cols-[1.2fr_0.8fr]'>
+      <div className='grid gap-4 md:grid-cols-2'>
         <DropZone onFileSelect={onFileSelect} filesCount={sortedFiles.length} />
         <FileList files={sortedFiles} />
       </div>

@@ -28,7 +28,7 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
   };
 
   return (
-    <div>
+    <div className='min-w-0'>
       <input
         type='file'
         id='file-input'
@@ -42,7 +42,7 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
 
       <button
         ref={dropAreaRef as React.RefObject<HTMLButtonElement>}
-        className={`flex min-h-[280px] w-full cursor-pointer items-center justify-center rounded-2xl border-[1.5px] border-dashed ${
+        className={`flex h-[360px] w-full cursor-pointer items-center justify-center rounded-2xl border-[1.5px] border-dashed ${
           isDragging
             ? 'border-primary bg-primary/5'
             : filesCount > 0

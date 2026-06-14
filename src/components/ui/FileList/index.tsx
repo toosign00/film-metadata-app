@@ -3,7 +3,7 @@ import type { FileListProps } from '@/types/fileList.types';
 export const FileList = ({ files }: FileListProps) => {
   if (!files || files.length === 0) {
     return (
-      <div className='flex min-h-[280px] items-center justify-center rounded-2xl border border-border bg-surface p-6'>
+      <div className='flex h-[360px] min-w-0 items-center justify-center rounded-2xl border border-border bg-surface p-6'>
         <p className='text-center text-sm text-foreground-muted'>
           파일을 선택하면 처리 순서를 보여드려요
         </p>
@@ -12,8 +12,8 @@ export const FileList = ({ files }: FileListProps) => {
   }
 
   return (
-    <div className='flex min-h-[280px] max-h-[360px] flex-col rounded-2xl border border-border bg-surface'>
-      <div className='flex items-center justify-between border-b border-border px-4 py-3'>
+    <div className='flex h-[360px] min-w-0 flex-col overflow-hidden rounded-2xl border border-border bg-surface'>
+      <div className='flex shrink-0 items-center justify-between border-b border-border px-4 py-3'>
         <h3 className='text-xs font-semibold uppercase tracking-[0.06em] text-foreground-secondary'>
           Selected files
         </h3>
@@ -21,7 +21,7 @@ export const FileList = ({ files }: FileListProps) => {
           {files.length}개
         </span>
       </div>
-      <div className='flex-1 overflow-y-auto px-4'>
+      <div className='min-h-0 flex-1 overflow-y-auto px-4'>
         <ol>
           {files.map((file, index) => (
             <li
