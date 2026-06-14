@@ -13,6 +13,7 @@ export const StepNavigation = ({
   activeStep,
   filesCount,
   resultsCount,
+  errorsCount,
   processing,
   goToStep,
 }: StepNavigationProps) => {
@@ -20,7 +21,7 @@ export const StepNavigation = ({
     if (processing) return false;
     if (stepNumber === 1) return true;
     if (stepNumber === 2) return filesCount > 0;
-    return resultsCount > 0;
+    return resultsCount > 0 || errorsCount > 0;
   };
 
   return (
@@ -41,6 +42,7 @@ export const StepNavigation = ({
                 onClick={() => goToStep(step.number)}
                 disabled={!enabled}
                 aria-current={active ? 'step' : undefined}
+                aria-label={`${String(step.number).padStart(2, '0')} ${step.label}`}
                 className='group flex min-h-11 shrink-0 items-center gap-2 rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
               >
                 <span

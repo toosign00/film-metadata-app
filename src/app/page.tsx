@@ -44,6 +44,7 @@ export default function Home() {
         activeStep={state.activeStep}
         filesCount={state.files.length}
         resultsCount={state.resultImages.length}
+        errorsCount={state.errors.length}
         processing={state.processing}
         goToStep={goToStep}
       />
