@@ -34,35 +34,33 @@ export const StepNavigation = ({
           return (
             <li
               key={step.number}
-              className={`flex items-center ${index < steps.length - 1 ? 'flex-1' : ''}`}
+              className={`flex min-w-0 items-center ${index < steps.length - 1 ? 'flex-1' : ''}`}
             >
               <button
                 type='button'
                 onClick={() => goToStep(step.number)}
                 disabled={!enabled}
                 aria-current={active ? 'step' : undefined}
-                className={`flex min-h-11 shrink-0 items-center gap-2 rounded-md focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset ${
-                  enabled ? 'cursor-pointer' : 'cursor-not-allowed'
-                }`}
+                className='group flex min-h-11 shrink-0 items-center gap-2 rounded-lg text-left focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring'
               >
                 <span
-                  className={`flex h-7 w-7 shrink-0 items-center justify-center rounded-full text-xs font-semibold transition-colors ${
+                  className={`grid h-6 w-6 place-items-center rounded-full border text-[10px] font-semibold ${
                     completed
-                      ? 'bg-primary text-primary-foreground'
+                      ? 'border-primary bg-primary text-primary-foreground'
                       : active
-                        ? 'bg-foreground text-background'
-                        : 'border border-border-hover text-foreground-muted'
+                        ? 'border-foreground bg-foreground text-background'
+                        : 'border-border-hover text-foreground-muted'
                   }`}
                 >
                   {completed ? (
-                    <Check aria-hidden='true' size={12} strokeWidth={3} />
+                    <Check aria-hidden='true' size={12} />
                   ) : (
                     step.number.toString().padStart(2, '0')
                   )}
                 </span>
                 <span
-                  className={`hidden text-sm sm:inline ${
-                    active ? 'font-semibold text-foreground' : 'text-foreground-muted'
+                  className={`hidden text-xs font-medium sm:inline ${
+                    active ? 'text-foreground' : 'text-foreground-muted'
                   }`}
                 >
                   {step.label}
@@ -72,7 +70,9 @@ export const StepNavigation = ({
               {index < steps.length - 1 && (
                 <span
                   aria-hidden='true'
-                  className={`mx-4 h-px flex-1 ${completed ? 'bg-primary/50' : 'bg-border'}`}
+                  className={`mx-3 h-px min-w-3 flex-1 sm:mx-5 ${
+                    completed ? 'bg-primary/50' : 'bg-border'
+                  }`}
                 />
               )}
             </li>

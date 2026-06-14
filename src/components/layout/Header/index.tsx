@@ -19,10 +19,10 @@ export const Header = ({ className }: HeaderProps) => {
         <span className='text-xs font-semibold tracking-[0.08em] text-foreground'>
           Film Metadata
         </span>
-        <div className='flex items-center gap-4'>
-          <p className='hidden text-xs text-foreground-muted md:block'>
+        <div className='flex items-center gap-3'>
+          <span className='hidden text-[11px] text-foreground-muted md:inline'>
             파일은 브라우저에서 안전하게 처리해요
-          </p>
+          </span>
           {mounted ? (
             <button
               type='button'

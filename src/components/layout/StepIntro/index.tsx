@@ -2,10 +2,10 @@ import type { StepIntroProps } from '@/types/stepIntro.types';
 
 export const StepIntro = ({ eyebrow, title, description, titleId }: StepIntroProps) => (
   <header className='mb-8 md:mb-10'>
-    <p className='text-[11px] font-semibold uppercase tracking-[0.08em] text-primary'>{eyebrow}</p>
+    <p className='text-[11px] font-semibold tracking-[0.12em] text-primary'>{eyebrow}</p>
     <h1
       id={titleId}
-      className='mt-2 text-[28px] font-semibold leading-[34px] tracking-[-0.02em] text-foreground'
+      className='mt-3 text-[28px] font-semibold leading-[1.18] tracking-[-0.035em] text-foreground md:text-[34px]'
     >
       {title}
     </h1>
