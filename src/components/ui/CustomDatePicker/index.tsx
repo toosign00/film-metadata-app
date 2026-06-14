@@ -1,19 +1,37 @@
 'use client';
 
 import { Calendar } from 'lucide-react';
-import { type ButtonHTMLAttributes, forwardRef } from 'react';
+import { type ButtonHTMLAttributes, type ChangeEventHandler, forwardRef } from 'react';
 import DatePicker, { type DatePickerProps } from 'react-datepicker';
 
-type CustomInputProps = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'value'> & {
+type CustomInputProps = Omit<
+  ButtonHTMLAttributes<HTMLButtonElement>,
+  'autoComplete' | 'onChange' | 'value'
+> & {
   value?: string;
   placeholder?: string;
+  autoComplete?: string;
+  onChange?: ChangeEventHandler<HTMLInputElement>;
+  readOnly?: boolean;
+  required?: boolean;
 };
 
 const CustomInput = forwardRef<HTMLButtonElement, CustomInputProps>((props, forwardedRef) => {
-  const { value, placeholder, className = '', disabled, ...rest } = props;
+  const {
+    value,
+    placeholder,
+    className = '',
+    disabled,
+    onChange: _onChange,
+    autoComplete: _autoComplete,
+    readOnly: _readOnly,
+    required: _required,
+    ...buttonProps
+  } = props;
+
   return (
     <button
-      {...rest}
+      {...buttonProps}
       ref={forwardedRef}
       type='button'
       disabled={disabled}
