@@ -144,7 +144,7 @@ export const MetadataSettingsForm = ({
           {processing
             ? `메타데이터 적용 중 ${completed}/${sortedFiles.length}`
             : Object.keys(errors).length > 0
-              ? '입력 정보에 오류가 있습니다. 각 필드의 오류 메시지를 확인해주세요.'
+              ? '입력 정보에 오류가 있습니다. 각 필드의 오류 메시지를 확인해 주세요.'
               : ''}
         </div>
       </form>

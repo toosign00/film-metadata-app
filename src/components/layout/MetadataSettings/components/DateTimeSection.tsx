@@ -27,7 +27,7 @@ export const DateTimeSection = ({ control, errors }: DateTimeSectionProps) => {
               onChange={(date: Date | null) => field.onChange(date)}
               dateFormat='yyyy-MM-dd'
               placeholderText='시작 날짜 선택'
-              aria-describedby='startDate-help startDate-error'
+              aria-describedby={`startDate-help${errors.startDate ? ' startDate-error' : ''}`}
               aria-required='true'
               aria-invalid={errors.startDate ? 'true' : 'false'}
               id='startDate'
@@ -67,7 +67,7 @@ export const DateTimeSection = ({ control, errors }: DateTimeSectionProps) => {
               timeFormat='HH:mm'
               dateFormat='HH:mm'
               placeholderText='시작 시간 선택'
-              aria-describedby='startTime-help startTime-error'
+              aria-describedby={`startTime-help${errors.startTime ? ' startTime-error' : ''}`}
               aria-required='true'
               aria-invalid={errors.startTime ? 'true' : 'false'}
               id='startTime'

@@ -22,7 +22,7 @@ export const FilmSection = ({ register, errors }: FilmSectionProps) => {
           {...register('filmInfo')}
           placeholder='예: Kodak Portra 400'
           className='min-h-11 w-full rounded-[10px] border border-border bg-input px-3 text-sm text-foreground placeholder:text-foreground-muted/70 transition-colors hover:border-border-hover focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20'
-          aria-describedby='filmInfo-help filmInfo-error'
+          aria-describedby={`filmInfo-help${errors.filmInfo ? ' filmInfo-error' : ''}`}
           aria-invalid={!!errors.filmInfo}
         />
         <div className='flex flex-wrap items-center justify-between'>
@@ -50,7 +50,7 @@ export const FilmSection = ({ register, errors }: FilmSectionProps) => {
           {...register('isoValue')}
           placeholder='예: 400'
           className='min-h-11 w-full rounded-[10px] border border-border bg-input px-3 text-sm text-foreground placeholder:text-foreground-muted/70 transition-colors hover:border-border-hover focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20'
-          aria-describedby='isoValue-help isoValue-error'
+          aria-describedby={`isoValue-help${errors.isoValue ? ' isoValue-error' : ''}`}
           aria-invalid={!!errors.isoValue}
         />
         <div className='flex flex-wrap items-center justify-between'>

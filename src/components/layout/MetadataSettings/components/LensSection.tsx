@@ -22,7 +22,7 @@ export const LensSection = ({ register, errors }: LensSectionProps) => {
           {...register('lens')}
           placeholder='예: Canon FD'
           className='min-h-11 w-full rounded-[10px] border border-border bg-input px-3 text-sm text-foreground placeholder:text-foreground-muted/70 transition-colors hover:border-border-hover focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20'
-          aria-describedby='lens-help lens-error'
+          aria-describedby={`lens-help${errors.lens ? ' lens-error' : ''}`}
           aria-invalid={!!errors.lens}
         />
         <div className='flex flex-wrap items-center justify-between'>
@@ -53,7 +53,7 @@ export const LensSection = ({ register, errors }: LensSectionProps) => {
               {...register('focalLength')}
               placeholder='예: 50'
               className='min-h-11 w-full rounded-[10px] border border-border bg-input px-3 pr-8 text-sm text-foreground placeholder:text-foreground-muted/70 transition-colors hover:border-border-hover focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20'
-              aria-describedby='focalLength-help focalLength-error'
+              aria-describedby={`focalLength-help${errors.focalLength ? ' focalLength-error' : ''}`}
               aria-invalid={!!errors.focalLength}
             />
             <span className='pointer-events-none absolute top-1/2 right-1 -translate-y-1/2 text-xs text-foreground-muted'>
@@ -88,7 +88,7 @@ export const LensSection = ({ register, errors }: LensSectionProps) => {
               {...register('aperture')}
               placeholder='예: 1.8'
               className='min-h-11 w-full rounded-[10px] border border-border bg-input px-3 pl-7 text-sm text-foreground placeholder:text-foreground-muted/70 transition-colors hover:border-border-hover focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20'
-              aria-describedby='aperture-help aperture-error'
+              aria-describedby={`aperture-help${errors.aperture ? ' aperture-error' : ''}`}
               aria-invalid={!!errors.aperture}
             />
           </div>

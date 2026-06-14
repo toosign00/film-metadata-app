@@ -21,8 +21,11 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
   const [presets, setPresets] = useState<Preset[]>([]);
   const [saving, setSaving] = useState(false);
   const [presetName, setPresetName] = useState('');
+  const [statusMessage, setStatusMessage] = useState('');
   const inputRef = useRef<HTMLInputElement>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
+  const saveTriggerRef = useRef<HTMLButtonElement>(null);
+  const presetButtonRefs = useRef(new Map<string, HTMLButtonElement>());
 
   useEffect(() => {
     setPresets(getPresets());
@@ -36,16 +39,30 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
     setPresets(getPresets());
     setPresetName('');
     setSaving(false);
+    setStatusMessage(`${trimmed} 프리셋을 저장했어요.`);
+    requestAnimationFrame(() => saveTriggerRef.current?.focus());
   }, [presetName, getCurrentData]);
 
-  const handleDelete = useCallback((id: string) => {
-    deletePreset(id);
-    setPresets(getPresets());
-  }, []);
+  const handleDelete = useCallback(
+    (id: string, index: number) => {
+      const deletedPreset = presets[index];
+      const focusId = presets[index + 1]?.id ?? presets[index - 1]?.id;
+      deletePreset(id);
+      const nextPresets = getPresets();
+      setPresets(nextPresets);
+      setStatusMessage(`${deletedPreset.name} 프리셋을 삭제했어요.`);
+      requestAnimationFrame(() => {
+        const nextButton = focusId ? presetButtonRefs.current.get(focusId) : null;
+        (nextButton ?? saveTriggerRef.current)?.focus();
+      });
+    },
+    [presets]
+  );
 
   const handleLoad = useCallback(
     (preset: Preset) => {
       onLoad(preset.data);
+      setStatusMessage(`${preset.name} 프리셋을 불러왔어요.`);
     },
     [onLoad]
   );
@@ -56,10 +73,24 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
     try {
       await importPresets(file);
       setPresets(getPresets());
+      setStatusMessage('프리셋을 가져왔어요.');
     } catch {
-      alert('프리셋 파일을 불러오지 못했어요. 올바른 JSON 파일인지 확인해 주세요.');
+      const message = '프리셋 파일을 불러오지 못했어요. 올바른 JSON 파일인지 확인해 주세요.';
+      setStatusMessage(message);
+      alert(message);
     }
     e.target.value = '';
+  }, []);
+
+  const handleExport = useCallback(() => {
+    setStatusMessage(`${presets.length}개 프리셋을 내보냈어요.`);
+    exportPresets();
+  }, [presets.length]);
+
+  const closeSaving = useCallback(() => {
+    setSaving(false);
+    setPresetName('');
+    requestAnimationFrame(() => saveTriggerRef.current?.focus());
   }, []);
 
   return (
@@ -73,20 +104,28 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
           {presets.length === 0 && (
             <p className='text-xs text-foreground-muted'>저장된 프리셋이 없어요.</p>
           )}
-          {presets.map((preset) => (
+          {presets.map((preset, index) => (
             <span key={preset.id} className='group relative'>
               <button
+                ref={(node) => {
+                  if (node) {
+                    presetButtonRefs.current.set(preset.id, node);
+                  } else {
+                    presetButtonRefs.current.delete(preset.id);
+                  }
+                }}
                 type='button'
                 onClick={() => handleLoad(preset)}
+                data-preset-id={preset.id}
                 className='min-h-9 cursor-pointer rounded-full border border-border bg-surface-alt px-3 text-xs text-foreground-secondary transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset'
                 title={`${preset.name} 불러오기`}
               >
-                {preset.name}
+                <span className='block max-w-[10rem] truncate'>{preset.name}</span>
               </button>
               <button
                 type='button'
-                onClick={() => handleDelete(preset.id)}
-                className='-right-2 -top-2 absolute flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-destructive text-destructive-foreground opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset'
+                onClick={() => handleDelete(preset.id, index)}
+                className='-right-2 -top-2 absolute flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-destructive text-destructive-foreground opacity-100 shadow-sm transition-opacity focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 md:focus-visible:opacity-100'
                 aria-label={`${preset.name} 삭제`}
               >
                 <X aria-hidden='true' size={12} />
@@ -109,9 +148,10 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
                   e.preventDefault();
                   handleSave();
                 }
-                if (e.key === 'Escape') setSaving(false);
+                if (e.key === 'Escape') closeSaving();
               }}
               placeholder='이름 입력'
+              maxLength={40}
               className='min-h-11 w-full rounded-[10px] border border-border bg-input px-3 text-sm text-foreground placeholder:text-foreground-muted/70 transition-colors hover:border-border-hover focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 sm:w-36'
               aria-label='프리셋 이름'
             />
@@ -126,10 +166,7 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
             <Button
               type='button'
               variant='secondary'
-              onClick={() => {
-                setSaving(false);
-                setPresetName('');
-              }}
+              onClick={closeSaving}
               aria-label='취소'
               className='w-11 px-0'
             >
@@ -137,17 +174,18 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
             </Button>
           </>
         ) : (
-          <Button
+          <button
+            ref={saveTriggerRef}
             type='button'
-            variant='secondary'
             onClick={() => {
               setSaving(true);
-              setTimeout(() => inputRef.current?.focus(), 0);
+              requestAnimationFrame(() => inputRef.current?.focus());
             }}
-            icon={<Plus aria-hidden='true' size={16} />}
+            className='inline-flex min-h-11 cursor-pointer items-center justify-center gap-2 rounded-[10px] border border-border bg-surface px-5 text-sm font-semibold text-foreground-secondary transition-colors duration-150 hover:bg-surface-alt hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset'
           >
+            <Plus aria-hidden='true' size={16} />
             저장
-          </Button>
+          </button>
         )}
 
         <input
@@ -169,13 +207,16 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
         <Button
           type='button'
           variant='secondary'
-          onClick={exportPresets}
+          onClick={handleExport}
           disabled={presets.length === 0}
           icon={<Download aria-hidden='true' size={16} />}
         >
           내보내기
         </Button>
       </div>
+      <p className='sr-only' aria-live='polite'>
+        {statusMessage}
+      </p>
     </div>
   );
 };

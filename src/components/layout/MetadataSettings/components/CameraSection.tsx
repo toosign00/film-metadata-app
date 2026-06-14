@@ -22,7 +22,7 @@ export const CameraSection = ({ register, errors }: CameraSectionProps) => {
           {...register('cameraMake')}
           className='min-h-11 w-full rounded-[10px] border border-border bg-input px-3 text-sm text-foreground placeholder:text-foreground-muted/70 transition-colors hover:border-border-hover focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20'
           placeholder='예: Nikon'
-          aria-describedby='cameraMake-help cameraMake-error'
+          aria-describedby={`cameraMake-help${errors.cameraMake ? ' cameraMake-error' : ''}`}
           aria-invalid={!!errors.cameraMake}
           autoComplete='off'
         />
@@ -51,7 +51,7 @@ export const CameraSection = ({ register, errors }: CameraSectionProps) => {
           {...register('cameraModel')}
           className='min-h-11 w-full rounded-[10px] border border-border bg-input px-3 text-sm text-foreground placeholder:text-foreground-muted/70 transition-colors hover:border-border-hover focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20'
           placeholder='예: FM2'
-          aria-describedby='cameraModel-help cameraModel-error'
+          aria-describedby={`cameraModel-help${errors.cameraModel ? ' cameraModel-error' : ''}`}
           aria-invalid={!!errors.cameraModel}
           autoComplete='off'
         />
