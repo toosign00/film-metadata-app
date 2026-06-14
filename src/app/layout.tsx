@@ -95,7 +95,10 @@ export const metadata: Metadata = {
 };
 
 export const viewport: Viewport = {
-  themeColor: '#f8f9fa',
+  themeColor: [
+    { media: '(prefers-color-scheme: light)', color: '#fcfcfd' },
+    { media: '(prefers-color-scheme: dark)', color: '#0f0f0f' },
+  ],
   width: 'device-width',
   initialScale: 1,
   maximumScale: 5,
@@ -115,7 +118,7 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <div className='flex min-h-screen w-full flex-col overflow-x-hidden bg-background text-foreground'>
+          <div className='flex min-h-screen w-full flex-col overflow-x-hidden'>
             {children}
             <Footer />
             <ToasterClient />
