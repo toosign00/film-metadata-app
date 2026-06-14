@@ -26,7 +26,7 @@ export const StepNavigation = ({
 
   return (
     <nav aria-label='작업 진행 단계' className='border-b border-border'>
-      <ol className='mx-auto flex h-14 w-full max-w-5xl items-center px-4 sm:px-6'>
+      <ol className='mx-auto flex h-14 w-full max-w-6xl items-center px-4 sm:px-6'>
         {steps.map((step, index) => {
           const enabled = isStepEnabled(step.number);
           const completed = step.number < activeStep;

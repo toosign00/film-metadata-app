@@ -49,7 +49,7 @@ export default function Home() {
         goToStep={goToStep}
       />
       <main className='flex-1'>
-        <div className='mx-auto w-full max-w-5xl px-4 py-10 sm:px-6 md:py-14'>
+        <div className='mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 md:py-14'>
           <div key={state.activeStep} className='step-enter'>
             {state.activeStep === 1 && (
               <FileSelection

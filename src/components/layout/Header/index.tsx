@@ -15,7 +15,7 @@ export const Header = ({ className }: HeaderProps) => {
 
   return (
     <header className={`border-b border-border bg-background/95 ${className || ''}`}>
-      <div className='mx-auto flex h-[58px] w-full max-w-5xl items-center justify-between px-4 sm:px-6'>
+      <div className='mx-auto flex h-[58px] w-full max-w-6xl items-center justify-between px-4 sm:px-6'>
         <span className='text-xs font-semibold tracking-[0.08em] text-foreground'>
           Film Metadata
         </span>
