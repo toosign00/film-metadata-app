@@ -1,7 +1,8 @@
 'use client';
 
-import { Info, Plus, X } from 'lucide-react';
+import { Download, Plus, Upload, X } from 'lucide-react';
 import { useCallback, useEffect, useRef, useState } from 'react';
+import { Button } from '@/components/ui/Button';
 import {
   deletePreset,
   exportPresets,
@@ -56,119 +57,125 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
       await importPresets(file);
       setPresets(getPresets());
     } catch {
-      alert('프리셋 파일을 불러올 수 없습니다. 올바른 JSON 파일인지 확인해주세요.');
+      alert('프리셋 파일을 불러오지 못했어요. 올바른 JSON 파일인지 확인해 주세요.');
     }
     e.target.value = '';
   }, []);
 
   return (
-    <div className='flex flex-wrap items-center gap-2 border-b border-border pb-4'>
-      <span className='group/info relative mr-1 inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-[0.04em] text-foreground-muted'>
-        프리셋
-        <Info size={14} className='cursor-help' />
-        <span className='pointer-events-none absolute top-full left-0 z-20 mt-2 w-64 rounded-lg border border-border bg-surface p-3 text-sm leading-relaxed text-foreground-secondary opacity-0 shadow-[0_4px_12px_rgba(0,0,0,0.08)] transition-opacity group-hover/info:opacity-100'>
-          자주 쓰는 카메라·렌즈·필름 설정을 프리셋으로 저장해두면 다음에 바로 불러올 수 있습니다.
-          JSON 파일로 내보내거나 가져올 수도 있습니다.
-        </span>
-      </span>
+    <div className='flex flex-col items-stretch gap-4 border-y border-border py-4 sm:flex-row sm:items-center sm:justify-between'>
+      <div className='min-w-0'>
+        <p className='text-xs font-semibold uppercase tracking-[0.04em] text-foreground'>Preset</p>
+        <p className='mt-1 text-xs leading-5 text-foreground-muted'>
+          자주 쓰는 카메라와 필름 설정을 저장해 바로 불러올 수 있어요.
+        </p>
+        <div className='mt-3 flex flex-wrap items-center gap-2'>
+          {presets.length === 0 && (
+            <p className='text-xs text-foreground-muted'>저장된 프리셋이 없어요.</p>
+          )}
+          {presets.map((preset) => (
+            <span key={preset.id} className='group relative'>
+              <button
+                type='button'
+                onClick={() => handleLoad(preset)}
+                className='min-h-9 cursor-pointer rounded-full border border-border bg-surface-alt px-3 text-xs text-foreground-secondary transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset'
+                title={`${preset.name} 불러오기`}
+              >
+                {preset.name}
+              </button>
+              <button
+                type='button'
+                onClick={() => handleDelete(preset.id)}
+                className='-right-2 -top-2 absolute flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-destructive text-destructive-foreground opacity-0 shadow-sm transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset'
+                aria-label={`${preset.name} 삭제`}
+              >
+                <X aria-hidden='true' size={12} />
+              </button>
+            </span>
+          ))}
+        </div>
+      </div>
 
-      {presets.map((preset) => (
-        <span key={preset.id} className='group relative'>
-          <button
+      <div className='flex flex-wrap items-center gap-2 sm:justify-end'>
+        {saving ? (
+          <>
+            <input
+              ref={inputRef}
+              type='text'
+              value={presetName}
+              onChange={(e) => setPresetName(e.target.value)}
+              onKeyDown={(e) => {
+                if (e.key === 'Enter') {
+                  e.preventDefault();
+                  handleSave();
+                }
+                if (e.key === 'Escape') setSaving(false);
+              }}
+              placeholder='이름 입력'
+              className='min-h-11 w-full rounded-[10px] border border-border bg-input px-3 text-sm text-foreground placeholder:text-foreground-muted/70 transition-colors hover:border-border-hover focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20 sm:w-36'
+              aria-label='프리셋 이름'
+            />
+            <Button
+              type='button'
+              variant='secondary'
+              onClick={handleSave}
+              disabled={!presetName.trim()}
+            >
+              저장
+            </Button>
+            <Button
+              type='button'
+              variant='secondary'
+              onClick={() => {
+                setSaving(false);
+                setPresetName('');
+              }}
+              aria-label='취소'
+              className='w-11 px-0'
+            >
+              <X aria-hidden='true' size={16} />
+            </Button>
+          </>
+        ) : (
+          <Button
             type='button'
-            onClick={() => handleLoad(preset)}
-            className='cursor-pointer rounded-full border border-border bg-surface-alt px-3 py-1 text-xs text-foreground-secondary transition-colors hover:border-primary hover:text-primary'
-            title={`${preset.name} 불러오기`}
-          >
-            {preset.name}
-          </button>
-          <button
-            type='button'
-            onClick={() => handleDelete(preset.id)}
-            className='-top-1.5 -right-1.5 absolute flex h-4 w-4 cursor-pointer items-center justify-center rounded-full bg-destructive text-destructive-foreground opacity-0 shadow-sm transition-opacity group-hover:opacity-100'
-            aria-label={`${preset.name} 삭제`}
-          >
-            <X size={10} />
-          </button>
-        </span>
-      ))}
-
-      {saving ? (
-        <div className='inline-flex items-center gap-2 rounded-full border border-primary/30 bg-surface-alt py-1 pr-2 pl-3'>
-          <input
-            ref={inputRef}
-            type='text'
-            value={presetName}
-            onChange={(e) => setPresetName(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === 'Enter') {
-                e.preventDefault();
-                handleSave();
-              }
-              if (e.key === 'Escape') setSaving(false);
+            variant='secondary'
+            onClick={() => {
+              setSaving(true);
+              setTimeout(() => inputRef.current?.focus(), 0);
             }}
-            placeholder='이름 입력'
-            className='w-24 bg-transparent text-foreground text-sm placeholder:text-foreground-muted focus:outline-none'
-          />
-          <button
-            type='button'
-            onClick={handleSave}
-            disabled={!presetName.trim()}
-            className='cursor-pointer rounded-full bg-primary px-3 py-1 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary-hover disabled:cursor-not-allowed disabled:opacity-40'
+            icon={<Plus aria-hidden='true' size={16} />}
           >
             저장
-          </button>
-          <button
-            type='button'
-            onClick={() => {
-              setSaving(false);
-              setPresetName('');
-            }}
-            className='cursor-pointer rounded-full p-0.5 text-foreground-muted transition-colors hover:text-foreground'
-            aria-label='취소'
-          >
-            <X size={14} />
-          </button>
-        </div>
-      ) : (
-        <button
+          </Button>
+        )}
+
+        <input
+          ref={fileInputRef}
+          type='file'
+          accept='.json'
+          onChange={handleImport}
+          className='hidden'
+          tabIndex={-1}
+        />
+        <Button
           type='button'
-          onClick={() => {
-            setSaving(true);
-            setTimeout(() => inputRef.current?.focus(), 0);
-          }}
-          className='inline-flex cursor-pointer items-center gap-1.5 rounded-full border border-dashed border-border-hover px-3 py-1 text-xs text-foreground-muted transition-colors hover:border-primary hover:text-primary'
-          title='현재 설정을 프리셋으로 저장'
+          variant='secondary'
+          onClick={() => fileInputRef.current?.click()}
+          icon={<Upload aria-hidden='true' size={16} />}
         >
-          <Plus size={14} />새 프리셋
-        </button>
-      )}
-
-      <span className='mx-0.5 h-5 w-px bg-border' />
-
-      <input
-        ref={fileInputRef}
-        type='file'
-        accept='.json'
-        onChange={handleImport}
-        className='hidden'
-        tabIndex={-1}
-      />
-      <button
-        type='button'
-        onClick={() => fileInputRef.current?.click()}
-        className='cursor-pointer text-xs text-foreground-muted transition-colors hover:text-foreground'
-      >
-        가져오기
-      </button>
-      <button
-        type='button'
-        onClick={exportPresets}
-        disabled={presets.length === 0}
-        className='cursor-pointer text-xs text-foreground-muted transition-colors hover:text-foreground disabled:cursor-not-allowed disabled:opacity-40'
-      >
-        내보내기
-      </button>
+          가져오기
+        </Button>
+        <Button
+          type='button'
+          variant='secondary'
+          onClick={exportPresets}
+          disabled={presets.length === 0}
+          icon={<Download aria-hidden='true' size={16} />}
+        >
+          내보내기
+        </Button>
+      </div>
     </div>
   );
 };

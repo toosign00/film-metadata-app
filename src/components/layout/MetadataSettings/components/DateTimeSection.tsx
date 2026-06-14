@@ -1,17 +1,16 @@
 import { Controller } from 'react-hook-form';
 import { CustomDatePicker } from '@/components/ui/CustomDatePicker';
+import { MetadataCard } from '@/components/ui/MetadataCard';
 import type { DateTimeSectionProps } from '@/types/metadataSettings.types';
 
 export const DateTimeSection = ({ control, errors }: DateTimeSectionProps) => {
   return (
-    <fieldset
-      className='rounded-xl border border-border bg-surface px-5 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)]'
-      aria-labelledby='date-time-heading'
+    <MetadataCard
+      id='capture'
+      eyebrow='01 / CAPTURE'
+      title='날짜 및 시간'
+      description='첫 사진의 촬영 시점을 기준으로 기록해요.'
     >
-      <h3 id='date-time-heading' className='mb-4 text-sm font-semibold text-foreground'>
-        촬영 날짜/시간
-      </h3>
-
       <div className='border-b border-border pb-4'>
         <label
           htmlFor='startDate'
@@ -38,7 +37,7 @@ export const DateTimeSection = ({ control, errors }: DateTimeSectionProps) => {
         />
         <div className='flex flex-wrap items-center justify-between'>
           <p id='startDate-help' className='mt-1 text-xs text-foreground-muted'>
-            첫 번째 사진의 촬영 날짜
+            첫 사진의 촬영 날짜를 기록해요.
           </p>
           {errors.startDate && (
             <p id='startDate-error' className='mt-1 text-xs text-destructive' role='alert'>
@@ -78,7 +77,7 @@ export const DateTimeSection = ({ control, errors }: DateTimeSectionProps) => {
         />
         <div className='flex flex-wrap items-center justify-between'>
           <p id='startTime-help' className='mt-1 text-xs text-foreground-muted'>
-            사진 순서대로 1초 간격으로 설정됩니다
+            사진 순서대로 1초 간격을 적용해요.
           </p>
           {errors.startTime && (
             <p id='startTime-error' className='mt-1 text-xs text-destructive' role='alert'>
@@ -87,6 +86,6 @@ export const DateTimeSection = ({ control, errors }: DateTimeSectionProps) => {
           )}
         </div>
       </div>
-    </fieldset>
+    </MetadataCard>
   );
 };

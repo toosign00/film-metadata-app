@@ -3,6 +3,7 @@
 import { zodResolver } from '@hookform/resolvers/zod';
 import { useCallback, useEffect, useRef } from 'react';
 import { useForm } from 'react-hook-form';
+import { StepIntro } from '@/components/layout/StepIntro';
 import { Button } from '@/components/ui/Button';
 import type { MetadataSettings } from '@/types/metadata.types';
 import type { MetadataSettingsProps } from '@/types/metadataSettings.types';
@@ -85,67 +86,68 @@ export const MetadataSettingsForm = ({
   }
 
   return (
-    <section className='mb-8 transition-all' aria-labelledby='metadata-section'>
-      <div className='rounded-xl border border-border bg-surface px-6 py-5 shadow-[0_1px_3px_rgba(0,0,0,0.06),0_1px_2px_rgba(0,0,0,0.04)]'>
-        <h2
-          id='metadata-section'
-          className='mb-5 text-xs font-semibold uppercase tracking-[0.06em] text-foreground-secondary'
-        >
-          메타데이터 설정
-        </h2>
+    <section aria-labelledby='metadata-section'>
+      <StepIntro
+        eyebrow='02 / METADATA'
+        title='촬영 정보를 입력하세요'
+        titleId='metadata-section'
+        description={<p>선택한 모든 이미지에 같은 EXIF 정보를 적용해요.</p>}
+      />
+      <form
+        ref={formRef}
+        onSubmit={handleSubmit(() => onProcessFiles())}
+        noValidate
+        aria-label='메타데이터 설정 폼'
+      >
+        <PresetBar onLoad={handlePresetLoad} getCurrentData={getCurrentPresetData} />
 
-        <form
-          ref={formRef}
-          onSubmit={handleSubmit(() => onProcessFiles())}
-          className='space-y-6'
-          noValidate
-          aria-label='메타데이터 설정 폼'
-        >
-          <PresetBar onLoad={handlePresetLoad} getCurrentData={getCurrentPresetData} />
+        <div className='mt-6 grid grid-cols-1 gap-4 md:grid-cols-2'>
+          <DateTimeSection control={control} errors={errors} />
+          <CameraSection register={register} errors={errors} />
+          <LensSection register={register} errors={errors} />
+          <FilmSection register={register} errors={errors} />
+        </div>
 
-          <div className='grid grid-cols-1 gap-5 md:grid-cols-2'>
-            <DateTimeSection control={control} errors={errors} />
-            <CameraSection register={register} errors={errors} />
-            <LensSection register={register} errors={errors} />
-            <FilmSection register={register} errors={errors} />
-          </div>
+        <div className='mt-8 flex flex-wrap items-center justify-between gap-4'>
+          <Button
+            variant='text'
+            type='button'
+            onClick={() => goToStep(1)}
+            aria-label='이미지 선택 단계로 이동'
+          >
+            ← 이미지 선택
+          </Button>
 
-          <div className='mt-6 flex justify-between'>
-            <Button
-              variant='text'
-              type='button'
-              onClick={() => goToStep(1)}
-              aria-label='이전 단계로 이동'
-            >
-              &larr; 이전
-            </Button>
+          <Button
+            variant='primary'
+            type='submit'
+            disabled={processing || sortedFiles.length === 0}
+            isLoading={processing}
+            aria-busy={processing}
+            aria-label={
+              processing
+                ? `메타데이터 적용 중 ${completed}/${sortedFiles.length}`
+                : '메타데이터 적용하기'
+            }
+          >
+            {processing ? (
+              <span aria-hidden='true'>
+                {completed}/{sortedFiles.length} 처리 중
+              </span>
+            ) : (
+              '메타데이터 적용하기 →'
+            )}
+          </Button>
+        </div>
 
-            <Button
-              variant='primary'
-              type='submit'
-              disabled={processing || sortedFiles.length === 0}
-              isLoading={processing && completed > 0}
-              aria-busy={processing && completed > 0}
-              aria-label='메타데이터 설정 완료'
-              icon={
-                processing && completed > 0 ? (
-                  <span aria-live='polite'>
-                    {completed}/{sortedFiles.length}
-                  </span>
-                ) : null
-              }
-            >
-              메타데이터 설정하기
-            </Button>
-          </div>
-
-          <div className='sr-only' aria-live='polite'>
-            {Object.keys(errors).length > 0
+        <div className='sr-only' aria-live='polite'>
+          {processing
+            ? `메타데이터 적용 중 ${completed}/${sortedFiles.length}`
+            : Object.keys(errors).length > 0
               ? '입력 정보에 오류가 있습니다. 각 필드의 오류 메시지를 확인해주세요.'
               : ''}
-          </div>
-        </form>
-      </div>
+        </div>
+      </form>
     </section>
   );
 };

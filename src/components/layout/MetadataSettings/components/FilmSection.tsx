@@ -1,15 +1,14 @@
+import { MetadataCard } from '@/components/ui/MetadataCard';
 import type { FilmSectionProps } from '@/types/metadataSettings.types';
 
 export const FilmSection = ({ register, errors }: FilmSectionProps) => {
   return (
-    <fieldset
-      className='rounded-xl border border-border bg-surface px-5 py-4 shadow-[0_1px_2px_rgba(0,0,0,0.04)]'
-      aria-labelledby='film-heading'
+    <MetadataCard
+      id='film'
+      eyebrow='04 / FILM'
+      title='필름'
+      description='필름 종류와 감도를 입력해요.'
     >
-      <h3 id='film-heading' className='mb-4 text-sm font-semibold text-foreground'>
-        필름 정보
-      </h3>
-
       <div className='border-b border-border pb-4'>
         <label
           htmlFor='filmInfo'
@@ -22,13 +21,13 @@ export const FilmSection = ({ register, errors }: FilmSectionProps) => {
           id='filmInfo'
           {...register('filmInfo')}
           placeholder='예: Kodak Portra 400'
-          className='w-full rounded-md border border-border bg-surface-alt px-3 py-2 text-sm text-foreground placeholder:text-foreground-muted transition-colors focus:border-primary focus:outline-none'
+          className='min-h-11 w-full rounded-[10px] border border-border bg-input px-3 text-sm text-foreground placeholder:text-foreground-muted/70 transition-colors hover:border-border-hover focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20'
           aria-describedby='filmInfo-help filmInfo-error'
           aria-invalid={!!errors.filmInfo}
         />
         <div className='flex flex-wrap items-center justify-between'>
           <p id='filmInfo-help' className='mt-1 text-xs text-foreground-muted'>
-            필름 종류 (예: Kodak Portra 400)
+            필름 종류와 제품명을 기록해요.
           </p>
           {errors.filmInfo && (
             <p id='filmInfo-error' className='mt-1 text-xs text-destructive' role='alert'>
@@ -50,13 +49,13 @@ export const FilmSection = ({ register, errors }: FilmSectionProps) => {
           id='isoValue'
           {...register('isoValue')}
           placeholder='예: 400'
-          className='w-full rounded-md border border-border bg-surface-alt px-3 py-2 text-sm text-foreground placeholder:text-foreground-muted transition-colors focus:border-primary focus:outline-none'
+          className='min-h-11 w-full rounded-[10px] border border-border bg-input px-3 text-sm text-foreground placeholder:text-foreground-muted/70 transition-colors hover:border-border-hover focus:border-ring focus:outline-none focus:ring-2 focus:ring-ring/20'
           aria-describedby='isoValue-help isoValue-error'
           aria-invalid={!!errors.isoValue}
         />
         <div className='flex flex-wrap items-center justify-between'>
           <p id='isoValue-help' className='mt-1 text-xs text-foreground-muted'>
-            ISO 감도 값
+            ISO 감도 값을 기록해요.
           </p>
           {errors.isoValue && (
             <p id='isoValue-error' className='mt-1 text-xs text-destructive' role='alert'>
@@ -65,6 +64,6 @@ export const FilmSection = ({ register, errors }: FilmSectionProps) => {
           )}
         </div>
       </div>
-    </fieldset>
+    </MetadataCard>
   );
 };
