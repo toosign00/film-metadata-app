@@ -67,6 +67,12 @@ const useFileDrop = (
     const handleDragLeave = (e: Event): void => {
       e.preventDefault();
       e.stopPropagation();
+
+      const relatedTarget = (e as DragEvent | MouseEvent).relatedTarget;
+      if (relatedTarget instanceof Node && dropArea.contains(relatedTarget)) {
+        return;
+      }
+
       setIsDragging(false);
     };
 

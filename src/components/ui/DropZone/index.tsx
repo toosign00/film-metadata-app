@@ -12,7 +12,6 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
     handleFileSelect,
     openFileDialog,
     errors,
-    clearErrors,
     maxFiles,
   } = useFileDrop(onFileSelect, {
     allowedExtensions: ['jpg', 'jpeg'],
@@ -22,7 +21,9 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
   });
 
   const handleOpenFileDialog = () => {
-    clearErrors();
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
     openFileDialog();
   };
 
@@ -37,7 +38,6 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
         multiple
         accept='.jpg,.jpeg'
         className='hidden'
-        aria-describedby='file-format-info'
       />
 
       <button
@@ -50,7 +50,7 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
               : 'border-border-hover bg-surface hover:border-primary/60'
         } p-4 text-center transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset`}
         onClick={handleOpenFileDialog}
-        aria-label='파일 선택 영역'
+        aria-describedby={errors.length > 0 ? 'file-format-info file-errors' : 'file-format-info'}
         type='button'
       >
         <div className='flex flex-col items-center justify-center py-5'>
@@ -81,9 +81,22 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
       </button>
 
       {errors.length > 0 && (
-        <ul className='mt-3 space-y-1 text-xs text-destructive-muted' aria-live='polite'>
-          {errors.map((error) => (
-            <li key={error}>{error}</li>
+        <ul
+          id='file-errors'
+          className='mt-3 space-y-1 text-xs text-destructive-muted'
+          role='status'
+          aria-live='polite'
+        >
+          {errors.map((error, index) => (
+            <li
+              key={
+                // biome-ignore lint/suspicious/noArrayIndexKey: The index disambiguates duplicate errors.
+                `${error}-${index}`
+              }
+              className='break-words'
+            >
+              {error}
+            </li>
           ))}
         </ul>
       )}

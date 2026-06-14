@@ -25,7 +25,10 @@ export const FileList = ({ files }: FileListProps) => {
         <ol>
           {files.map((file, index) => (
             <li
-              key={`${file.name}-${file.lastModified}-${file.size}`}
+              key={
+                // biome-ignore lint/suspicious/noArrayIndexKey: The index disambiguates identical file metadata.
+                `${file.name}-${file.lastModified}-${file.size}-${index}`
+              }
               className='flex items-center gap-2.5 border-b border-border py-2.5 last:border-0'
             >
               <span className='w-4 shrink-0 text-right text-xs text-foreground-muted'>
