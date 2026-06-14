@@ -2,88 +2,46 @@
 
 import { Download } from 'lucide-react';
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
-import { isMobile, isTablet } from 'react-device-detect';
 import type { ImageCardProps } from '@/types/imageCard.types';
 
 export const ImageCard = ({ image, onDownload, processing = false }: ImageCardProps) => {
-  const [isTouch, setIsTouch] = useState(false);
-
-  useEffect(() => {
-    setIsTouch(isMobile || isTablet);
-  }, []);
-
   if (!image?.url) return null;
 
-  const handleDownload = (e: React.MouseEvent<HTMLButtonElement>) => {
-    e.preventDefault();
-    e.stopPropagation();
-    onDownload(image);
-  };
-
   return (
-    <div className='group relative overflow-hidden rounded-lg border border-border bg-surface shadow-[0_1px_2px_rgba(0,0,0,0.06)] transition-shadow duration-200 hover:shadow-[0_4px_12px_rgba(0,0,0,0.08)]'>
-      <div className='relative aspect-4/3 bg-surface-alt'>
+    <article className='overflow-hidden rounded-xl border border-border bg-surface'>
+      <div className='relative aspect-4/3 overflow-hidden bg-surface-alt'>
         <Image
           src={image.url}
-          alt={`처리된 이미지: ${image.name}`}
+          alt={`메타데이터가 적용된 ${image.name}`}
           className='object-cover'
-          loading='lazy'
           fill
-          sizes='(max-width: 768px) 50vw, (max-width: 1200px) 33vw, 25vw'
+          loading='lazy'
+          sizes='(max-width: 479px) 100vw, (max-width: 767px) 50vw, (max-width: 1279px) 33vw, 25vw'
           unoptimized
         />
-
-        {!isTouch && (
-          <div className='absolute inset-0 flex items-end justify-center bg-gradient-to-t from-[rgba(17,24,39,0.75)] to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100'>
-            <button
-              type='button'
-              onClick={handleDownload}
-              disabled={processing}
-              className={`mb-4 translate-y-2 transform rounded-lg px-4 py-1.5 text-sm font-semibold transition-all duration-300 focus:outline-none focus-visible:ring-2 focus-visible:ring-ring group-hover:translate-y-0 ${
-                processing
-                  ? 'cursor-not-allowed bg-surface/60 text-foreground-muted'
-                  : 'cursor-pointer bg-surface text-foreground hover:bg-surface-alt'
-              }`}
-              aria-label={`${image.name} 다운로드`}
-            >
-              <span className='flex items-center gap-1'>
-                <Download size={14} />
-                다운로드
-              </span>
-            </button>
-          </div>
-        )}
       </div>
 
-      <div className='px-3 py-2.5'>
-        <p className='truncate text-xs font-medium text-foreground' title={image.name}>
-          {image.name}
-        </p>
-        {image.dateTime && (
-          <p className='mt-0.5 truncate text-[11px] text-foreground-muted' title={image.dateTime}>
-            {image.dateTime}
-          </p>
-        )}
-      </div>
-
-      {isTouch && (
-        <div className='px-3 pb-3'>
-          <button
-            type='button'
-            onClick={handleDownload}
-            disabled={processing}
-            className={`flex w-full items-center justify-center gap-1.5 rounded-md py-1.5 text-xs font-medium ${
-              processing
-                ? 'cursor-not-allowed bg-surface-alt text-foreground-muted'
-                : 'cursor-pointer bg-surface-alt text-foreground-secondary hover:bg-muted'
-            }`}
-          >
-            <Download size={12} />
-            다운로드
-          </button>
+      <div className='flex items-center justify-between gap-3 p-3'>
+        <div className='min-w-0'>
+          <h2 className='truncate text-xs font-medium text-foreground' title={image.name}>
+            {image.name}
+          </h2>
+          {image.dateTime && (
+            <p className='mt-1 truncate text-[11px] text-foreground-muted' title={image.dateTime}>
+              {image.dateTime}
+            </p>
+          )}
         </div>
-      )}
-    </div>
+        <button
+          type='button'
+          onClick={() => onDownload(image)}
+          disabled={processing}
+          className='grid h-11 w-11 shrink-0 cursor-pointer place-items-center rounded-[10px] border border-border text-foreground-muted transition-colors hover:bg-surface-alt hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:pointer-events-none disabled:cursor-not-allowed disabled:opacity-40'
+          aria-label={`${image.name} 다운로드`}
+        >
+          <Download size={16} aria-hidden='true' />
+        </button>
+      </div>
+    </article>
   );
 };
