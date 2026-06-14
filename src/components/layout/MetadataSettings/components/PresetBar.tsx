@@ -125,7 +125,7 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
                 type='button'
                 onClick={() => handleLoad(preset)}
                 data-preset-id={preset.id}
-                className='min-h-9 cursor-pointer rounded-full border border-border bg-surface-alt px-3 text-xs text-foreground-secondary transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset'
+                className='min-h-11 cursor-pointer rounded-full border border-border bg-surface-alt px-3 text-xs text-foreground-secondary transition-colors hover:border-primary hover:text-primary focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset'
                 title={`${preset.name} 불러오기`}
               >
                 <span className='block max-w-[10rem] truncate'>{preset.name}</span>

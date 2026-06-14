@@ -29,7 +29,11 @@ export const FileSelection = ({
       </div>
       <FileSummary files={sortedFiles} />
       <div className='mt-8 flex justify-end'>
-        <Button disabled={sortedFiles.length === 0} onClick={() => goToStep(2)}>
+        <Button
+          disabled={sortedFiles.length === 0}
+          onClick={() => goToStep(2)}
+          className='whitespace-nowrap'
+        >
           다음 단계 →
         </Button>
       </div>

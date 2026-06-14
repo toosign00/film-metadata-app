@@ -48,7 +48,7 @@ export const DropZone = ({ onFileSelect, filesCount = 0 }: DropZoneProps) => {
             : filesCount > 0
               ? 'border-primary/30 bg-surface'
               : 'border-border-hover bg-surface hover:border-primary/60'
-        } p-4 text-center transition-all focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset`}
+        } p-4 text-center transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset`}
         onClick={handleOpenFileDialog}
         aria-describedby={errors.length > 0 ? 'file-format-info file-errors' : 'file-format-info'}
         type='button'

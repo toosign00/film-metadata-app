@@ -3,7 +3,7 @@ import type { ProgressBarProps } from '@/types/progressBar.types';
 
 export const ProgressBar = ({ progress, label, className = '' }: ProgressBarProps) => {
   const labelId = useId();
-  const normalizedProgress = Math.min(100, Math.max(0, progress));
+  const normalizedProgress = Number.isFinite(progress) ? Math.min(100, Math.max(0, progress)) : 0;
 
   return (
     <div className={`mb-6 border-y border-border py-4 ${className}`} aria-live='polite'>

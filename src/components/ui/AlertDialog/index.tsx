@@ -26,8 +26,8 @@ export const ConfirmDialog = ({
     <AlertDialog.Root open={open} onOpenChange={onOpenChange}>
       {trigger && <AlertDialog.Trigger asChild>{trigger}</AlertDialog.Trigger>}
       <AlertDialog.Portal>
-        <AlertDialog.Overlay className='data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-overlay data-[state=closed]:animate-out data-[state=open]:animate-in' />
-        <AlertDialog.Content className='data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 grid w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 gap-5 rounded-2xl border border-border bg-surface p-5 data-[state=closed]:animate-out data-[state=open]:animate-in sm:p-6'>
+        <AlertDialog.Overlay className='data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 fixed inset-0 z-50 bg-overlay data-[state=closed]:animate-out data-[state=open]:animate-in motion-reduce:animate-none' />
+        <AlertDialog.Content className='data-[state=closed]:fade-out-0 data-[state=open]:fade-in-0 data-[state=closed]:zoom-out-95 data-[state=open]:zoom-in-95 fixed top-1/2 left-1/2 z-50 grid w-[calc(100%-2rem)] max-w-md -translate-x-1/2 -translate-y-1/2 gap-5 rounded-2xl border border-border bg-surface p-5 data-[state=closed]:animate-out data-[state=open]:animate-in motion-reduce:animate-none sm:p-6'>
           <div className='space-y-2'>
             <AlertDialog.Title className='font-semibold text-foreground text-lg'>
               {title}

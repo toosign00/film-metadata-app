@@ -160,11 +160,6 @@ const useFileDrop = (
     fileInputRef.current?.click();
   };
 
-  // 에러 초기화
-  const clearErrors = (): void => {
-    setErrors([]);
-  };
-
   return {
     isDragging,
     fileInputRef,
@@ -172,7 +167,6 @@ const useFileDrop = (
     handleFileSelect,
     openFileDialog,
     errors,
-    clearErrors,
     isMobile,
     maxFiles,
   };

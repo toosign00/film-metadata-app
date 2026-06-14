@@ -123,6 +123,7 @@ export const MetadataSettingsForm = ({
             type='submit'
             disabled={processing || sortedFiles.length === 0}
             isLoading={processing}
+            className='whitespace-nowrap'
             aria-busy={processing}
             aria-label={
               processing

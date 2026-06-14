@@ -49,7 +49,6 @@ export interface UseFileDropReturn {
   handleFileSelect: (e: React.ChangeEvent<HTMLInputElement>) => void;
   openFileDialog: () => void;
   errors: string[];
-  clearErrors: () => void;
   isMobile: boolean;
   maxFiles: number;
 }

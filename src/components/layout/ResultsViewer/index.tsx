@@ -54,6 +54,7 @@ export const ResultsViewer = ({
             onClick={handleDownloadAll}
             disabled={processing}
             isLoading={processing && zipProgress > 0}
+            className='whitespace-nowrap'
             icon={processing ? null : <Download aria-hidden='true' className='h-4 w-4' />}
           >
             ZIP 다운로드

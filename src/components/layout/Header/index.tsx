@@ -27,7 +27,7 @@ export const Header = ({ className }: HeaderProps) => {
             <button
               type='button'
               onClick={() => setTheme(resolvedTheme === 'dark' ? 'light' : 'dark')}
-              className='flex h-11 w-11 cursor-pointer items-center justify-center rounded-[10px] border border-border text-foreground-muted transition-colors hover:bg-surface-alt hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset md:h-9 md:w-9'
+              className='flex h-11 w-11 cursor-pointer items-center justify-center rounded-[10px] border border-border text-foreground-muted transition-colors hover:bg-surface-alt hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset'
               aria-label={resolvedTheme === 'dark' ? '라이트 모드로 전환' : '다크 모드로 전환'}
             >
               {resolvedTheme === 'dark' ? (
@@ -37,7 +37,7 @@ export const Header = ({ className }: HeaderProps) => {
               )}
             </button>
           ) : (
-            <div className='h-11 w-11 shrink-0 md:h-9 md:w-9' />
+            <div className='h-11 w-11 shrink-0' />
           )}
         </div>
       </div>

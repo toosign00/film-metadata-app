@@ -61,7 +61,7 @@ export const StepNavigation = ({
                   )}
                 </span>
                 <span
-                  className={`hidden text-xs font-medium sm:inline ${
+                  className={`hidden text-xs font-medium md:inline ${
                     active ? 'text-foreground' : 'text-foreground-muted'
                   }`}
                 >
