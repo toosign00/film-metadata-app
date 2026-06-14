@@ -35,12 +35,12 @@ const useFileDrop = (
 
       // 확장자 검사
       if (!ext || !allowedExtensions.includes(ext)) {
-        errors.push(`지원되지 않는 파일 형식입니다: ${file.name}`);
+        errors.push(`지원하지 않는 파일이에요: ${file.name}`);
       }
 
       // 파일 크기 검사
       if (file.size > maxFileSize) {
-        errors.push(`파일 크기가 너무 큽니다: ${file.name} (최대 ${maxFileSize / 1024 / 1024}MB)`);
+        errors.push(`파일 크기는 최대 ${maxFileSize / 1024 / 1024}MB예요: ${file.name}`);
       }
 
       return errors;
@@ -93,7 +93,7 @@ const useFileDrop = (
 
       // 최대 파일 수 제한
       if (validFiles.length > maxFiles) {
-        fileErrors.push(`최대 ${maxFiles}개의 파일만 선택할 수 있습니다.`);
+        fileErrors.push(`파일은 최대 ${maxFiles}개까지 선택할 수 있어요.`);
       }
 
       const selectedFiles = validFiles.slice(0, maxFiles);
@@ -101,10 +101,7 @@ const useFileDrop = (
         onFileSelect(selectedFiles);
       }
 
-      // 에러가 있다면 상태 업데이트
-      if (fileErrors.length > 0) {
-        setErrors(fileErrors);
-      }
+      setErrors(fileErrors);
     };
 
     // 이벤트 리스너 등록
@@ -141,7 +138,7 @@ const useFileDrop = (
 
     // 최대 파일 수 제한을 초과할 경우 경고 메시지 추가
     if (validFiles.length > maxFiles) {
-      fileErrors.push(`최대 ${maxFiles}개의 파일만 선택할 수 있습니다.`);
+      fileErrors.push(`파일은 최대 ${maxFiles}개까지 선택할 수 있어요.`);
     }
 
     const finalSelectedFiles = validFiles.slice(0, maxFiles);
@@ -149,10 +146,7 @@ const useFileDrop = (
       onFileSelect(finalSelectedFiles);
     }
 
-    // 에러가 있다면 상태 업데이트
-    if (fileErrors.length > 0) {
-      setErrors(fileErrors);
-    }
+    setErrors(fileErrors);
   };
 
   // 파일 선택 다이얼로그 열기
