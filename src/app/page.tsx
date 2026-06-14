@@ -15,16 +15,14 @@ export default function Home() {
 
   const formRef = useRef<HTMLFormElement>(null);
   const resultRef = useRef<HTMLElement>(null);
+  const previousStepRef = useRef(state.activeStep);
 
   useEffect(() => {
-    if (typeof window === 'undefined') return;
-    if (state.files.length === 0) return;
-    const handleBeforeUnload = (e: BeforeUnloadEvent) => {
-      e.preventDefault();
-    };
-    window.addEventListener('beforeunload', handleBeforeUnload);
-    return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-  }, [state.files.length]);
+    if (previousStepRef.current === state.activeStep) return;
+
+    previousStepRef.current = state.activeStep;
+    window.scrollTo({ top: 0, left: 0 });
+  }, [state.activeStep]);
 
   const handleFileSelect = (files: File[]) => setFiles(files);
 
