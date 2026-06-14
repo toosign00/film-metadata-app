@@ -31,6 +31,11 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
     setPresets(getPresets());
   }, []);
 
+  const announce = useCallback((message: string) => {
+    setStatusMessage('');
+    requestAnimationFrame(() => setStatusMessage(message));
+  }, []);
+
   const handleSave = useCallback(() => {
     const trimmed = presetName.trim();
     if (!trimmed) return;
@@ -39,9 +44,9 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
     setPresets(getPresets());
     setPresetName('');
     setSaving(false);
-    setStatusMessage(`${trimmed} 프리셋을 저장했어요.`);
+    announce(`${trimmed} 프리셋을 저장했어요.`);
     requestAnimationFrame(() => saveTriggerRef.current?.focus());
-  }, [presetName, getCurrentData]);
+  }, [presetName, getCurrentData, announce]);
 
   const handleDelete = useCallback(
     (id: string, index: number) => {
@@ -50,42 +55,45 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
       deletePreset(id);
       const nextPresets = getPresets();
       setPresets(nextPresets);
-      setStatusMessage(`${deletedPreset.name} 프리셋을 삭제했어요.`);
+      announce(`${deletedPreset.name} 프리셋을 삭제했어요.`);
       requestAnimationFrame(() => {
         const nextButton = focusId ? presetButtonRefs.current.get(focusId) : null;
         (nextButton ?? saveTriggerRef.current)?.focus();
       });
     },
-    [presets]
+    [presets, announce]
   );
 
   const handleLoad = useCallback(
     (preset: Preset) => {
       onLoad(preset.data);
-      setStatusMessage(`${preset.name} 프리셋을 불러왔어요.`);
+      announce(`${preset.name} 프리셋을 불러왔어요.`);
     },
-    [onLoad]
+    [onLoad, announce]
   );
 
-  const handleImport = useCallback(async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
-    try {
-      await importPresets(file);
-      setPresets(getPresets());
-      setStatusMessage('프리셋을 가져왔어요.');
-    } catch {
-      const message = '프리셋 파일을 불러오지 못했어요. 올바른 JSON 파일인지 확인해 주세요.';
-      setStatusMessage(message);
-      alert(message);
-    }
-    e.target.value = '';
-  }, []);
+  const handleImport = useCallback(
+    async (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (!file) return;
+      try {
+        await importPresets(file);
+        setPresets(getPresets());
+        announce('프리셋을 가져왔어요.');
+      } catch {
+        const message = '프리셋 파일을 불러오지 못했어요. 올바른 JSON 파일인지 확인해 주세요.';
+        announce(message);
+        alert(message);
+      }
+      e.target.value = '';
+    },
+    [announce]
+  );
 
   const handleExport = useCallback(() => {
-    setStatusMessage(`${presets.length}개 프리셋을 내보냈어요.`);
+    announce(`${presets.length}개 프리셋을 내보냈어요.`);
     exportPresets();
-  }, [presets.length]);
+  }, [presets.length, announce]);
 
   const closeSaving = useCallback(() => {
     setSaving(false);
@@ -105,7 +113,7 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
             <p className='text-xs text-foreground-muted'>저장된 프리셋이 없어요.</p>
           )}
           {presets.map((preset, index) => (
-            <span key={preset.id} className='group relative'>
+            <span key={preset.id} className='inline-flex items-center md:group md:relative'>
               <button
                 ref={(node) => {
                   if (node) {
@@ -125,7 +133,7 @@ export const PresetBar = ({ onLoad, getCurrentData }: PresetBarProps) => {
               <button
                 type='button'
                 onClick={() => handleDelete(preset.id, index)}
-                className='-right-2 -top-2 absolute flex h-6 w-6 cursor-pointer items-center justify-center rounded-full bg-destructive text-destructive-foreground opacity-100 shadow-sm transition-opacity focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset md:opacity-0 md:group-hover:opacity-100 md:group-focus-within:opacity-100 md:focus-visible:opacity-100'
+                className='flex h-11 w-11 shrink-0 cursor-pointer items-center justify-center rounded-[10px] bg-destructive/10 text-destructive transition-colors hover:bg-destructive/15 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-ring-offset md:absolute md:-right-2 md:-top-2 md:h-6 md:w-6 md:rounded-full md:bg-destructive md:text-destructive-foreground md:opacity-0 md:shadow-sm md:transition-opacity md:group-hover:opacity-100 md:group-focus-within:opacity-100 md:focus-visible:opacity-100'
                 aria-label={`${preset.name} 삭제`}
               >
                 <X aria-hidden='true' size={12} />
