@@ -11,13 +11,6 @@ input[type="time"] {
   appearance: textfield;
 }
 
-/* 포커스 테두리 제거 */
-input:focus,
-select:focus,
-textarea:focus {
-  outline: none !important;
-}
-
 .react-datepicker__input-container input:focus {
   box-shadow: 0 0 0 2px var(--color-ring) !important;
   border-color: var(--color-ring) !important;

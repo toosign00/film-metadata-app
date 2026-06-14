@@ -155,8 +155,10 @@
   }
 }
 
-.step-enter {
-  animation: step-enter 200ms ease-out;
+@layer utilities {
+  .step-enter {
+    animation: step-enter 200ms ease-out;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
